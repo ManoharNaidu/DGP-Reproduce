@@ -16,7 +16,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from dgp_repro.metrics import compute_metrics
+from dgp_repro.metrics import compute_metrics, evaluate_split
 from dgp_repro.utils.seed import set_seed
 
 GRID = {"hidden": [128, 256], "layers": [1, 2], "dropout": [0.0, 0.3], "lr": [1e-3, 1e-4]}
@@ -78,6 +78,5 @@ def run_mlp(features: np.ndarray, labels: np.ndarray, split, seeds: list[int], g
     per_seed = []
     for s in seeds:
         p_va, p_te = fit_predict(X_tr, y_tr, X_va, y_va, X_te, best[1], s)
-        per_seed.append({"seed": s, "val": compute_metrics(y_va, p_va), "test": compute_metrics(y_te, p_te),
-                         "val_prob": p_va, "test_prob": p_te})
+        per_seed.append({"seed": s, **evaluate_split(y_va, p_va, y_te, p_te), "val_prob": p_va, "test_prob": p_te})
     return {"selected_params": best[1], "selection_val_auroc": best[0], "per_seed": per_seed}

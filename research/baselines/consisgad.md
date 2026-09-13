@@ -37,3 +37,25 @@
 - **deviations**: `requirements.txt` unusable as-is (conda dump) — record the hand-built environment. Node features likely replaced with DGP's text embeddings.
 - **license**: MIT
 - **reproducibility_status**: **GOOD.** Official code exists, is clean, targets exactly YelpChi+Amazon, and runs with a one-line command. Main risk is feature/split mismatch with DGP, not the code.
+
+---
+
+## Verified by the lead engineer from the upstream source (2026-09-13, commit 36811c5b)
+
+**Adapter:** `src/dgp_repro/baselines/consisgad_adapter.py` (BASELINE_ADAPTED). Upstream files are not edited.
+
+| Fact (from source) | Consequence for the adapter |
+|---|---|
+| `requirements.txt` is a Linux conda export: python 3.7, pytorch 1.13.1, dgl 1.1.0+cu118 | Isolated env `dgp-bl-consisgad`: python 3.9 (3.7 unavailable as a Windows export), **torch 1.13.1 and dgl 1.1.0 exactly** (CPU builds; `dgl-1.1.0-cp39-cp39-win_amd64.whl` from data.dgl.ai) |
+| Data enters only through `modules.data_loader.get_index_loader_test`, which draws its own `train_test_split(random_state=2)` | Replaced by a mirror that uses our split; batch sizes and the labeled/unlabeled loader construction are copied from upstream |
+| Unlabeled consistency loader = all train+val+test node ids (features only) | Kept: it is part of the method (semi-supervised consistency training); no labels flow through it |
+| Model uses `graph.etypes` generically (per-relation edge MLPs) | Our single node type `review` with RUR/RPR/RSR works without changes |
+| `main.py` imports `wandb` but never calls it | Stubbed module; no telemetry |
+| `SoftAttentionDrop.forward` reads a module-level `args` that only exists when run as a script | Adapter injects `main.args` |
+| `store_model` writes `model-weights/<data-set>.pth` | `store-model` forced to False (would overwrite shipped weights) |
+| Device: CUDA if available, else CPU | Runs on CPU; mode recorded as CPU_REPRODUCTION or GPU_REPRODUCTION |
+| Model selection: test metrics at the epoch with best **validation AUROC** (strict `>`) | Adapter records per-epoch predictions and saves the ones at that epoch |
+| Macro-F1: threshold tuned on validation over 19 values in [0.05, 0.95] | Adopted as the primary Macro-F1 protocol for every method (see `src/dgp_repro/metrics/classification.py`) |
+| Config used: upstream `config/amazon.yml` (hidden 64, 1 layer, 100 epochs, lr 1e-3, batch 32, unlabel ratio 6) | Paper: baselines tuned "within the recommended ranges"; upstream config is the starting point |
+
+**Node features:** DeBERTaV3-base mean-pooled text embedding ⊕ rating (769-d). The paper does not state baseline features on these text graphs.

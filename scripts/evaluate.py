@@ -19,19 +19,19 @@ from collections import defaultdict
 from _common import ROOT
 
 from dgp_repro.evaluation.reporting import DATASET_NAMES, REAL_MODES, write_table
-from dgp_repro.metrics import METRICS, aggregate_seeds, compute_metrics
+from dgp_repro.metrics import METRICS, aggregate_seeds, evaluate_split
 
 RAW = ROOT / "results" / "raw"
 
 
 def recompute(run_dir):
-    labels, probs = [], []
+    """Test metrics under the shared protocol: Macro-F1 threshold chosen on validation predictions."""
+    data = {"val": ([], []), "test": ([], [])}
     with open(run_dir / "predictions.csv", encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            if row["split"] == "test":
-                labels.append(int(row["label"]))
-                probs.append(float(row["p_fraud"]))
-    return compute_metrics(labels, probs)
+            data[row["split"]][0].append(int(row["label"]))
+            data[row["split"]][1].append(float(row["p_fraud"]))
+    return evaluate_split(*data["val"], *data["test"])["test"]
 
 
 def classify(experiment):
@@ -41,6 +41,8 @@ def classify(experiment):
         return "main", "DGP", "main"
     if experiment.startswith("mlp_"):
         return "main", "MLP", "main"
+    if experiment.startswith("consisgad_"):
+        return "main", "ConsisGAD", "main"
     if experiment.startswith("llm_"):
         return "main", "LLM", "main"
     if experiment.startswith("ablation_"):
@@ -87,7 +89,7 @@ def main():
         table, method, variant = classify(experiment)
         row = {"dataset": DATASET_NAMES.get(dataset, dataset), "method": method, "variant": variant,
                "experiment": experiment, "mode": mode, "n_seeds": agg["n_seeds"]}
-        row.update({f"{m}_{s}": round(agg[f"{m}_{s}"], 2) for m in METRICS for s in ("mean", "std")})
+        row.update({f"{m}_{s}": round(agg[f"{m}_{s}"], 2) for m in (*METRICS, "macro_f1_at_0.5") for s in ("mean", "std")})
         tables["debug" if mode not in REAL_MODES else table].append(row)
 
     columns = ["dataset", "method", "mode", "n_seeds", "macro_f1_mean", "macro_f1_std", "auroc_mean", "auroc_std", "auprc_mean", "auprc_std"]

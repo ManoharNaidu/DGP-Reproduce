@@ -28,7 +28,7 @@
 | Yes/No first-token readout (Eq. 13–14) | Yes | None | `models/readout.py`, `models/label_tokens.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Real Qwen3 tokenizer: Yes=9454, No=2753, single tokens at the chat boundary |
 | LoRA on attention (q/k/v/o_proj) | Yes | None | `models/qwen_classifier.py` | PAPER_RECONSTRUCTION | IMPLEMENTED | Module names verified in two transformers versions; alpha unstated |
 | AdamW, batch 4, ≤10 epochs, early stop on val loss | arXiv v1 | None | `training/trainer.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock LLM) | Patience reconstructed |
-| Metrics via scikit-learn | arXiv v1 | None | `metrics/classification.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Macro-F1 threshold 0.5 reconstructed |
+| Metrics via scikit-learn | arXiv v1 | None | `metrics/classification.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Macro-F1 threshold unstated; official baselines disagree (ConsisGAD tunes on validation, PMP uses 0.5). Both recomputed for every method; the choice MEASURED to move Macro-F1 by ~13 points |
 | Five seeds, mean ± std | Yes | None | `experiment.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Seed values 0–4 reconstructed |
 | Hyperparameter grid search | Grid in arXiv v1 | None | configs `grid:` | PAPER_RECONSTRUCTION | BLOCKED | Selected values unpublished; search strategy awaits owner decision (`compute_plan.md` §6) |
 | Caching / resumability | — | — | `utils/cache.py` | — | SMOKE_TESTED | Keys include target-id hash (Loop 2 fix) |
@@ -65,8 +65,8 @@
 | LLM (Qwen3-8B target-only) | n/a | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock) | DGP pipeline with all neighbour components off |
 | GraphSAGE | `williamleif/GraphSAGE` @ a0fdef95 | BASELINE_ADAPTED | NOT_STARTED | Export adapter ready; repo is TF1 |
 | HGT | `acbull/pyHGT` @ 85eaccd4 | BASELINE_ADAPTED | NOT_STARTED | OAG-specific loader needs data adapter |
-| ConsisGAD | `Xtra-Computing/ConsisGAD` @ 36811c5b | BASELINE_ADAPTED | NOT_STARTED | Reads CARE-GNN `.mat`; export adapter ready |
-| PMP | `Xtra-Computing/PMP` @ 3f7629f6 | BASELINE_ADAPTED | NOT_STARTED | **No licence** — fetch, never redistribute |
+| ConsisGAD | `Xtra-Computing/ConsisGAD` @ 36811c5b | BASELINE_ADAPTED | SMOKE_TESTED | Official code runs unmodified on our AmazonVideo graph + split (`baselines/consisgad_adapter.py`, env torch 1.13.1 / dgl 1.1.0). 1 epoch verified: prediction ids and labels match our split exactly. CPU cost MEASURED ~7.5 min/epoch under contention × 100 epochs → run 5 seeds on the GPU machine |
+| PMP | `Xtra-Computing/PMP` @ 3f7629f6 | BASELINE_ADAPTED | NOT_STARTED | **No licence**. Hard-codes `torch.cuda.current_device()` → GPU machine; same bundle interface as ConsisGAD |
 | GAAP | `AtwoodDuan/GAAP` @ 6a7dbb04 | BASELINE_ADAPTED | NOT_STARTED | **No licence**; Amazon config absent upstream |
 | TAPE | `XiaoxinHe/TAPE` @ d9881f7e | BASELINE_ADAPTED | NOT_STARTED | Needs LLM explanations (GPU) |
 | FLAG (KDD'25) | `BUPT-GAMMA/FLAG` @ cb83944e | BASELINE_ADAPTED | NOT_STARTED | **No licence**, no README; attribution high-confidence, not declared |
@@ -83,3 +83,4 @@
 | D3 | Qwen3 thinking mode disabled | First-token Yes/No readout is impossible otherwise | — (required) |
 | D4 | "w/o MDK" = random M neighbours | Paper does not say what replaces MDK | ablation config |
 | D5 | MDK input follows camera-ready (DeBERTa ⊕ numeric), not arXiv v1 (raw features) | Camera-ready is the archival version | `mdk.features` |
+| D6 | Macro-F1 reported under two threshold protocols (validation-tuned primary, 0.5 secondary) | Paper silent; official baselines disagree | both columns |

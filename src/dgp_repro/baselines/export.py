@@ -39,3 +39,18 @@ def export_care_gnn_mat(graph: HeteroGraph, features: np.ndarray, split: Split, 
         "note": "DGP reproduction split; baselines must use these ids instead of their own random splits"}),
         encoding="utf-8")
     return path
+
+
+def export_edge_bundle(graph: HeteroGraph, features: np.ndarray, split: Split, path: str | Path) -> Path:
+    """Framework-neutral bundle for baseline environments that cannot import this package (e.g. DGL 1.1 / py3.9):
+    per-relation directed edge lists, node features, labels and our split, in one .npz."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"dataset": np.array(graph.name), "num_nodes": np.array(graph.num_nodes),
+               "relations": np.array(list(graph.relations)), "features": features.astype(np.float32),
+               "labels": graph.labels.astype(np.int64), "train": split.train, "val": split.val, "test": split.test}
+    for rel, mat in graph.relations.items():
+        coo = mat.tocoo()
+        payload[f"src_{rel}"], payload[f"dst_{rel}"] = coo.row.astype(np.int64), coo.col.astype(np.int64)
+    np.savez_compressed(path, **payload)
+    return path

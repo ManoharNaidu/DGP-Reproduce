@@ -70,7 +70,7 @@
 | Max seq len, grad accumulation, warmup, weight decay, precision, patience | Not stated | — | — | NONE | Documented defaults; bf16 on A100 |
 | Seeds | "5 random seeds", values unstated | both | VERIFIED | — | Seeds `0–4` |
 | Metrics | Macro-F1, AUROC, AUPRC via **scikit-learn** | arXiv v1 | VERIFIED | CONFIRMED | `f1_score(macro)`, `roc_auc_score`, `average_precision_score` |
-| Macro-F1 threshold | Not stated | — | — | NONE | 0.5 on `p_v`, `PAPER_RECONSTRUCTION` |
+| Macro-F1 threshold | Not stated. Official ConsisGAD: best F1 over 19 validation thresholds; official PMP: fixed 0.5 | ConsisGAD `modules/evaluation.py`; PMP `training_procedure/evaluate.py` | VERIFIED | LOW (sources disagree) | Report both; val-tuned primary |
 | Class reweighting | Not stated | — | — | NONE | None (plain CE, as Eq. 13) |
 | Significance test for `*` | Not named | — | — | NONE | Report Welch t-test, labelled ours |
 

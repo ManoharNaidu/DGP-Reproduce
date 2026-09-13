@@ -50,3 +50,19 @@
 - **deviations**: No LICENSE in either repo — usage terms are unstated (treat as "all rights reserved"; cite, don't redistribute). Train ratio and feature source must be chosen and documented.
 - **license**: **NONE declared** (GitHub API returns `license: null` for both `JhuoW/PMP` and `Xtra-Computing/PMP`).
 - **reproducibility_status**: **GOOD.** Clean pip-installable requirements, auto-downloading Yelp/Amazon, one-line entrypoint. Best-behaved repo in this baseline set.
+
+---
+
+## Verified by the lead engineer from the upstream source (2026-09-13, commit 3f7629f6)
+
+| Fact (from source) | Consequence |
+|---|---|
+| `requirements.txt`: dgl 1.1.1+cu118, torch 2.0.1, torch_geometric 2.3.1, torch_scatter/torch_sparse +pt20cu118 | CUDA builds pinned |
+| `training_procedure/evaluate.py` hard-codes `torch.cuda.current_device()` | **Cannot run on CPU without shimming CUDA calls → run on the GPU machine** |
+| Data enters through `DataHelper.datasetHelper.DatasetHelper.load` (DGL `FraudDataset` + masks, `data.etypes`) | Same bundle as ConsisGAD; adapter patches `load` to build the graph from our bundle and set our masks |
+| Default config `amazon.yml`: `homo: true` (converts to homogeneous), `norm_feat: true` (row-normalises features), `monitor: auc_gnn`, `patience: 20` | Keep upstream settings; row normalisation of DeBERTa features is part of upstream preprocessing |
+| DGL loaders use `num_workers=8` | Linux/GPU run expected; set lower on Windows |
+| **Macro-F1 at fixed threshold 0.5** on `sigmoid(logits)[:, 1]` (`thres: 0.5`, `threshold_moving: true`) | Differs from ConsisGAD's validation-tuned threshold; both protocols are recomputed for every method |
+| No licence | Fetch only; never redistribute |
+
+Status: NOT_STARTED (GPU-dependent). Adapter design identical to ConsisGAD's.

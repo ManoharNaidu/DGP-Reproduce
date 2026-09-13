@@ -25,7 +25,7 @@ from dgp_repro.config import REPO_ROOT
 from dgp_repro.data import load_graph, load_split
 from dgp_repro.embeddings import make_embedder
 from dgp_repro.evaluation.token_usage import summarize_token_usage, write_token_usage
-from dgp_repro.metrics import aggregate_seeds, compute_metrics
+from dgp_repro.metrics import aggregate_seeds, evaluate_split
 from dgp_repro.pipeline import PromptSet, run_dgp_prompt_pipeline
 from dgp_repro.summarization import make_summarizer
 from dgp_repro.utils.provenance import peak_memory_gb, write_manifest
@@ -122,8 +122,7 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
     batch = cfg["training"].get("eval_batch_size", 8)
     probs = {name: predict(model, text[name], label_tokens, batch) for name in ("val", "test")}
     metrics = {"seed": seed, "best_epoch": result.best_epoch,
-               "val": compute_metrics(labels["val"], probs["val"]),
-               "test": compute_metrics(labels["test"], probs["test"])}
+               **evaluate_split(labels["val"], probs["val"], labels["test"], probs["test"])}
 
     with open(run_dir / "predictions.csv", "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)

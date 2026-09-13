@@ -151,3 +151,15 @@ def test_care_gnn_export_roundtrip(tmp_path):
     mat = scipy.io.loadmat(path)
     assert {"net_rur", "net_rsr", "net_rtr", "homo", "features", "label"} <= set(mat)
     assert mat["net_rur"].shape == (30, 30) and mat["label"].shape == (1, 30)
+
+
+def test_val_threshold_protocol_mirrors_consisgad_and_never_sees_test_labels():
+    from dgp_repro.metrics import evaluate_split, select_f1_threshold
+    y_val, p_val = np.array([0, 0, 0, 1, 1]), np.array([0.1, 0.2, 0.3, 0.32, 0.9])
+    t = select_f1_threshold(y_val, p_val)
+    assert 0.3 <= t < 0.32  # first threshold on the 0.05 grid separating the classes (p > t)
+    y_test = np.array([0, 1, 0, 1])
+    r1 = evaluate_split(y_val, p_val, y_test, np.array([0.2, 0.31, 0.1, 0.8]))
+    r2 = evaluate_split(y_val, p_val, 1 - y_test, np.array([0.2, 0.31, 0.1, 0.8]))
+    assert r1["test"]["threshold"] == r2["test"]["threshold"] == t  # flipping test labels cannot move the threshold
+    assert "macro_f1_at_0.5" in r1["test"]
