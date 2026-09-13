@@ -1,0 +1,4 @@
+# Figure 5: unified summarization budget B = B_node = B_meta = 5.
+# Note: B=5 appears in the Figure 5 sweep but is outside the tuning grid {10,20,40,80}.
+variant: B=5
+dgp: {B_node: 5, B_meta: 5}

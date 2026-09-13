@@ -1,0 +1,3 @@
+# Table 3: task-aware node-level summarization prompt (prompts/dgp/node_summary_task_aware.txt).
+variant: task-aware
+task_aware: {enabled: true, apply_to_metapath: false}

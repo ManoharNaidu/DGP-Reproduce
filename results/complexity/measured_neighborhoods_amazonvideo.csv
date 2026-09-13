@@ -1,0 +1,13 @@
+dataset,metapath,hops,targets,mean_neighbors,median_neighbors,max_neighbors,empty,mean_raw_neighbor_tokens,max_raw_neighbor_tokens
+amazonvideo,RUR,1,10023,9.7,6.0,122,0,1940.1,79008
+amazonvideo,RPR,1,10023,89.1,41.0,454,0,8059.0,42627
+amazonvideo,RSR,1,10023,168.1,149.0,655,91,13799.9,46086
+amazonvideo,RUR-RUR,2,10023,9.7,6.0,122,0,1940.1,79008
+amazonvideo,RUR-RPR,2,10023,677.8,509.0,5594,0,68042.3,602979
+amazonvideo,RUR-RSR,2,10023,1070.2,867.0,6812,0,92173.5,657440
+amazonvideo,RPR-RUR,2,10023,676.2,390.0,2810,0,91505.3,409370
+amazonvideo,RPR-RPR,2,10023,89.1,41.0,454,0,8059.0,42627
+amazonvideo,RPR-RSR,2,10023,6119.2,4660.0,20195,0,516420.5,1681931
+amazonvideo,RSR-RUR,2,10023,1061.4,986.0,3186,91,131361.7,304239
+amazonvideo,RSR-RPR,2,10023,6078.7,6234.0,13610,91,554448.8,1196263
+amazonvideo,RSR-RSR,2,10023,168.1,149.0,655,174,13796.7,46086

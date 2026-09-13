@@ -1,0 +1,5 @@
+# Figure 4: w/o TextSumm. No neighbour text; the numeric means remain.
+# PAPER_RECONSTRUCTION: the paper removes the textual summarization module but does not say whether raw
+# neighbour text replaces it; removal is the reading consistent with it being a 'major component'.
+variant: w/o TextSumm
+components: {text_summary: false}

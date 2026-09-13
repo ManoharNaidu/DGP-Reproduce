@@ -1,0 +1,3 @@
+# Figure 4: w/o NumSumm. No neighbour means a_P(v).
+variant: w/o NumSumm
+components: {numeric_summary: false}

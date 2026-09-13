@@ -1,0 +1,82 @@
+# DGP method defaults. Tags:
+#   PAPER  stated in the paper (camera-ready and/or arXiv v1)
+#   GRID   paper gives only a search grid; value here is a PLACEHOLDER until scripts/run_grid.py selects it
+#   RECON  not stated anywhere; PAPER_RECONSTRUCTION (see research/evidence_matrix.md)
+
+dgp:
+  K: 2                     # GRID {1,2,3}. Figure 3 illustrates a 2-hop metapath (RTR-RSR)
+  M: 4                     # GRID {2,4,8,16}
+  B_node: 10               # GRID {10,20,40,80}; paper: 10 tokens is "generally" best
+  B_meta: 10               # GRID {10,20,40,80}
+  numeric_precision: 2     # RECON: decimals when writing a_P(v)
+  max_target_tokens: 1024  # RECON: cap on the target's raw text (Yelp mean L = 170)
+
+mdk:
+  operator: paper_eq6      # PAPER Eq. 6 literally: (1/K) sum_{k=0}^{K} T^k
+  adjacency: weighted      # RECON (literal Eq. 3): A_P keeps path counts
+  features: deberta_concat # PAPER (camera-ready): DeBERTaV3(text) concat numeric. arXiv v1: 'raw'
+  scaling: none            # RECON: literal concatenation, no normalisation
+  random_seed: 0           # used only by the w/o MDK ablation
+
+components:                # all on = full DGP
+  node_summary: true
+  text_summary: true
+  mdk: true
+  path_summary: true
+  numeric_summary: true
+
+task_aware:
+  enabled: false           # PAPER: DGP is task-agnostic
+  apply_to_metapath: false # RECON: Table 3 is captioned "node-level summarization prompts"
+
+embedder:
+  backend: deberta
+  model_id: microsoft/deberta-v3-base   # PAPER: DeBERTaV3 (bibliography). RECON: base size
+  max_length: 512
+  batch_size: 64
+
+summarizer:
+  backend: qwen
+  model_id: Qwen/Qwen3-8B  # PAPER: frozen Qwen3-8B
+  revision: null           # pin a commit hash for a final reproduction run
+  batch_size: 16
+  enforce_budget: false    # RECON: budget given by the instruction; realised lengths are measured
+  max_new_tokens_factor: 4
+  max_new_tokens_extra: 16
+  max_input_tokens: 4096
+
+classifier:
+  model_id: Qwen/Qwen3-8B  # PAPER
+  revision: null
+  precision: canonical     # canonical = bf16, no quantisation. memory_optimized = 4-bit QLoRA (flagged)
+  gradient_checkpointing: true
+  max_seq_len: 4096        # RECON
+  lora:
+    enabled: true
+    target_modules: [q_proj, k_proj, v_proj, o_proj]  # PAPER "all attention layers"; names verified in modeling_qwen3.py
+    rank: 8                # GRID {4,8,16,32}
+    alpha: 16              # RECON: never stated; alpha = 2 * rank
+    dropout: 0.05          # GRID {0.0,0.05,0.1}
+
+training:
+  optimizer: adamw         # PAPER
+  learning_rate: 1.0e-4    # GRID {1e-5,3e-5,1e-4}
+  batch_size: 4            # PAPER (arXiv v1)
+  max_epochs: 10           # PAPER (arXiv v1): up to 10 epochs
+  early_stopping_patience: 2   # RECON: paper says early stopping on val loss, no patience given
+  gradient_accumulation: 1 # RECON
+  weight_decay: 0.0        # RECON
+  max_grad_norm: 1.0       # RECON
+  eval_batch_size: 8
+
+seeds: [0, 1, 2, 3, 4]     # PAPER: five seeds. RECON: their values
+
+# PAPER (arXiv v1 section 5.1): the full search grid. Selection criterion: mean validation AUROC.
+grid:
+  B: [10, 20, 40, 80]
+  K: [1, 2, 3]
+  M: [2, 4, 8, 16]
+  lora_rank: [4, 8, 16, 32]
+  lora_dropout: [0.0, 0.05, 0.1]
+  learning_rate: [1.0e-5, 3.0e-5, 1.0e-4]
+  selection_metric: val_auroc

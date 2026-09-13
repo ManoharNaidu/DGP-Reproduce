@@ -1,0 +1,9 @@
+# Alias kept for the documented layout: the DGP method itself needs exactly gpu.yml.
+# Use environment/base.yml for CPU-only work.
+name: dgp
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - -r requirements-dgp.txt

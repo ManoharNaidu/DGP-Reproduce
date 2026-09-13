@@ -1,0 +1,24 @@
+# DEBUG_ONLY synthetic review graph for the CPU smoke test. Never reported as a result.
+name: synthetic
+display_name: Synthetic (DEBUG_ONLY)
+reproducibility: DEBUG_ONLY
+processed_dir: datasets/processed/synthetic
+
+graph:
+  num_nodes: 80
+  num_users: 16
+  num_products: 6
+  seed: 0
+
+relation_labels:
+  RUR: Same User
+  RSR: Same Star
+  RTR: Same Time
+
+split:
+  sizes: {train: 30, val: 15, test: 30}
+  seed: 0
+  stratify: true
+
+task:
+  question: Is this fraud?

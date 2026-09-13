@@ -1,0 +1,7 @@
+# DGP main experiment on amazonvideo (paper Table 2). GPU_REPRODUCTION.
+# Values tagged GRID in configs/models/dgp.yaml are placeholders until scripts/run_grid.py selects them.
+defaults:
+  - configs/models/dgp.yaml
+dataset_config: configs/datasets/amazonvideo.yaml
+mode: GPU_REPRODUCTION
+experiment: dgp_amazonvideo

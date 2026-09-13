@@ -1,0 +1,3 @@
+# Figure 4: w/o MDK. PAPER_RECONSTRUCTION of the replacement: M neighbours drawn at random (same budget).
+variant: w/o MDK
+components: {mdk: false}

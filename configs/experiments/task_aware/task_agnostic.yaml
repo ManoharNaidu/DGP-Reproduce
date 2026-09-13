@@ -1,0 +1,3 @@
+# Table 3: task-agnostic summarization (= full DGP).
+variant: task-agnostic
+task_aware: {enabled: false}

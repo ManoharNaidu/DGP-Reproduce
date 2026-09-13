@@ -1,0 +1,5 @@
+# Baseline 'LLM' (Table 2): Qwen3-8B finetuned on target nodes alone, same LoRA recipe as DGP.
+# Implemented in-repo because it is the DGP classifier with every neighbour component switched off.
+variant: LLM
+method: llm
+components: {text_summary: false, numeric_summary: false}

@@ -1,0 +1,28 @@
+# CPU_DEBUG smoke test. DEBUG_ONLY: synthetic graph, mock summarizer, hashing embeddings, mock LLM.
+# Exercises every stage of the real pipeline; its numbers mean nothing.
+defaults:
+  - configs/models/dgp.yaml
+dataset_config: configs/datasets/synthetic.yaml
+mode: CPU_DEBUG
+
+dgp:
+  K: 2
+  M: 3
+  B_node: 6
+  B_meta: 12
+
+embedder:
+  backend: hashing
+  dim: 32
+
+summarizer:
+  backend: mock
+
+classifier:
+  backend: mock
+
+training:
+  learning_rate: 0.05
+  batch_size: 4
+  max_epochs: 6
+  early_stopping_patience: 3

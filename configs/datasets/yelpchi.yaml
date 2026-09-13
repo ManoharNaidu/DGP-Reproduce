@@ -1,0 +1,37 @@
+# YelpReviews — original Rayana & Akoglu YelpChi release (67,395 reviews, raw text).
+# STATUS: BLOCKED ON DATA ACCESS (email srayana@cs.stonybrook.edu). See docs/datasets.md.
+# Do NOT substitute YelpChi.mat (45,954 nodes, no text).
+name: yelpchi
+display_name: YelpReviews
+reproducibility: BLOCKED
+processed_dir: datasets/processed/yelpchi
+
+source:
+  canonical_path: datasets/raw/yelpchi/reviews.jsonl   # produced from the raw release; format in data/yelpchi.py
+
+graph:
+  relations: [RUR, RSR, RTR]
+  # Prose (arXiv v1): RSR = same product + same star; RTR = same product + same month.
+  # Must be checked against the reported edge count when the data arrives
+  # (the Amazon prose did not match its data). Use scripts/prepare_data.py --probe.
+  rsr_product_scope: true
+  rtr_product_scope: true
+
+relation_labels:
+  RUR: Same User
+  RSR: Same Star
+  RTR: Same Time
+
+expected:                      # paper Table 1
+  nodes: 67395
+  edges: 17486608
+  edge_types: 3
+  frauds: 8919
+
+split:
+  sizes: {train: 1348, val: 1348, test: 13479}  # paper Table 1
+  seed: 0
+  stratify: true
+
+task:
+  question: Is this fraud?

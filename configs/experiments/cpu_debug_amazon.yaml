@@ -1,0 +1,12 @@
+# CPU_DEBUG on the REAL AmazonVideo graph: real graph, split, metapaths and MDK trimming;
+# hashing embeddings, mock summaries and a mock LLM. DEBUG_ONLY - checks the real-data plumbing, not results.
+defaults:
+  - configs/models/dgp.yaml
+dataset_config: configs/datasets/amazonvideo.yaml
+mode: CPU_DEBUG
+experiment: cpu_debug_amazonvideo
+embedder: {backend: hashing, dim: 64}
+summarizer: {backend: mock}
+classifier: {backend: mock}
+training: {learning_rate: 0.05, max_epochs: 3, early_stopping_patience: 2, eval_batch_size: 256}
+save_checkpoints: false

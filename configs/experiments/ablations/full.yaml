@@ -1,0 +1,3 @@
+# Figure 4: full DGP (reference bar).
+variant: DGP
+components: {node_summary: true, text_summary: true, mdk: true, path_summary: true, numeric_summary: true}

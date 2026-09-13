@@ -1,0 +1,23 @@
+# environments
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.env
+
+# large or generated artefacts
+datasets/raw/
+datasets/processed/
+datasets/cache/
+checkpoints/
+logs/
+results/raw/
+
+# third-party code is fetched at pinned commits by scripts/fetch_baselines.py, never committed
+methods/*/upstream/
+
+# copyrighted source documents: kept locally for provenance, never redistributed
+*.pdf
+research/paper_fulltext.txt
+research/arxiv_v1_fulltext.txt

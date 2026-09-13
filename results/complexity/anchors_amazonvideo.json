@@ -1,0 +1,9 @@
+{
+  "dataset": "amazonvideo",
+  "token_counter": "Qwen/Qwen3-8B tokenizer",
+  "L_mean_tokens": 115.7,
+  "L_median_tokens": 53.0,
+  "D_undirected_pairs_per_node": 133.1,
+  "R": 3,
+  "paper_anchor": "D = 133"
+}

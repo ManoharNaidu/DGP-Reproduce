@@ -1,0 +1,17 @@
+# Baselines run in their OWN environments, never in the DGP environment.
+# Their pinned upstream requirements conflict with each other and with DGP
+# (e.g. GraphSAGE targets TensorFlow 1.x; GraphGPT/HiGPT pin older transformers + a Vicuna stack).
+# Recommended: one env per baseline, created from that repository's own requirements after
+#   python scripts/fetch_baselines.py <method>
+# e.g.  conda create -n bl-consisgad python=3.9 && pip install -r methods/consisgad/upstream/requirements.txt
+# Per-method notes: research/baselines/<method>.md
+name: dgp-baselines-shared
+channels: [conda-forge]
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - numpy
+      - scipy
+      - scikit-learn
+      - pyyaml
