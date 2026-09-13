@@ -5,7 +5,7 @@
 **Status labels:** `NOT_STARTED` · `INVESTIGATING` · `IMPLEMENTED` · `SMOKE_TESTED` · `PARTIALLY_REPRODUCED` · `REPRODUCED` · `BLOCKED` · `NOT_REPRODUCIBLE`
 **Provenance labels:** `OFFICIAL` · `OFFICIAL_ADAPTED` · `PAPER_RECONSTRUCTION` · `BASELINE_OFFICIAL` · `BASELINE_ADAPTED` · `APPROXIMATION` · `DEBUG_ONLY`
 
-> **No component is `OFFICIAL`.** The official DGP repository contains only a README; code release is pending industry-partner approval (`repository_audit.md`). **Nothing is `REPRODUCED` yet**: no Qwen3-8B run has been executed, because this machine has no CUDA GPU.
+> **No component is `OFFICIAL`.** The official DGP repository contains only a README; code release is pending industry-partner approval (`repository_audit.md`). **Nothing is `REPRODUCED` yet.** No Qwen3-8B run has been executed (no CUDA GPU). The first real result is the MLP baseline on AmazonVideo: `PARTIALLY_REPRODUCED` (below).
 
 `SMOKE_TESTED` means the code ran end to end and passed checks on CPU (synthetic graph and/or the real AmazonVideo graph with mock language models). It says nothing about matching the paper's numbers.
 
@@ -17,8 +17,8 @@
 | Metapath enumeration `P_K` | Implicit | None | `mdk/adjacency.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | All sequences of length ≤ K, derived from the paper's `(R^{K+1}−R)/(R−1)` count; unit-tested |
 | Metapath adjacency (Eq. 3) | Yes | None | `mdk/adjacency.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Equals dense product in tests |
 | MDK operator (Eq. 6) | Yes | None | `mdk/diffusion.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Literal `(1/K)Σ_{k=0}^{K}`; iterative sparse form equals dense for all variants; 1/K scale proven ranking-invariant by test |
-| Diffusion distance + Top-M (Eq. 8–9) | Yes | None | `mdk/distance.py`, `mdk/trimming.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Runs on all 12 real AmazonVideo metapaths in ~1 min CPU |
-| DeBERTaV3 features for MDK | Camera-ready only | None | `embeddings/text.py` | PAPER_RECONSTRUCTION | IMPLEMENTED | Variant verified from bibliography; base size + mean pooling reconstructed. Real CPU run in progress |
+| Diffusion distance + Top-M (Eq. 8–9) | Yes | None | `mdk/distance.py`, `mdk/trimming.py` | PAPER_RECONSTRUCTION | IMPLEMENTED (real run done) | Real DeBERTaV3 ⊕ rating features, K=2, M=4: all 12 AmazonVideo metapaths trimmed for 10,023 targets and cached (K, M are GRID placeholders) |
+| DeBERTaV3 features for MDK | Camera-ready only | None | `embeddings/text.py` | PAPER_RECONSTRUCTION | IMPLEMENTED (real run done) | Variant verified from bibliography; base size + mean pooling reconstructed. All 37,126 AmazonVideo reviews embedded on CPU (float32): finite, 37,111 distinct, 1- vs 5-star separable at 91.5 AUROC |
 | Node-level summarization (Eq. 5) | Yes | None | `summarization/` | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock) | Instruction verbatim; decoding reconstructed; Qwen path not yet run |
 | Metapath-level summarization (Eq. 10) | Yes | None | `summarization/pipeline.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock) | Prompt not published → reuses node instruction |
 | Numerical summarization (Eq. 11) | Yes | None | `summarization/numeric.py` | PAPER_RECONSTRUCTION | SMOKE_TESTED | Matches Figure 3 arithmetic in tests |
@@ -50,6 +50,7 @@
 
 | Experiment | Paper artefact | AmazonVideo | YelpReviews | E-Commerce / LifeService |
 |---|---|---|---|---|
+| MLP baseline, 5 seeds | Table 2 | **PARTIALLY_REPRODUCED** (see Baselines) | BLOCKED (data) | NOT_REPRODUCIBLE |
 | DGP main result, 5 seeds | Table 2 | SMOKE_TESTED (mock); GPU run BLOCKED on compute | BLOCKED (data + compute) | NOT_REPRODUCIBLE |
 | Ablations (w/o MDK, PathSumm, TextSumm, NumSumm) | Figure 4 (no printed numbers) | SMOKE_TESTED; BLOCKED on compute | BLOCKED | NOT_REPRODUCIBLE |
 | Budget B ∈ {5,10,20,40,80} | Figure 5 (no printed numbers) | SMOKE_TESTED; BLOCKED on compute | BLOCKED | — |
@@ -61,7 +62,7 @@
 
 | Method | Official repo @ commit | Provenance | Status | Notes |
 |---|---|---|---|---|
-| MLP | none exists | PAPER_RECONSTRUCTION | IMPLEMENTED | `baselines/mlp.py`; input features unstated by the paper |
+| MLP | none exists | PAPER_RECONSTRUCTION | **PARTIALLY_REPRODUCED** (AmazonVideo) | 5 seeds, CPU: Macro-F1 59.86±0.51 (paper 61.74, CLOSE) · AUROC 68.35±0.49 (paper 70.47, DEVIATES by 2.12) · AUPRC 25.14±1.06 (paper 26.55, MATCH). Input features and MLP grid unstated by the paper |
 | LLM (Qwen3-8B target-only) | n/a | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock) | DGP pipeline with all neighbour components off |
 | GraphSAGE | `williamleif/GraphSAGE` @ a0fdef95 | BASELINE_ADAPTED | NOT_STARTED | Export adapter ready; repo is TF1 |
 | HGT | `acbull/pyHGT` @ 85eaccd4 | BASELINE_ADAPTED | NOT_STARTED | OAG-specific loader needs data adapter |

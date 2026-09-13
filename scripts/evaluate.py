@@ -92,7 +92,8 @@ def main():
         row.update({f"{m}_{s}": round(agg[f"{m}_{s}"], 2) for m in (*METRICS, "macro_f1_at_0.5") for s in ("mean", "std")})
         tables["debug" if mode not in REAL_MODES else table].append(row)
 
-    columns = ["dataset", "method", "mode", "n_seeds", "macro_f1_mean", "macro_f1_std", "auroc_mean", "auroc_std", "auprc_mean", "auprc_std"]
+    columns = ["dataset", "method", "mode", "n_seeds", "macro_f1_mean", "macro_f1_std", "auroc_mean", "auroc_std", "auprc_mean", "auprc_std",
+               "macro_f1_at_0.5_mean", "macro_f1_at_0.5_std"]  # Macro-F1 = validation-tuned threshold; at_0.5 = fixed threshold
     if tables["main"]:
         write_table([{k: r[k] for k in columns} for r in tables["main"]], ROOT / "results" / "tables" / "main_results",
                     "Main results (real runs only, mean and std over seeds, percent)")

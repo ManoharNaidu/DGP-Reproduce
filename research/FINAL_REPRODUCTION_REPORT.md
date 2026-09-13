@@ -1,11 +1,11 @@
 # DGP Reproduction Report
 
-**Version:** interim, 2026-09-13 — before any GPU experiment.
+**Version:** interim, 2026-09-13 — before any GPU experiment; includes the first real CPU baseline (MLP).
 **Paper:** Li, Hu, Hooi, He, Chen. *DGP: A Dual-Granularity Prompting Framework for Fraud Detection with Graph-Enhanced LLMs.* AAAI 2026.
 
-> This report will be reissued after the GPU runs. At this version **no result from the paper has been
+> This report will be reissued after the GPU runs. At this version **no DGP result from the paper has been
 > reproduced or refuted**: every experiment that needs Qwen3-8B is implemented and tested on CPU but has not
-> been executed. No numbers below are model results unless explicitly marked MEASURED, and none are paper
+> been executed. One baseline row (MLP, AmazonVideo) has been run and is partially reproduced. No numbers below are model results unless explicitly marked MEASURED, and none are paper
 > numbers presented as ours.
 
 ## 1. Executive summary
@@ -34,6 +34,7 @@
 | AmazonVideo graph: nodes, edges, edge types, frauds, split sizes | **Exact match** with Table 1 |
 | Average degree `D = 133` on Amazon (paper complexity section) | **Match**: 133.1 (MEASURED) |
 | Paper's complexity formulas | Implemented and evaluated at MEASURED L and D |
+| MLP baseline, AmazonVideo, 5 seeds | **PARTIALLY_REPRODUCED**: Macro-F1 59.86±0.51 vs 61.74 (CLOSE), AUROC 68.35±0.49 vs 70.47 (DEVIATES, −2.12), AUPRC 25.14±1.06 vs 26.55 (MATCH) |
 | DGP main results, ablations, budget sweep, task-aware study | Not yet run (GPU) |
 
 ## 3. What matched the paper
@@ -91,7 +92,14 @@ Python 3.11.9 · torch 2.14.0+cpu · transformers 5.17.0 · numpy 2.4.6 · scipy
 
 ## 11. Main results
 
-**Not yet available.** Paper targets: `reported_results.csv`.
+**DGP: not yet available** (GPU). Paper targets: `reported_results.csv`.
+
+| Dataset | Method | Mode | Macro-F1 | AUROC | AUPRC | Macro-F1 @0.5 |
+|---|---|---|---|---|---|---|
+| AmazonVideo | MLP (ours) | CPU_REPRODUCTION, 5 seeds | 59.86 ± 0.51 | 68.35 ± 0.49 | 25.14 ± 1.06 | 49.65 ± 1.67 |
+| AmazonVideo | MLP (paper) | — | 61.74 ± 0.39 | 70.47 ± 0.18 | 26.55 ± 0.48 | — |
+
+Status by the documented tolerance rule: Macro-F1 CLOSE, AUROC DEVIATES (−2.12), AUPRC MATCH. The gap may come from unstated MLP input features, architecture grid or DeBERTa pooling; none can be checked against the paper. The run independently supports two earlier decisions: the benign reading of unvoted reviews (AUPRC lands near the paper's), and a non-0.5 Macro-F1 threshold (0.5 gives 49.65, far from the paper's 61.74).
 
 ## 12. Ablation results
 
@@ -109,8 +117,7 @@ Realised prompt lengths require real summaries and are pending.
 
 ## 15. Baseline results
 
-**Not yet available.** MLP and the target-only LLM are implemented; the ten official baselines are pinned and
-have an export adapter but have not been adapted or run.
+MLP on AmazonVideo: see §11. ConsisGAD: official code runs unmodified on our graph and split (adapter verified); full 5-seed training deferred to the GPU machine. PMP requires CUDA. Remaining official baselines not yet adapted.
 
 ## 16. Unresolved issues
 

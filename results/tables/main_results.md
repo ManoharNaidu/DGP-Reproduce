@@ -1,0 +1,5 @@
+# Main results (real runs only, mean and std over seeds, percent)
+
+| dataset | method | mode | n_seeds | macro_f1_mean | macro_f1_std | auroc_mean | auroc_std | auprc_mean | auprc_std | macro_f1_at_0.5_mean | macro_f1_at_0.5_std |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| AmazonVideo | MLP | CPU_REPRODUCTION | 5 | 59.86 | 0.51 | 68.35 | 0.49 | 25.14 | 1.06 | 49.65 | 1.67 |

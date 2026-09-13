@@ -70,7 +70,7 @@
 | Max seq len, grad accumulation, warmup, weight decay, precision, patience | Not stated | — | — | NONE | Documented defaults; bf16 on A100 |
 | Seeds | "5 random seeds", values unstated | both | VERIFIED | — | Seeds `0–4` |
 | Metrics | Macro-F1, AUROC, AUPRC via **scikit-learn** | arXiv v1 | VERIFIED | CONFIRMED | `f1_score(macro)`, `roc_auc_score`, `average_precision_score` |
-| Macro-F1 threshold | Not stated. Official ConsisGAD: best F1 over 19 validation thresholds; official PMP: fixed 0.5 | ConsisGAD `modules/evaluation.py`; PMP `training_procedure/evaluate.py` | VERIFIED | LOW (sources disagree) | Report both; val-tuned primary |
+| Macro-F1 threshold | Not stated. Official ConsisGAD: best F1 over 19 validation thresholds; official PMP: fixed 0.5. **Empirical hint:** our AmazonVideo MLP gets 59.86 val-tuned vs 49.65 at 0.5, against the paper's 61.74 — the paper's MLP number is inconsistent with a fixed 0.5 threshold | ConsisGAD `modules/evaluation.py`; PMP `training_procedure/evaluate.py`; our MLP run | VERIFIED | MEDIUM for MLP row, LOW overall | Report both; val-tuned primary |
 | Class reweighting | Not stated | — | — | NONE | None (plain CE, as Eq. 13) |
 | Significance test for `*` | Not named | — | — | NONE | Report Welch t-test, labelled ours |
 
@@ -158,6 +158,8 @@ No two primary sources disagree on an item without the disagreement being record
 3. Control: on YelpReviews (all reviews labelled, prevalence 13.23% known) the same model gives gaps of 2–4 points, so it is a reasonable instrument.
 4. The paper's split sizes are exact fractions of **N** (test = 20% of 37,126 = 7,425), which is natural when splits are drawn from all nodes.
 5. The paper's "majority of nodes are unlabeled" sentence is generic (it is also false for Yelp, where every review carries a label) and is read as "most nodes lie outside the train/val/test splits".
+
+6. **Corroborated by a real model (added after the first baseline run).** Our MLP on the benign-labelled split scores AUROC 68.35 and AUPRC 25.14; the paper's MLP scores 70.47 and 26.55. At 33.3% prevalence an AUROC-68 model would be expected near AUPRC 50.
 
 **Resolution.** Zero-vote reviews are **benign**; splits are drawn from all 37,126 nodes. Confidence HIGH (strong quantitative inference, not a paper statement). The other reading remains available as `graph.label.zero_vote_label: unlabeled`.
 

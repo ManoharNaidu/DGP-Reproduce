@@ -78,7 +78,7 @@ def compare(ours: dict, paper: dict) -> list[dict]:
             status = "CLOSE"
         else:
             status = "DEVIATES"
-        rows.append({"dataset": paper["dataset"], "method": paper["method"], "variant": paper["variant"], "metric": m,
+        rows.append({"dataset": paper["dataset"], "method": paper["method"], "variant": paper["variant"], "mode": ours["mode"], "metric": m,
                      "paper": p_mean, "paper_std": p_std, "ours": round(o_mean, 2), "ours_std": round(o_std, 2),
                      "abs_diff": round(diff, 2), "rel_diff_pct": round(100 * diff / p_mean, 2), "status": status})
     return rows

@@ -4,11 +4,12 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 (Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He, Cheng Chen — AAAI 2026;
 [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/38541) · [arXiv:2507.21653](https://arxiv.org/abs/2507.21653)).
 
-> **Status (2026-09-13): implemented and smoke-tested; not yet reproduced.**
+> **Status (2026-09-13): implemented and smoke-tested; DGP not yet reproduced; MLP baseline partially reproduced.**
 > The official repository ([Xtra-Computing/DGP](https://github.com/Xtra-Computing/DGP)) contains only a README —
 > code release is pending industry-partner approval — so **every DGP component here is a `PAPER_RECONSTRUCTION`**,
 > built from both paper versions and traced to evidence in [`research/`](research/).
-> No Qwen3-8B run has been executed yet (it needs a GPU), so **no paper number has been reproduced**.
+> No Qwen3-8B run has been executed yet (it needs a GPU), so **none of DGP's own numbers has been reproduced**;
+> the only real result so far is the MLP baseline (partially reproduced).
 > See [`research/reproduction_matrix.md`](research/reproduction_matrix.md).
 
 ---
@@ -147,7 +148,7 @@ Run the ~1 GPU-hour calibration in [`docs/reproduction.md`](docs/reproduction.md
 
 MLP and the target-only LLM are implemented in this repository. The ten official baselines are fetched at
 verified commits (`python scripts/fetch_baselines.py`) and receive our exact graph and split through an export
-adapter; their adaptation has not started. PMP, GAAP and FLAG publish **no licence** and must never be
+adapter. ConsisGAD's official code already runs unmodified on our AmazonVideo graph and split; the others are not yet adapted. PMP, GAAP and FLAG publish **no licence** and must never be
 redistributed. See [`methods/README.md`](methods/README.md).
 
 ## 14. Ablations
@@ -168,8 +169,9 @@ python scripts/run_sensitivity.py --study task_aware --dataset amazonvideo --dev
 
 ## 16. Results
 
-**None yet.** `results/tables/main_results.md` is written only from real GPU runs; CPU debug runs are kept in
-`results/tables/debug_runs.md` and are never compared with the paper.
+**First real result — MLP baseline, AmazonVideo, 5 seeds (CPU):** Macro-F1 59.86 ± 0.51 · AUROC 68.35 ± 0.49 · AUPRC 25.14 ± 1.06, against the paper's 61.74 / 70.47 / 26.55 → `PARTIALLY_REPRODUCED` (details in `results/tables/comparison_with_paper.md`). **DGP itself: not yet run** (needs a GPU).
+
+`results/tables/main_results.md` is written only from real runs; CPU debug runs are kept in `results/tables/debug_runs.md` and are never compared with the paper.
 
 Measured so far without any LLM (AmazonVideo, real data): mean review length **115.7 Qwen3 tokens**; average
 degree **133.1** (paper: 133); at K=2 a full-neighbour prompt would average **~1.5M tokens** per review versus
