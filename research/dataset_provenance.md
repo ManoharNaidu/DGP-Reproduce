@@ -473,6 +473,21 @@ does not redistribute data.
 
 ---
 
+## 4b. Lead-engineer check of a user-supplied file (2026-09-14)
+
+`datasets/raw/yelpchi/YelpChi.mat` — SHA-256 `fedb35a8fa539b27866244d3515a47a76b20080cdacb33112da3458fd2487b42`,
+207,676,376 bytes, header "MATLAB 5.0 MAT-file Platform: posix, Created on: Wed Aug 19 20:09:02 2020".
+
+| Key | Content |
+|---|---|
+| `homo` | 45,954 × 45,954, nnz 7,693,958 |
+| `net_rur` / `net_rtr` / `net_rsr` | nnz 98,630 / 1,147,232 / 6,805,486 (total 8,051,348) |
+| `features` | 45,954 × 32, sparse, handcrafted |
+| `label` | 6,677 frauds of 45,954 (14.53%) |
+
+Identical in statistics to the CARE-GNN / DGL `FraudYelpDataset` variant described in §1.3. **No text, no review
+identifiers.** Rejected for DGP; blocker #1 below is unchanged.
+
 ## 5. UNRESOLVED
 
 1. **YelpChi raw data not in hand.** Email-gated; no direct URL exists. This is the single

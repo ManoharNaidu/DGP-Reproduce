@@ -50,6 +50,14 @@ DGP uses the **original** YelpChi release (67,395 Chicago hotel and restaurant r
 13.23% filtered by Yelp). This is **not** the `YelpChi.mat` used by CARE-GNN, PC-GNN, ConsisGAD and DGL
 (45,954 nodes, 32 handcrafted features, no text). Do not substitute it.
 
+> **Checked 2026-09-14: `datasets/raw/yelpchi/YelpChi.mat` is NOT usable.** A copy was downloaded and inspected
+> (SHA-256 `fedb35a8fa539b27866244d3515a47a76b20080cdacb33112da3458fd2487b42`, 207,676,376 bytes, MAT-file created
+> 2020-08-19). It is the CARE-GNN preprocessed graph: 45,954 reviews, 6,677 frauds (14.53%), 8,051,348 directed
+> edges (`net_rur` 98,630 · `net_rtr` 1,147,232 · `net_rsr` 6,805,486), 32 handcrafted features, **no review text and
+> no review ids**. DGP's Table 1 needs 67,395 reviews, 8,919 frauds, 17,486,608 edges and the raw text. The file can be
+> kept for other GNN work but must not be substituted for YelpReviews. The ODDS mirror still failed its TLS handshake
+> on 2026-09-14 (two independent network paths).
+
 The dataset page (https://shebuti.com/yelpchi-dataset/) states: *"To get the datasets with ground truth
 please email: srayana@cs.stonybrook.edu"*. The ODDS mirror was unreachable (TLS failure) when checked.
 

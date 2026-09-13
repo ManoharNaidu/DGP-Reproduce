@@ -42,7 +42,7 @@
 | Dataset | Paper | Official code | Our code | Status | Notes |
 |---|---|---|---|---|---|
 | **AmazonVideo** | Yes | None | `data/amazon.py` | **SMOKE_TESTED** (graph fully matches Table 1) | Nodes 37,126 · edges 9,883,406 · 3 types · frauds 4,379 — all exact. Source file SHA-256 pinned. Relation R-S-R follows the data, not the prose. Zero-vote reviews benign (Loop 2) |
-| **YelpReviews** | Yes | None | `data/yelpchi.py` | **BLOCKED** | Original Rayana & Akoglu release obtainable only by email; relations and validation ready |
+| **YelpReviews** | Yes | None | `data/yelpchi.py` | **BLOCKED** | Original Rayana & Akoglu release obtainable only by email. A downloaded `YelpChi.mat` was checked on 2026-09-14 and rejected: 45,954 nodes, no text (CARE-GNN variant; details in `docs/datasets.md`) |
 | E-Commerce | Yes | Proprietary | `data/proprietary.py` (interface only) | **NOT_REPRODUCIBLE** | Not reproduced because proprietary dataset access was unavailable |
 | LifeService | Yes | Proprietary | `data/proprietary.py` (interface only) | **NOT_REPRODUCIBLE** | Not reproduced because proprietary dataset access was unavailable |
 

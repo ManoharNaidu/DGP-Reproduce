@@ -40,6 +40,13 @@ REQUIRED_FIELDS = ("review_id", "user_id", "product_id", "date", "rating", "text
 
 def read_canonical_reviews(path: str | Path) -> list[dict]:
     path = Path(path)
+    mat = path.parent / "YelpChi.mat"
+    if not path.exists() and mat.exists():
+        raise FileNotFoundError(
+            f"{mat} is the CARE-GNN preprocessed YelpChi (45,954 reviews, 32 handcrafted features, NO review text). "
+            "DGP's YelpReviews needs the original release with 67,395 reviews and their raw text (paper Table 1), "
+            "which DGP summarizes with an LLM; this file cannot be converted into it (no text, no review ids). "
+            "Request the original release from srayana@cs.stonybrook.edu. See docs/datasets.md.")
     if not path.exists():
         raise FileNotFoundError(
             f"{path} not found. YelpReviews requires the original YelpChi release, obtainable only by "
