@@ -73,6 +73,37 @@ python scripts/reproduce.py --dataset amazonvideo --device cuda:0 --seeds 0 1 2 
 | Complexity analysis | `analyze_complexity.py` | `results/complexity/` |
 | Comparison with paper | `compare_with_paper.py` | `results/tables/comparison_with_paper.*` |
 
+## 4b. Baselines
+
+Every baseline trains on exactly our graph and split and writes `results/raw/<method>_<dataset>_seed<k>_*/predictions.csv`;
+`scripts/evaluate.py` recomputes all of them with the same metric code (Macro-F1 under both threshold protocols).
+
+```bash
+# node features shared by the MLP and GNN baselines (needs the DeBERTaV3 embedding cache from build_mdk.py)
+python scripts/export_baseline_data.py --dataset amazonvideo
+
+# MLP (in-repo, CPU is fine)
+python scripts/run_mlp.py --dataset amazonvideo --seeds 0 1 2 3 4
+
+# LLM target-only baseline (GPU)
+python scripts/train.py --dataset amazonvideo --device cuda:0 --seeds 0 1 2 3 4 \
+       --overlay configs/experiments/baselines/llm_target_only.yaml --experiment llm_amazonvideo
+
+# ConsisGAD, official code in its own environment
+python scripts/fetch_baselines.py consisgad
+conda create -y -n dgp-bl-consisgad python=3.9 && conda activate dgp-bl-consisgad
+pip install torch==1.13.1 --index-url https://download.pytorch.org/whl/cpu      # or the cu117 build on a GPU machine
+pip install dgl==1.1.0 -f https://data.dgl.ai/wheels/repo.html numpy==1.23.5 scipy==1.9.3 scikit-learn==1.0.2 \
+            pandas==1.5.3 pyyaml scikit-plot==0.3.7
+python src/dgp_repro/baselines/consisgad_adapter.py \
+       --bundle datasets/processed/amazonvideo/baseline_bundle.npz --seeds 0 1 2 3 4
+
+python scripts/evaluate.py
+```
+
+Measured CPU cost of ConsisGAD on AmazonVideo: ~7.5 min per epoch (laptop, with another job running) × 100 upstream
+epochs, i.e. many hours per seed. Run it on the GPU machine.
+
 ## 5. YelpReviews
 
 Blocked until the dataset is obtained (`docs/datasets.md`). Afterwards the same commands work with
