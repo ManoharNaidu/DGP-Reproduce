@@ -9,7 +9,7 @@ Tags: **MEASURED** (from our real AmazonVideo runs) · **DERIVED** (arithmetic o
 | Stage | Needs GPU? | Why |
 |---|---|---|
 | Graph building, splits, metapaths, MDK diffusion + Top-M | **No** | Sparse linear algebra. MEASURED: all 12 AmazonVideo metapaths at K=2 in ~1 min on a 12-thread laptop CPU |
-| DeBERTaV3-base embeddings (37k reviews) | No (faster on GPU) | 184M-parameter encoder; running now on the local CPU |
+| DeBERTaV3-base embeddings (37k reviews) | No (faster on GPU) | MEASURED: ~2.5 h on the laptop CPU in float32; done and cached for AmazonVideo (copy `datasets/cache/embeddings/` and `datasets/cache/mdk/` to the GPU machine to skip it) |
 | **Node + metapath summaries (frozen Qwen3-8B)** | **Yes** | 8.19B-parameter generation over ~150k prompts per configuration |
 | **LoRA fine-tuning + inference (Qwen3-8B)** | **Yes** | 8B forward/backward passes |
 | Metrics, tables, figures, complexity analysis | No | — |
