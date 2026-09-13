@@ -101,8 +101,8 @@ python src/dgp_repro/baselines/consisgad_adapter.py \
 python scripts/evaluate.py
 ```
 
-Measured CPU cost of ConsisGAD on AmazonVideo: ~7.5 min per epoch (laptop, with another job running) × 100 upstream
-epochs, i.e. many hours per seed. Run it on the GPU machine.
+Measured CPU cost of ConsisGAD on AmazonVideo (12-thread laptop, real 769-d features): ~4 min per epoch × 100 upstream
+epochs ≈ 7 h per seed, ≈ 35 h for five seeds. Run it on the GPU machine.
 
 ## 5. YelpReviews
 

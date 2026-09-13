@@ -66,7 +66,7 @@
 | LLM (Qwen3-8B target-only) | n/a | PAPER_RECONSTRUCTION | SMOKE_TESTED (mock) | DGP pipeline with all neighbour components off |
 | GraphSAGE | `williamleif/GraphSAGE` @ a0fdef95 | BASELINE_ADAPTED | NOT_STARTED | Export adapter ready; repo is TF1 |
 | HGT | `acbull/pyHGT` @ 85eaccd4 | BASELINE_ADAPTED | NOT_STARTED | OAG-specific loader needs data adapter |
-| ConsisGAD | `Xtra-Computing/ConsisGAD` @ 36811c5b | BASELINE_ADAPTED | SMOKE_TESTED | Official code runs unmodified on our AmazonVideo graph + split (`baselines/consisgad_adapter.py`, env torch 1.13.1 / dgl 1.1.0). 1 epoch verified: prediction ids and labels match our split exactly. CPU cost MEASURED ~7.5 min/epoch under contention × 100 epochs → run 5 seeds on the GPU machine |
+| ConsisGAD | `Xtra-Computing/ConsisGAD` @ 36811c5b | BASELINE_ADAPTED | SMOKE_TESTED | Official code runs unmodified on our AmazonVideo graph + split (`baselines/consisgad_adapter.py`, env torch 1.13.1 / dgl 1.1.0). 1 epoch verified: prediction ids and labels match our split exactly. CPU cost MEASURED uncontended: 509 s for 2 epochs on real features (~4 min/epoch) × 100 upstream epochs ≈ 7 h/seed, ≈35 h for 5 seeds → run on the GPU machine |
 | PMP | `Xtra-Computing/PMP` @ 3f7629f6 | BASELINE_ADAPTED | NOT_STARTED | **No licence**. Hard-codes `torch.cuda.current_device()` → GPU machine; same bundle interface as ConsisGAD |
 | GAAP | `AtwoodDuan/GAAP` @ 6a7dbb04 | BASELINE_ADAPTED | NOT_STARTED | **No licence**; Amazon config absent upstream |
 | TAPE | `XiaoxinHe/TAPE` @ d9881f7e | BASELINE_ADAPTED | NOT_STARTED | Needs LLM explanations (GPU) |

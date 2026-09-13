@@ -13,6 +13,8 @@ Tags: **MEASURED** (from our real AmazonVideo runs) · **DERIVED** (arithmetic o
 | **Node + metapath summaries (frozen Qwen3-8B)** | **Yes** | 8.19B-parameter generation over ~150k prompts per configuration |
 | **LoRA fine-tuning + inference (Qwen3-8B)** | **Yes** | 8B forward/backward passes |
 | Metrics, tables, figures, complexity analysis | No | — |
+| MLP baseline | No | MEASURED: 5 seeds incl. grid search in 3 min on CPU |
+| ConsisGAD baseline | Strongly preferred | MEASURED: ~4 min/epoch on CPU, 100 epochs × 5 seeds ≈ 35 h |
 
 This machine has **no CUDA GPU** (AMD integrated graphics), so the two Qwen3-8B stages must run in the cloud.
 
