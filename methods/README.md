@@ -9,7 +9,7 @@ Detailed per-method records (paper, requirements, entry points, adaptation, devi
 
 | Method | Family | Official repository | Pinned commit | Licence | Provenance | Status |
 |---|---|---|---|---|---|---|
-| **DGP** | Graph-enhanced LLM | `Xtra-Computing/DGP` — **README only, code unreleased** | — | — | PAPER_RECONSTRUCTION (in `src/dgp_repro/`) | SMOKE_TESTED |
+| **DGP** | Graph-enhanced LLM | `Xtra-Computing/DGP` — **README only, code unreleased** | — | — | PAPER_RECONSTRUCTION (in `src/dgp_repro/`) | REPRODUCED (AmazonVideo, 5 seeds, GPU) |
 | MLP | Graph-agnostic | none exists | — | — | PAPER_RECONSTRUCTION (`src/dgp_repro/baselines/mlp.py`) | IMPLEMENTED |
 | LLM (Qwen3-8B, target only) | Graph-agnostic | n/a | — | Apache-2.0 (model) | PAPER_RECONSTRUCTION (DGP with neighbours off) | SMOKE_TESTED |
 | GraphSAGE | GNN | [williamleif/GraphSAGE](https://github.com/williamleif/GraphSAGE) | `a0fdef95` | NOASSERTION | BASELINE_ADAPTED | NOT_STARTED |

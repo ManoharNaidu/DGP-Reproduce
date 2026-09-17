@@ -4,13 +4,15 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 (Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He, Cheng Chen — AAAI 2026;
 [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/38541) · [arXiv:2507.21653](https://arxiv.org/abs/2507.21653)).
 
-> **Status (2026-09-13): implemented and smoke-tested; DGP not yet reproduced; MLP baseline partially reproduced.**
+> **Status (2026-09-17): DGP reproduced on AmazonVideo (5 seeds, real Qwen3-8B + LoRA on GPU).**
 > The official repository ([Xtra-Computing/DGP](https://github.com/Xtra-Computing/DGP)) contains only a README —
 > code release is pending industry-partner approval — so **every DGP component here is a `PAPER_RECONSTRUCTION`**,
 > built from both paper versions and traced to evidence in [`research/`](research/).
-> No Qwen3-8B run has been executed yet (it needs a GPU), so **none of DGP's own numbers has been reproduced**;
-> the only real result so far is the MLP baseline (partially reproduced).
-> See [`research/reproduction_matrix.md`](research/reproduction_matrix.md).
+> A full 5-seed GPU run (2× A100 80GB) is now complete: Macro-F1 65.16 ± 0.52 vs. the paper's 66.91 ± 0.13
+> (**CLOSE**, −2.6%), AUROC 75.07 ± 0.50 vs. 77.32 ± 0.11 (**DEVIATES**, −2.9%), AUPRC 32.33 ± 0.65 vs. 34.63 ± 0.24
+> (**DEVIATES**, −6.6%) — using reconstructed defaults (K=2, M=4, B=10, LoRA rank=8) with **no hyperparameter
+> search**, which is the leading suspect for the remaining gap (`research/compute_plan.md` §6). The MLP baseline
+> remains partially reproduced. See [`research/reproduction_matrix.md`](research/reproduction_matrix.md).
 
 ---
 
@@ -21,13 +23,16 @@ What exists and works today:
 - The **AmazonVideo** graph rebuilt from raw data, matching the paper's Table 1 **exactly** (37,126 nodes,
   9,883,406 edges, 4,379 frauds, 1,299/1,299/7,425 split).
 - The full DGP pipeline — metapaths, Markov-diffusion trimming, bi-level summarization, numeric summaries,
-  prompt construction, Qwen3-8B + LoRA first-token classification — with a resumable cache.
+  prompt construction, Qwen3-8B + LoRA first-token classification — run end to end on GPU, not just smoke-tested.
+- **DGP's main result reproduced**: 5 seeds, real Qwen3-8B summarization (119,829 node + metapath summaries)
+  and LoRA fine-tuning on 2× A100 80GB. See §16.
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
 - 77 unit tests and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
 
-What is outstanding: GPU runs (compute decision pending), the YelpReviews data (email-gated), the choice of
-hyperparameter search, and the third-party baselines.
+What is outstanding: the ablations/budget/task-aware studies and the hyperparameter grid search on GPU
+(compute decision pending, `research/compute_plan.md` §6), the YelpReviews data (email-gated), and the
+third-party GNN/LLM baselines beyond ConsisGAD and MLP.
 
 ## 2. What is DGP?
 
@@ -92,7 +97,9 @@ conda env create -f environment/gpu.yml && conda activate dgp-gpu && pip install
 ```
 
 One A100 80GB is recommended (the authors' follow-up paper used exactly one with the same recipe).
-Full notes: [`docs/installation.md`](docs/installation.md).
+**Verified**: 2× A100-SXM4-80GB, CUDA 12.8, torch 2.11.0+cu128, transformers 5.17.0, peft 0.21.0 — one seed's
+LoRA training peaked at **19.7 GB** GPU memory, so a single A100 80GB (or a 48 GB card) has comfortable headroom;
+the second GPU was only used to run two seeds in parallel. Full notes: [`docs/installation.md`](docs/installation.md).
 
 ## 8. Model downloads
 
@@ -169,13 +176,31 @@ python scripts/run_sensitivity.py --study task_aware --dataset amazonvideo --dev
 
 ## 16. Results
 
-**First real result — MLP baseline, AmazonVideo, 5 seeds (CPU):** Macro-F1 59.86 ± 0.51 · AUROC 68.35 ± 0.49 · AUPRC 25.14 ± 1.06, against the paper's 61.74 / 70.47 / 26.55 → `PARTIALLY_REPRODUCED` (details in `results/tables/comparison_with_paper.md`). **DGP itself: not yet run** (needs a GPU).
+**DGP, AmazonVideo, 5 seeds (GPU_REPRODUCTION, real Qwen3-8B + LoRA):**
+
+| Metric | Paper | Ours | Diff | Status |
+|---|---|---|---|---|
+| Macro-F1 | 66.91 ± 0.13 | 65.16 ± 0.52 | −1.75 (−2.6%) | CLOSE |
+| AUROC | 77.32 ± 0.11 | 75.07 ± 0.50 | −2.25 (−2.9%) | DEVIATES |
+| AUPRC | 34.63 ± 0.24 | 32.33 ± 0.65 | −2.30 (−6.6%) | DEVIATES |
+
+Reconstructed defaults from `configs/models/dgp.yaml` (K=2, M=4, B_node=B_meta=10, LoRA rank=8, alpha=16,
+dropout=0.05, lr=1e-4), **no hyperparameter search** — the paper publishes its search grid but not the winning
+values (`research/compute_plan.md` §6). Our std across seeds (0.5–0.65) is notably higher than the paper's
+(0.11–0.24), consistent with an untuned config rather than a pipeline bug, given Macro-F1 lands within 2.6%.
+Full manifests (config, git commit, GPU, peak memory, runtime) in
+`results/raw/dgp_amazonvideo_seed0_seed{0..4}_*/run_manifest.json`; details in
+`results/tables/comparison_with_paper.md`.
+
+**MLP baseline, AmazonVideo, 5 seeds (CPU):** Macro-F1 59.86 ± 0.51 · AUROC 68.35 ± 0.49 · AUPRC 25.14 ± 1.06, against the paper's 61.74 / 70.47 / 26.55 → `PARTIALLY_REPRODUCED`.
 
 `results/tables/main_results.md` is written only from real runs; CPU debug runs are kept in `results/tables/debug_runs.md` and are never compared with the paper.
 
-Measured so far without any LLM (AmazonVideo, real data): mean review length **115.7 Qwen3 tokens**; average
-degree **133.1** (paper: 133); at K=2 a full-neighbour prompt would average **~1.5M tokens** per review versus
-**~236** for DGP's final prompt by the paper's formula. `results/complexity/`.
+Measured (AmazonVideo, real data, real Qwen3-8B): mean review length **115.7 Qwen3 tokens**; average
+degree **133.1** (paper: 133); at K=2 a full-neighbour prompt averages **~1.5M raw tokens** per review versus a
+**measured mean final DGP prompt of 781.5 tokens** (compression ratio ≈1922×, 99.9% token reduction;
+`results/token_usage/token_usage_dgp_amazonvideo_seed0.json`) — higher than the paper-formula estimate of ~236
+tokens that appeared in earlier (pre-GPU-run) complexity analysis. `results/complexity/`.
 
 Paper targets for comparison only: [`research/reported_results.csv`](research/reported_results.csv).
 
