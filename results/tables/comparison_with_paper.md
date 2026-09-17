@@ -15,9 +15,7 @@
 | YelpReviews | HiGPT | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | YelpReviews | InstructGLM | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | YelpReviews | DGP | main |  | all |  |  |  |  |  |  | NO_RESULT |
-| AmazonVideo | MLP | main | CPU_REPRODUCTION | macro_f1 | 61.74 | 0.39 | 59.86 | 0.51 | -1.88 | -3.05 | CLOSE |
-| AmazonVideo | MLP | main | CPU_REPRODUCTION | auroc | 70.47 | 0.18 | 68.35 | 0.49 | -2.12 | -3.01 | DEVIATES |
-| AmazonVideo | MLP | main | CPU_REPRODUCTION | auprc | 26.55 | 0.48 | 25.14 | 1.06 | -1.41 | -5.31 | MATCH |
+| AmazonVideo | MLP | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | SAGE | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | HGT | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | ConsisGAD | main |  | all |  |  |  |  |  |  | NO_RESULT |
@@ -29,7 +27,9 @@
 | AmazonVideo | GraphGPT | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | HiGPT | main |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | InstructGLM | main |  | all |  |  |  |  |  |  | NO_RESULT |
-| AmazonVideo | DGP | main |  | all |  |  |  |  |  |  | NO_RESULT |
+| AmazonVideo | DGP | main | GPU_REPRODUCTION | macro_f1 | 66.91 | 0.13 | 65.16 | 0.52 | -1.75 | -2.62 | CLOSE |
+| AmazonVideo | DGP | main | GPU_REPRODUCTION | auroc | 77.32 | 0.11 | 75.07 | 0.5 | -2.25 | -2.91 | DEVIATES |
+| AmazonVideo | DGP | main | GPU_REPRODUCTION | auprc | 34.63 | 0.24 | 32.33 | 0.65 | -2.3 | -6.64 | DEVIATES |
 | YelpReviews | DGP | task_agnostic |  | all |  |  |  |  |  |  | NO_RESULT |
 | YelpReviews | DGP | task_aware |  | all |  |  |  |  |  |  | NO_RESULT |
 | AmazonVideo | DGP | task_agnostic |  | all |  |  |  |  |  |  | NO_RESULT |

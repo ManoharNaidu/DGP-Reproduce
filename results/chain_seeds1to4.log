@@ -1,0 +1,14 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+=== batch 1: seed 1 (cuda:0) + seed 2 (cuda:1) starting 2026-09-17T11:01:44+00:00 ===
+=== batch 1 done: seed1 exit=0 seed2 exit=0 2026-09-17T12:09:21+00:00 ===
+=== batch 2: seed 3 (cuda:0) + seed 4 (cuda:1) starting 2026-09-17T12:09:21+00:00 ===
+=== batch 2 done: seed3 exit=0 seed4 exit=0 2026-09-17T13:29:59+00:00 ===
+=== evaluate 2026-09-17T13:29:59+00:00 ===
+main        1 experiment(s)
+budget      0 experiment(s)
+task_aware  0 experiment(s)
+ablation    0 experiment(s)
+debug       0 experiment(s)
+=== compare with paper 2026-09-17T13:30:01+00:00 ===
+{'NO_RESULT': 29, 'CLOSE': 1, 'DEVIATES': 2}
+=== 5-SEED CHAIN COMPLETE 2026-09-17T13:30:02+00:00 ===

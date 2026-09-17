@@ -1,0 +1,45 @@
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights:   9%|▉         | 35/399 [00:00<00:01, 339.04it/s]Loading weights:  18%|█▊        | 73/399 [00:00<00:01, 305.36it/s]Loading weights:  27%|██▋       | 106/399 [00:00<00:00, 312.55it/s]Loading weights:  35%|███▌      | 141/399 [00:00<00:00, 314.40it/s]Loading weights:  44%|████▍     | 175/399 [00:00<00:00, 291.91it/s]Loading weights:  54%|█████▎    | 214/399 [00:00<00:00, 314.71it/s]Loading weights:  62%|██████▏   | 246/399 [00:00<00:00, 299.39it/s]Loading weights:  69%|██████▉   | 277/399 [00:00<00:00, 299.80it/s]Loading weights:  77%|███████▋  | 308/399 [00:01<00:00, 282.49it/s]Loading weights:  85%|████████▍ | 339/399 [00:01<00:00, 283.99it/s]Loading weights:  93%|█████████▎| 370/399 [00:01<00:00, 290.67it/s]Loading weights: 100%|██████████| 399/399 [00:01<00:00, 304.86it/s]
+Loading weights:   0%|          | 0/198 [00:00<?, ?it/s]Loading weights:   2%|▏         | 3/198 [00:00<00:32,  6.09it/s]Loading weights:  73%|███████▎  | 145/198 [00:00<00:00, 273.60it/s]Loading weights: 100%|██████████| 198/198 [00:00<00:00, 274.51it/s]
+[transformers] [1mDebertaV2Model LOAD REPORT[0m from: microsoft/deberta-v3-base
+Key                                     | Status     |  | 
+----------------------------------------+------------+--+-
+mask_predictions.LayerNorm.weight       | UNEXPECTED |  | 
+mask_predictions.LayerNorm.bias         | UNEXPECTED |  | 
+mask_predictions.classifier.bias        | UNEXPECTED |  | 
+mask_predictions.classifier.weight      | UNEXPECTED |  | 
+lm_predictions.lm_head.LayerNorm.weight | UNEXPECTED |  | 
+mask_predictions.dense.weight           | UNEXPECTED |  | 
+lm_predictions.lm_head.dense.weight     | UNEXPECTED |  | 
+lm_predictions.lm_head.bias             | UNEXPECTED |  | 
+lm_predictions.lm_head.LayerNorm.bias   | UNEXPECTED |  | 
+mask_predictions.dense.bias             | UNEXPECTED |  | 
+lm_predictions.lm_head.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+node summaries: 35747 nodes needed, 35747 cached
+metapath summaries: 119829 requests, 14304 cached
+{
+  "mean_raw_target_tokens": 117.01267085702884,
+  "mean_raw_neighbor_tokens": 1501547.0354185374,
+  "mean_trimmed_neighbor_raw_tokens": 7396.547839968073,
+  "mean_node_summary_tokens": 1308.5515314776014,
+  "mean_metapath_summary_tokens": 460.03432106155844,
+  "mean_final_prompt_tokens": 781.5054374937644,
+  "mean_num_neighbors_full": 16217.414347001895,
+  "mean_num_neighbors_trimmed": 47.74309089095081,
+  "nodes": 10023,
+  "average_prompt_length": 781.5054374937644,
+  "p95_prompt_length": 1205.8999999999996,
+  "max_prompt_length": 1902.0,
+  "mean_full_neighbor_prompt_tokens": 1501664.0480893943,
+  "compression_ratio": 1921.5017273649821,
+  "token_reduction": 0.9994795737179111,
+  "targets_truncated": 93,
+  "num_metapaths": 12,
+  "K": 2,
+  "M": 4,
+  "B_node": 10,
+  "B_meta": 10
+}
+prompts written to /workspace/DGP-Reproduce/datasets/cache/prompts/dgp_amazonvideo_5eb6ae7bc6.jsonl
