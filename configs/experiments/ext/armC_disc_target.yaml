@@ -1,0 +1,7 @@
+# Arm C: add the target's own discriminative line next to its raw text (neighbours unchanged).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: C disc-target
+templates: {final: final_prompt_disc}
+target_text:
+  disc: {template: node_discriminative, budget: 40}

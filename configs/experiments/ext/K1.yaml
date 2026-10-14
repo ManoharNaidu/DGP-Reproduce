@@ -1,0 +1,5 @@
+# K sweep: K=1 (3 metapaths, 1 diffusion step).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: K=1
+dgp: {K: 1}

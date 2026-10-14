@@ -1,0 +1,8 @@
+# Arm E1: baseline prompt, plus FLAG-style residual auxiliary loss (KL-to-uniform + orthogonality).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: E1 resid-aux
+target_text:
+  residual: {template: node_residual, budget: 40}
+training:
+  residual_aux: {enabled: true, alpha: 0.1, beta: 0.1}

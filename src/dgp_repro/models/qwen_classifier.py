@@ -95,6 +95,17 @@ class QwenFraudClassifier:
         out = self.model(**enc, logits_to_keep=1)
         return out.logits[:, -1, :]
 
+    def last_token_logits_hidden(self, prompts: list[str]):
+        """(logits, final-layer hidden state) at the answer position; used only by the residual aux loss."""
+        rendered = [render_chat_prompt(self.tokenizer, p) for p in prompts]
+        enc = self.tokenizer(rendered, return_tensors="pt", padding=True, add_special_tokens=False)
+        max_len = self.cfg.get("max_seq_len")
+        if max_len and enc["input_ids"].shape[1] > max_len:
+            raise ValueError(f"prompt of {enc['input_ids'].shape[1]} tokens exceeds max_seq_len={max_len}")
+        enc = enc.to(self.device)
+        out = self.model(**enc, logits_to_keep=1, output_hidden_states=True)
+        return out.logits[:, -1, :], out.hidden_states[-1][:, -1, :]
+
     def trainable_parameters(self):
         return [p for p in self.model.parameters() if p.requires_grad]
 

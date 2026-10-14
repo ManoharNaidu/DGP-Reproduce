@@ -53,7 +53,10 @@ class TextStore:
             with open(self.path, encoding="utf-8") as f:
                 for line in f:
                     if line.strip():
-                        row = json.loads(line)
+                        try:
+                            row = json.loads(line)
+                        except json.JSONDecodeError:
+                            continue  # a concurrent writer's half-written last line; the key is simply regenerated
                         self.data[row["key"]] = row["text"]
                         self.extra[row["key"]] = {k: v for k, v in row.items() if k not in ("key", "text")}
 

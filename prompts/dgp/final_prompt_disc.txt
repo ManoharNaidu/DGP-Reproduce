@@ -1,0 +1,5 @@
+Target: {target_text}
+Key signals: {target_disc}
+Metapaths:
+{metapath_blocks}
+Question: {question}

@@ -1,0 +1,4 @@
+Below is a customer review. Reviews are later classified as either helpful or unhelpful to other shoppers.
+Write one single line of at most {budget} tokens containing only generic or background information about this review (for example the kind of product or the general setting) that is NOT indicative of whether it is helpful or unhelpful. Do not mention quality, usefulness, tone or detail level.
+
+{text}

@@ -1,0 +1,5 @@
+# Arm B: neighbour node-level text = discriminative lines (per node, Qwen3-8B) instead of task-agnostic summaries.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: B disc-neighbors
+templates: {node: node_discriminative}

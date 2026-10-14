@@ -64,7 +64,8 @@ def build_prompts(cfg: dict, device: str = "cpu", log=print, until: str = "promp
             "numeric_summary": True, **cfg.get("components", {})}
     uses_neighbors = comp["text_summary"] or comp["numeric_summary"]
     # Build each model only if the requested stage uses it: stopping after MDK must never load Qwen3-8B.
-    needs_summarizer = until != "mdk" and comp["text_summary"] and (comp["node_summary"] or comp["path_summary"])
+    needs_summarizer = until != "mdk" and ((comp["text_summary"] and (comp["node_summary"] or comp["path_summary"]))
+                                           or bool(cfg.get("target_text")))
     needs_embedder = uses_neighbors and comp["mdk"] and cfg.get("mdk", {}).get("features") != "raw"
     summarizer = make_summarizer(cfg["summarizer"], device) if needs_summarizer else None
     embedder = make_embedder(cfg["embedder"], device) if needs_embedder else None
@@ -117,8 +118,14 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
     text = {name: [prompts[int(v)] for v in ids[name]] for name in ids}
     labels = {name: graph.labels[ids[name]].astype(int) for name in ids}
 
+    aux_prompts = None
+    if cfg["training"].get("residual_aux", {}).get("enabled"):
+        template = (REPO_ROOT / "prompts" / "dgp" / "residual_only_prompt.txt").read_text(encoding="utf-8")
+        question = cfg["dataset"].get("task", {}).get("question", "Is this fraud?")
+        aux_prompts = [template.replace("{target_residual}", " ".join(prompt_set.extras[int(v)]["target_residual"].split()))
+                       .replace("{question}", question) for v in ids["train"]]
     result = train(model, text["train"], labels["train"], text["val"], labels["val"], label_tokens,
-                   cfg["training"], seed, log_path=run_dir / "training_log.jsonl")
+                   cfg["training"], seed, log_path=run_dir / "training_log.jsonl", aux_prompts=aux_prompts)
     batch = cfg["training"].get("eval_batch_size", 8)
     probs = {name: predict(model, text[name], label_tokens, batch) for name in ("val", "test")}
     metrics = {"seed": seed, "best_epoch": result.best_epoch,

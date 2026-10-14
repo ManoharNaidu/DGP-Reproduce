@@ -24,7 +24,8 @@ import numpy as np
 import torch
 
 from dgp_repro.metrics import compute_metrics
-from dgp_repro.models.readout import first_token_loss, fraud_probability
+from dgp_repro.models.readout import (first_token_loss, fraud_probability, orthogonality_loss,
+                                      residual_uniform_loss)
 
 
 @dataclass
@@ -68,7 +69,10 @@ def evaluation_loss(model, prompts: list[str], labels: np.ndarray, label_tokens,
 
 
 def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts: list[str], val_labels: np.ndarray,
-          label_tokens, cfg: dict, seed: int, log_path: str | Path | None = None) -> TrainResult:
+          label_tokens, cfg: dict, seed: int, log_path: str | Path | None = None,
+          aux_prompts: list[str] | None = None) -> TrainResult:
+    """aux_prompts (optional, aligned with train_prompts): residual-only prompts for the FLAG-style auxiliary loss
+    L = CE + alpha*KL(uniform || p_residual) + beta*cos^2(h_main, h_residual). Validation loss stays pure CE."""
     rng = np.random.default_rng(seed)
     optimizer = torch.optim.AdamW(model.trainable_parameters(), lr=cfg["learning_rate"],
                                   weight_decay=cfg.get("weight_decay", 0.0))
@@ -91,9 +95,17 @@ def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts
         running, steps = 0.0, 0
         for step, start in enumerate(range(0, len(order), batch_size), 1):
             idx = order[start:start + batch_size]
-            logits = model.last_token_logits([train_prompts[i] for i in idx])
+            if aux_prompts is None:
+                logits = model.last_token_logits([train_prompts[i] for i in idx])
+            else:
+                logits, h_main = model.last_token_logits_hidden([train_prompts[i] for i in idx])
             labels = torch.as_tensor(train_labels[idx], device=logits.device)
             loss = first_token_loss(logits, labels, label_tokens.yes_id, label_tokens.no_id)
+            if aux_prompts is not None:
+                r_logits, h_res = model.last_token_logits_hidden([aux_prompts[i] for i in idx])
+                aux_cfg = cfg.get("residual_aux", {})
+                loss = (loss + aux_cfg.get("alpha", 0.1) * residual_uniform_loss(r_logits, label_tokens.yes_id, label_tokens.no_id)
+                        + aux_cfg.get("beta", 0.1) * orthogonality_loss(h_main, h_res))
             (loss / accumulation).backward()
             running += float(loss.detach())
             steps += 1

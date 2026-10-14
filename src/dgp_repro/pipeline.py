@@ -33,6 +33,7 @@ from dgp_repro.data import HeteroGraph, Split
 from dgp_repro.embeddings import build_mdk_features
 from dgp_repro.mdk import enumerate_metapaths, metapath_name, trim_metapath
 from dgp_repro.prompts import MetapathBlock, build_prompt
+from dgp_repro.prompts.builder import load_final_template
 from dgp_repro.summarization import load_template, metapath_summaries, node_summaries, prompt_version, template_names
 from dgp_repro.summarization.numeric import numeric_summary
 from dgp_repro.summarization.pipeline import join_neighbor_texts
@@ -49,6 +50,12 @@ class PromptSet:
     token_rows: list[dict]
     trim_stats: list[dict]
     metadata: dict = field(default_factory=dict)
+    extras: dict = field(default_factory=dict)      # node -> {"target_disc": ..., "target_residual": ...}
+
+
+def target_text_specs(cfg: dict) -> dict:
+    """Optional LLM-generated target text (extension; empty for the baseline): kind -> {template, budget}."""
+    return {k: v for k, v in (cfg.get("target_text") or {}).items() if v}
 
 
 def _components(cfg: dict) -> dict:
@@ -169,6 +176,7 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
     # ---- 2. node-level summaries s_u (Eq. 5) --------------------------------------------------
     node_template_name, meta_template_name = template_names(task_aware.get("enabled", False),
                                                             task_aware.get("apply_to_metapath", False))
+    node_template_name = (cfg.get("templates") or {}).get("node", node_template_name)   # extension override
     per_node_text: dict[int, str] = {}
     if comp["text_summary"]:
         used = sorted({int(u) for t in trims.values() for nbrs in t["neighbors"].values() for u in nbrs})
@@ -201,12 +209,26 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
             path_text = {(v, name): PATH_SUMM_OFF_SEPARATOR.join(per_node_text[u] for u in nbrs)
                          for v, name, nbrs in requests if nbrs}
 
+    # ---- 3b. optional generated target text (discriminative / residual), cached per template and budget
+    target_extra: dict[str, dict[int, str]] = {}
+    for kind, spec in target_text_specs(cfg).items():
+        store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
+                      "template": spec["template"], "B_node": spec["budget"], "role": "target"}
+        store = TextStore(ArtifactCache("node_summaries", store_meta, cache_root).path("summaries.jsonl"))
+        tl = [int(t) for t in targets]
+        log(f"target {kind}: {len(tl)} targets, {sum(str(u) in store for u in tl)} cached")
+        target_extra[kind] = node_summaries(graph.texts, tl, summarizer, load_template(spec["template"]),
+                                            spec["budget"], store)
+
     # ---- 4. prompts (Eq. 11-12) and token accounting -------------------------------------------
     question = cfg["dataset"].get("task", {}).get("question", "Is this fraud?")
     precision = dgp.get("numeric_precision", 2)
     split_of = {int(v): s for s, ids in (("train", split.train), ("val", split.val), ("test", split.test)) for v in ids}
     prompts: dict[int, str] = {}
     rows: list[dict] = []
+    extras_out: dict[int, dict] = {}
+    final_name = (cfg.get("templates") or {}).get("final")
+    final_template = load_final_template(final_name) if final_name else None
     for v in targets.tolist():
         target_text, truncated = truncate_target(graph.texts[v]) if truncate_target else (graph.texts[v], False)
         blocks, node_sum_tokens, trimmed_raw, n_full, n_trim, raw_neighbor = [], 0, 0, 0, 0, 0
@@ -222,7 +244,11 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
                 name=name, num_neighbors=len(nbrs),
                 text=path_text.get((v, name)) if comp["text_summary"] else None,
                 numeric=numeric_summary(graph.numeric, nbrs) if comp["numeric_summary"] else None))
-        prompt = build_prompt(target_text, blocks, graph.numeric_names, question, precision=precision)
+        extras = {f"target_{k}": t[v] for k, t in target_extra.items()}
+        if extras:
+            extras_out[v] = extras
+        prompt = build_prompt(target_text, blocks, graph.numeric_names, question, template=final_template,
+                              precision=precision, extras=extras)
         prompts[v] = prompt
         rows.append({
             "node": v, "split": split_of[v], "raw_target_tokens": int(token_counts[v]),
@@ -238,4 +264,4 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
                 "prompt_version": prompt_version(), "token_counter": token_counter_name,
                 "summarizer": summarizer.name if summarizer else None,
                 "embedder": embedder.name if embedder is not None else None}
-    return PromptSet(prompts=prompts, token_rows=rows, trim_stats=trim_stats, metadata=metadata)
+    return PromptSet(prompts=prompts, token_rows=rows, trim_stats=trim_stats, metadata=metadata, extras=extras_out)

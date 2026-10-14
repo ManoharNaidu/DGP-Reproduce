@@ -1,0 +1,5 @@
+Target: {target_text}
+Background: {target_residual}
+Metapaths:
+{metapath_blocks}
+Question: {question}

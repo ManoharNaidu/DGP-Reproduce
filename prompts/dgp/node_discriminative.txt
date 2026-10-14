@@ -1,0 +1,4 @@
+Below is a customer review. Reviews are later classified as either helpful or unhelpful to other shoppers.
+Write one single line of at most {budget} tokens that captures the characteristics of this review that help distinguish helpful from unhelpful reviews (for example specificity, informativeness, tone, relevance, rating-text consistency). Describe the review only; do not state or predict its class.
+
+{text}

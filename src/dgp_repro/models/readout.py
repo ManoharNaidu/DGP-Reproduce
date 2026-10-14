@@ -38,3 +38,16 @@ def gather_last_logits(logits: torch.Tensor, attention_mask: torch.Tensor) -> to
     positions = torch.arange(attention_mask.shape[1], device=attention_mask.device)
     last = (attention_mask * positions).argmax(dim=1)
     return logits[torch.arange(logits.shape[0], device=logits.device), last]
+
+
+def residual_uniform_loss(last_logits: torch.Tensor, yes_id: int, no_id: int) -> torch.Tensor:
+    """FLAG L_Res analogue: KL(uniform || softmax over the Yes/No logits). Residual text should carry no class signal."""
+    pair = torch.stack([last_logits[:, yes_id], last_logits[:, no_id]], dim=-1).float()
+    uniform = torch.full_like(pair, 0.5)
+    return F.kl_div(F.log_softmax(pair, dim=-1), uniform, reduction="batchmean")
+
+
+def orthogonality_loss(h_main: torch.Tensor, h_resid: torch.Tensor) -> torch.Tensor:
+    """FLAG L_Orthog analogue on the final hidden state: squared cosine (scale-free, unlike the raw squared dot)."""
+    a, b = F.normalize(h_main.float(), dim=-1), F.normalize(h_resid.float(), dim=-1)
+    return ((a * b).sum(-1) ** 2).mean()

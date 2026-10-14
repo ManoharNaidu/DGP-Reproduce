@@ -31,8 +31,8 @@ class MetapathBlock:
     numeric: np.ndarray | None = None  # a_P(v)
 
 
-def load_final_template() -> str:
-    return (PROMPT_DIR / "final_prompt.txt").read_text(encoding="utf-8")
+def load_final_template(name: str = "final_prompt") -> str:
+    return (PROMPT_DIR / f"{name}.txt").read_text(encoding="utf-8")
 
 
 def format_numeric(values: np.ndarray, names: list[str], precision: int = 2) -> str:
@@ -54,12 +54,19 @@ def format_block(block: MetapathBlock, numeric_names: list[str], precision: int 
     return f"- {block.name}: " + " ".join(parts)
 
 
+def _one_line(text: str) -> str:
+    return " ".join(str(text).split())
+
+
 def build_prompt(target_text: str, blocks: list[MetapathBlock], numeric_names: list[str], question: str,
-                 template: str | None = None, precision: int = 2) -> str:
+                 template: str | None = None, precision: int = 2, extras: dict | None = None) -> str:
     template = template or load_final_template()
     lines = [line for line in (format_block(b, numeric_names, precision) for b in blocks) if line is not None]
     if lines:
         body = template.replace("{metapath_blocks}", "\n".join(lines))
     else:
         body = template.replace(METAPATH_SECTION, "")  # target-only prompt (the "LLM" baseline)
-    return body.replace("{target_text}", target_text.strip()).replace("{question}", question)
+    body = body.replace("{target_text}", target_text.strip()).replace("{question}", question)
+    for key, value in (extras or {}).items():       # {target_disc}, {target_residual}: generated target text
+        body = body.replace("{" + key + "}", _one_line(value))
+    return body

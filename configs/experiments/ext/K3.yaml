@@ -1,0 +1,6 @@
+# K sweep: K=3 (39 metapaths, 3 diffusion steps). Prompts are much longer, so max_seq_len is raised (recorded deviation).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: K=3
+dgp: {K: 3}
+classifier: {max_seq_len: 8192}

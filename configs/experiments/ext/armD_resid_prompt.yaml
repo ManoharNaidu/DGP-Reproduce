@@ -1,0 +1,7 @@
+# Arm D (negative control): residual (non-causal) text of the target placed in the prompt.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: D resid-in-prompt
+templates: {final: final_prompt_resid}
+target_text:
+  residual: {template: node_residual, budget: 40}

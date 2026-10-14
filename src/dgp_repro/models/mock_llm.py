@@ -52,6 +52,10 @@ class MockLLM(nn.Module):
     def last_token_logits(self, prompts: list[str]) -> torch.Tensor:
         return self.head(self._featurize(prompts))
 
+    def last_token_logits_hidden(self, prompts: list[str]):
+        x = self._featurize(prompts)
+        return self.head(x), x
+
     def trainable_parameters(self):
         return [p for p in self.parameters() if p.requires_grad]
 

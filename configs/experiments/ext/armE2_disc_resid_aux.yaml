@@ -1,0 +1,10 @@
+# Arm E2: arm C prompt (target discriminative line) plus residual auxiliary loss = closest analogue of FLAG's training.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: E2 disc-target+resid-aux
+templates: {final: final_prompt_disc}
+target_text:
+  disc: {template: node_discriminative, budget: 40}
+  residual: {template: node_residual, budget: 40}
+training:
+  residual_aux: {enabled: true, alpha: 0.1, beta: 0.1}

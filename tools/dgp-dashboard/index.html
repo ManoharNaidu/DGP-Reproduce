@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DGP progress</title><link rel="stylesheet" href="/palette.css">
+<style>
+/* Same layout language as the FLAG dashboard (v4). Base tokens come from palette.json via /palette.css; the rest is derived. */
+:root{
+  --run:var(--accent); --done:var(--ok); --fail:var(--bad); --warning:var(--warn);
+  --track:color-mix(in srgb,var(--muted) 24%,transparent);
+  --card:color-mix(in srgb,var(--fg) 3%,var(--bg));
+  --wash-run:color-mix(in srgb,var(--run) 9%,var(--bg));
+  --wash-warn:color-mix(in srgb,var(--warning) 12%,var(--bg));
+  --heat-low:color-mix(in srgb,var(--fail) 22%,var(--bg));
+  --heat-mid:color-mix(in srgb,var(--warning) 22%,var(--bg));
+  --heat-high:color-mix(in srgb,var(--done) 22%,var(--bg));
+}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+.num{font-variant-numeric:tabular-nums}.muted{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--run);outline-offset:2px}
+header{position:sticky;top:0;z-index:3;background:color-mix(in srgb,var(--st,var(--muted)) 9%,var(--bg));border-bottom:1px solid var(--line)}
+.hrow{max-width:1720px;margin:0 auto;padding:10px 20px 8px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px}
+h1{font-size:17px;margin:0 6px 0 0}.pill{font-weight:600;color:var(--st,var(--muted))}.hbig{font-weight:600}
+.crit{color:var(--muted)}.crit b{color:var(--fg);font-weight:600}
+.overall{height:5px;background:var(--track)}.overall>i{display:block;height:100%;background:var(--st-bar,var(--run))}
+main{max-width:1720px;margin:0 auto;padding:6px 20px 32px}
+h2{font-size:12.5px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;margin:22px 0 8px}
+h2 .muted{font-weight:400;letter-spacing:0;text-transform:none}
+.banner{margin:12px 0 0;padding:6px 10px;border-radius:6px;background:color-mix(in srgb,var(--fail) 12%,var(--bg));color:var(--fail)}
+.banner[hidden]{display:none}
+.bar{height:6px;background:var(--track);border-radius:3px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--c,var(--run));border-radius:3px}
+.c-run{--c:var(--run)}.c-done{--c:var(--done)}.c-fail{--c:var(--fail)}.c-warn{--c:var(--warning)}.c-idle{--c:var(--muted)}
+.t-run{color:var(--run)}.t-done{color:var(--done)}.t-fail{color:var(--fail)}.t-warn{color:var(--warning)}
+.badge{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:10px;border:1px solid currentColor;white-space:nowrap;line-height:1.5}
+.b-run{color:var(--run);background:var(--wash-run)}.b-done{color:var(--done)}.b-wait{color:var(--muted)}
+.b-nt{color:var(--muted);border-style:dashed}.b-warn{color:var(--warning);background:var(--wash-warn)}
+.b-fail{color:var(--fail)}.b-crit{color:var(--fg);border-color:var(--run);margin-left:8px}
+.b-limit{color:var(--fg);border-color:var(--run);background:var(--wash-run)}
+.b-partial{color:var(--muted);border-style:dashed;margin-left:6px}
+/* pipeline */
+.pipe{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+@media(min-width:1200px){.pipe{grid-template-columns:repeat(5,minmax(0,1fr));gap:26px}}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.card.limiting{border-color:var(--run);box-shadow:0 0 0 1px var(--run) inset}
+.card .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
+.card h3{font-size:13px;margin:0;font-weight:650}.card h3 .step{color:var(--muted);font-weight:500;margin-right:4px}
+.card .badges{display:flex;gap:4px;flex-wrap:wrap}
+.lane{display:grid;grid-template-columns:7.4em 1fr auto;gap:2px 8px;align-items:center;font-size:13px}
+.lane .ln{color:var(--muted)}.lane .bar{height:5px}
+.card .note{font-size:12px;color:var(--muted);margin-top:auto}
+.card::after{content:"↓";position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);color:var(--muted);font-size:14px;line-height:1}
+.card:last-child::after{content:none}
+@media(min-width:1200px){.card::after{content:"→";left:auto;right:-21px;bottom:auto;top:50%;transform:translateY(-50%)}}
+.exp{display:grid;grid-template-columns:minmax(12em,24em) 1fr auto;gap:2px 14px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.exp .bar{grid-column:1/-1}.exp .en{font-weight:600}.exp .en .muted{display:block;font-weight:400;font-size:12.5px}
+@media(max-width:560px){.exp{grid-template-columns:1fr auto}.exp .mid{display:none}}
+/* chips */
+.filters{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:0 0 8px}
+.fgroup{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.fgroup>span{font-size:12px;color:var(--muted);margin-right:2px}
+.chip{font:inherit;font-size:12.5px;min-height:26px;padding:2px 10px;border-radius:13px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--wash-run);border-color:var(--run)}.chip.reset{border-style:dashed;color:var(--muted)}
+/* tables */
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+th:last-child,td:last-child{padding-right:0}
+thead th{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.r{text-align:right}
+th button.sort{font:inherit;color:inherit;background:none;border:0;padding:2px 0;cursor:pointer;min-height:24px}
+th button.sort::after{content:" ↕";opacity:.45}
+th[aria-sort="ascending"] button.sort::after{content:" ↑";opacity:1}
+th[aria-sort="descending"] button.sort::after{content:" ↓";opacity:1}
+tr.grp th{padding:10px 0 4px;font-weight:600}
+tr.grp button{font:inherit;font-weight:600;color:var(--fg);background:none;border:0;padding:2px 0;cursor:pointer;display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;min-height:26px}
+tr.grp button .muted{font-weight:400}
+tr.grp button::before{content:"▾";color:var(--muted);width:1em}tr.grp button[aria-expanded="false"]::before{content:"▸"}
+.empty{padding:10px 0}
+.strip{display:grid;grid-template-columns:minmax(0,1fr);gap:10px 28px;margin:0 0 12px}
+@media(min-width:1200px){.strip{grid-template-columns:minmax(260px,1fr) minmax(0,2.4fr)}}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.kpi .k{font-size:12px;color:var(--muted)}.kpi .v{font-size:19px;font-weight:650}.kpi .wlt{font-size:12.5px}
+.cmp td,.cmp th{white-space:nowrap}.cmp td.m{text-align:right}.cmp td.d{text-align:right;font-weight:650}
+.cmp tr.ref td,.cmp tr.ref th{color:var(--muted)}
+.cmp tbody th{font-weight:600}
+.cmp .sub{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.d-win{color:var(--done)}.d-loss{color:var(--fail)}.d-tie{color:var(--muted);font-weight:500}
+.cmpwrap{overflow-x:auto;min-width:0}
+.breakdown td,.breakdown th{font-size:13px;padding:3px 10px 3px 0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:8px 0 0;font-size:12px;color:var(--muted)}
+.legend .sw::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px;background:var(--sw)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:0 32px}
+@media(min-width:1200px){.cols{grid-template-columns:minmax(380px,5fr) minmax(0,8fr)}}
+details.dd>summary{cursor:pointer;min-height:24px;list-style-position:inside;margin:22px 0 8px}
+details.dd>summary h2{display:inline;margin:0}
+.grow{display:grid;grid-template-columns:4.2em 1fr;gap:3px 12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.grow .name{grid-row:span 3;font-weight:600;align-self:center}
+.metric{display:grid;grid-template-columns:3.6em 1fr 6.5em;gap:8px;align-items:center}
+.metric .lbl{color:var(--muted);font-size:12px}.metric .val{text-align:right}
+.grow .sub{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
+.spark{width:120px;height:20px;vertical-align:middle}.spark polyline{fill:none;stroke:var(--run);stroke-width:1.5}
+.jobs{padding:8px 0;color:var(--muted)}
+td.prog{width:150px}
+tr.critical td{background:var(--wash-run)}
+td.eta{white-space:nowrap}td.eta em{color:var(--muted)}
+.oneline{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:22px 0 0}.oneline h2{margin:0}
+ul.fails{margin:6px 0 0;padding-left:1.2em;color:var(--fail)}
+.heat{table-layout:fixed}
+.heat td{text-align:center;font-weight:600;border:2px solid var(--bg);border-radius:4px}
+.heat th[scope="row"]{white-space:nowrap;font-weight:500}
+.heat thead th{text-align:center;white-space:normal}.heat thead th:first-child{width:18em;text-align:left}
+.h-low{background:var(--heat-low)}.h-mid{background:var(--heat-mid)}.h-high{background:var(--heat-high)}
+@media(max-width:560px){
+  main{padding:6px 12px 28px}.hrow{padding:10px 12px 8px}.hide-sm{display:none}
+  th,td{padding-right:6px}td.eta{white-space:normal}td.prog{width:54px}
+  .heat td,.heat th{font-size:12px;padding-right:4px}.heat thead th:first-child{width:8em}
+  .metric{grid-template-columns:3.2em 1fr 5.6em}.kpis{grid-template-columns:1fr}.spark{width:80px}
+}
+@media(prefers-reduced-motion:no-preference){.bar>i,.overall>i{transition:width .4s ease}}
+</style></head><body>
+<header id="hdr">
+  <div class="hrow">
+    <h1>DGP progress</h1><span id="pill" class="pill">○ loading</span>
+    <span id="overall" class="num hbig"></span><span id="pct" class="num hbig"></span>
+    <span id="eta" class="num"></span><span id="crit" class="crit"></span><span id="upd" class="muted num"></span>
+  </div>
+  <div class="overall" role="progressbar" aria-label="Overall jobs" id="obar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="obar-i" style="width:0"></i></div>
+</header>
+<main>
+  <div id="banner" class="banner" role="alert" hidden></div><p id="live" class="sr" aria-live="polite"></p>
+
+  <section aria-labelledby="h-exp"><h2 id="h-exp">Experiments</h2><div id="experiments"><p class="muted">Loading…</p></div></section>
+
+  <section aria-labelledby="h-pipe"><h2 id="h-pipe">Pipeline <span class="muted">(AmazonVideo, Qwen3-8B + LoRA)</span></h2>
+    <ol id="pipeline" class="pipe"><li class="card"><span class="muted">Loading…</span></li></ol></section>
+
+  <section aria-labelledby="h-res"><h2 id="h-res">Results: arms vs baseline <span id="res-n" class="muted"></span></h2>
+    <div id="strip" class="strip"></div>
+    <div class="cmpwrap"><table class="cmp">
+      <thead>
+        <tr><th colspan="3"></th><th colspan="2" scope="colgroup" style="text-align:center">Macro-F1 (mean ± std, %)</th><th colspan="2" scope="colgroup" style="text-align:center">AUROC (mean ± std, %)</th><th colspan="2" scope="colgroup" style="text-align:center">AUPRC (mean ± std, %)</th></tr>
+        <tr><th scope="col">Arm</th><th scope="col" class="r">Seeds</th><th scope="col" class="r">min/seed</th>
+          <th scope="col" class="r">value</th><th scope="col" class="r">Δ</th><th scope="col" class="r">value</th><th scope="col" class="r">Δ</th><th scope="col" class="r">value</th><th scope="col" class="r">Δ</th></tr>
+      </thead>
+      <tbody id="cmp"><tr><td colspan="9" class="muted">Loading…</td></tr></tbody>
+    </table></div>
+    <div class="legend" aria-label="Legend">
+      <span>Δ = arm − baseline A, paired by seed</span>
+      <span class="sw" style="--sw:var(--done)">better</span><span class="sw" style="--sw:var(--fail)">worse</span>
+      <span class="sw" style="--sw:var(--muted)">|Δ| below the larger std (may be noise)</span>
+    </div>
+  </section>
+
+  <div class="cols">
+    <div>
+      <details class="dd" open><summary><h2 id="h-gpu">GPUs</h2></summary><div id="gpus"><p class="muted">Loading…</p></div></details>
+      <section aria-labelledby="h-fail" id="fail-sec"></section>
+    </div>
+    <details class="dd" open><summary><h2 id="h-open">Unfinished jobs <span id="open-n" class="muted"></span></h2></summary>
+      <div id="filters" class="filters" aria-label="Filters"></div>
+      <table id="open-table">
+        <thead><tr>
+          <th scope="col" data-key="name"><button class="sort" type="button">Job</button></th>
+          <th scope="col" data-key="group" class="hide-sm"><button class="sort" type="button">Kind</button></th>
+          <th scope="col" data-key="now"><button class="sort" type="button">Now</button></th>
+          <th scope="col" data-key="el" class="r"><button class="sort" type="button">Elapsed</button></th>
+        </tr></thead>
+        <tbody id="open"><tr><td colspan="4" class="muted">Loading…</td></tr></tbody>
+      </table>
+    </details>
+  </div>
+
+  <details class="dd" open><summary><h2 id="h-nb">Neighbours by K <span class="muted">(LLM-free analysis)</span></h2></summary><div id="nb"></div></details>
+  <details class="dd" open><summary><h2 id="h-cov">Generation coverage per cache</h2></summary>
+    <table class="heat"><thead><tr><th scope="col">Cache</th><th scope="col">Lines</th><th scope="col">Coverage</th></tr></thead><tbody id="cov"></tbody></table>
+    <div class="legend" aria-label="Legend"><span class="sw" style="--sw:var(--heat-low)">below 25%</span><span class="sw" style="--sw:var(--heat-mid)">25–75%</span><span class="sw" style="--sw:var(--heat-high)">above 75%</span></div>
+  </details>
+</main>
+<script>
+// All rendering goes through el()/svg(): text is set with textContent, never parsed as HTML.
+const $=id=>document.getElementById(id);
+function el(tag,props,...kids){const n=document.createElement(tag);
+  for(const [k,v] of Object.entries(props||{})){if(v==null||v===false)continue;
+    if(k==='class')n.className=v;else if(k==='width')n.style.width=v;else if(k.startsWith('on'))n.addEventListener(k.slice(2),v);else n.setAttribute(k,v===true?'':v);}
+  for(const k of kids.flat())if(k!=null&&k!==false)n.append(k instanceof Node?k:String(k));return n;}
+function svg(tag,attrs,...kids){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const [k,v] of Object.entries(attrs||{}))n.setAttribute(k,v);kids.forEach(k=>n.append(k));return n;}
+const pct=(a,b)=>b?Math.round(100*a/b):0;
+const fmt=s=>{if(s==null)return '—';if(s<60)return '<1m';const m=Math.round(s/60);if(m<60)return `${m}m`;return `${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`;};
+const bar=(p,cls='c-run')=>el('div',{class:'bar '+cls,role:'presentation'},el('i',{width:Math.max(0,Math.min(100,p))+'%'}));
+const sign=x=>{const r=Math.abs(x).toFixed(2);return (r==='0.00'?'±':x>0?'+':'−')+r;};
+const ms=(m,s)=>m==null?'—':`${m.toFixed(2)} ± ${s==null?'—':s.toFixed(2)}`;
+const STATE={running:['● running','run'],done:['✓ done','done'],failing:['✕ failures','fail'],idle:['○ idle','']};
+const METRICS=[['f1','f1_sd'],['auroc','auroc_sd'],['auprc','auprc_sd']];
+const UI=(()=>{let s={};try{s=JSON.parse(localStorage.getItem('dgpdash-ui-v1')||'{}')}catch(e){}
+  return Object.assign({f:{kind:[],now:[]},sort:{key:'now',dir:'ascending'},collapsed:[],open:[]},s);})();
+const saveUI=()=>{try{localStorage.setItem('dgpdash-ui-v1',JSON.stringify(UI))}catch(e){}};
+let lastState=null,lastData=0,DATA=null;
+const nowOf=j=>j.state==='running'?'Running':j.state==='failed'?'Failed':'Queued';
+const elapsedS=j=>j.state==='running'&&j.started?(Date.now()-new Date(j.started+'Z').getTime())/1000:null;
+
+function overall(d){const J=d.jobs,c=k=>J.filter(j=>j.state===k).length;
+  return {done:c('done'),total:J.length,running:c('running'),failed:c('failed'),
+    state:c('failed')?'failing':c('done')===J.length&&J.length?'done':c('running')?'running':'idle'};}
+
+function renderHeader(d){const o=overall(d),[label,role]=STATE[o.state];
+  $('hdr').style.setProperty('--st',role?`var(--${role})`:'var(--muted)');
+  $('hdr').style.setProperty('--st-bar',o.state==='done'?'var(--done)':o.state==='failing'?'var(--fail)':'var(--run)');
+  $('pill').textContent=label;const p=pct(o.done,o.total);
+  $('overall').textContent=`${o.done} / ${o.total} jobs`;$('pct').textContent=`${p}%`;$('obar-i').style.width=p+'%';$('obar').setAttribute('aria-valuenow',p);
+  const e=d.eta||{};$('eta').textContent=o.state==='done'?'':`est. ${fmt(e.eta_s)} left${e.partial?'+':''}`;
+  $('eta').title=e.partial?'No training job has finished yet, so the estimate uses a default duration':'Remaining work spread over 4 slots (2 per GPU)';
+  $('crit').replaceChildren(e.critical?el('span',{},'critical: ',el('b',{},e.critical)):'');
+  if(o.state!==lastState){if(lastState!==null)$('live').textContent=`Status changed to ${o.state}`;lastState=o.state;}}
+
+function renderExperiments(d){
+  $('experiments').replaceChildren(...d.blocks.map(b=>{const done=b.done>=b.total,run=b.running>0,fail=b.failed>0;
+    const st=fail?['✕ failed','t-fail']:done?['✓ done','t-done']:run?['● running','t-run']:['○ waiting','muted'];
+    return el('div',{class:'exp'},el('span',{class:'en'},b.name,el('span',{class:'muted'},b.note)),
+      el('span',{class:'mid muted'},`${b.running} running`),
+      el('span',{class:'num'},el('span',{class:st[1]},st[0]),` · ${b.done} / ${b.total} jobs`),
+      bar(pct(b.done,b.total),fail?'c-fail':done?'c-done':run?'c-run':'c-idle'));}));}
+
+// ---------- pipeline ----------
+const SB={done:['done','b-done'],running:['running','b-run'],waiting:['waiting','b-wait'],nt:['not started','b-nt']};
+const sbadge=s=>el('span',{class:'badge '+SB[s][1]},SB[s][0]);
+function lane(name,text,p,status,tip){return el('div',{class:'lane'},el('span',{class:'ln',title:tip||null},name),
+  bar(p,status==='done'?'c-done':status==='running'?'c-run':'c-idle'),el('span',{class:'num '+(status==='done'?'t-done':'')},text));}
+const st=(n,t,r)=>n>=t&&t?'done':r?'running':'waiting';
+function renderPipeline(d){
+  const J=d.jobs,by=p=>J.filter(j=>j.name.startsWith(p)),cnt=js=>({n:js.filter(j=>j.state==='done').length,t:js.length,r:js.some(j=>j.state==='running')});
+  const S={};
+  // 1 MDK trimming
+  const mdkOk=d.mdk_k3>=39;S[1]=mdkOk?'done':'running';
+  // 2 LLM text
+  const gens=J.filter(j=>j.group==='gen'),g=cnt(gens);S[2]=st(g.n,g.t,g.r);
+  // 3 training
+  const tr=J.filter(j=>j.group==='train'),t=cnt(tr);S[3]=st(t.n,t.t,t.r);
+  // 4 results (arms with 5 seeds)
+  const arms=d.results.filter(r=>!r.exp.startsWith('dgp_amazonvideo')&&r.exp!=='parity_dgp'),full=arms.filter(r=>r.n>=5).length;
+  S[4]=full===arms.length?'done':arms.some(r=>r.n>0)?'running':'waiting';
+  // 5 analysis
+  const N=d.neighbours;S[5]=N?'done':d.analysis_running?'running':'waiting';
+  const limiting=[1,2,3,4,5].find(i=>S[i]!=='done'),cards=[];
+  const card=(i,title,body,note)=>{const lim=i===limiting;
+    return el('li',{class:'card'+(lim?' limiting':''),'aria-label':`Stage ${i}: ${title}`+(lim?' (limiting)':'')},
+      el('div',{class:'top'},el('h3',{},el('span',{class:'step'},`${i}`),title),el('span',{class:'badges'},sbadge(S[i]),lim?el('span',{class:'badge b-limit'},'limiting'):null)),
+      body,el('div',{class:'note'},note));};
+  cards.push(card(1,'MDK trimming',['K=1','K=2','K=3'].map((k,i)=>{const done=i<2||mdkOk;
+      return lane(k,i===2?`${Math.min(d.mdk_k3,39)}/39 metapaths${done?' ✓':''}`:`${[3,12][i]}/${[3,12][i]} metapaths ✓`,i===2?pct(d.mdk_k3,39):100,done?'done':'running');}),
+    mdkOk?'Neighbour sets built for K=1,2,3':'K=3 trimming in progress (CPU)'));
+  cards.push(card(2,'LLM text',gens.map(j=>{const c=cnt([j]);return lane(j.name.replace('gen_',''),j.state==='running'?'running':j.state==='done'?'✓':'waiting',
+      j.state==='done'?100:0,j.state==='done'?'done':j.state==='running'?'running':'waiting');}),
+    'Qwen3-8B node, metapath and target text'));
+  cards.push(card(3,'LoRA training',[lane('jobs',`${t.n}/${t.t}`,pct(t.n,t.t),S[3]==='done'?'done':'running'),
+      ...['armC','armD','armE1','armE2','K1','armB','armBC','K3'].map(a=>{const c=cnt(by(`train_${a}_`));return lane(a,`${c.n}/${c.t}`,pct(c.n,c.t),c.n>=c.t?'done':c.r?'running':'waiting');})],
+    '5 seeds per arm, 4 slots across 2 GPUs'));
+  cards.push(card(4,'Results',[lane('arms 5/5',`${full}/${arms.length}`,pct(full,arms.length),S[4]==='done'?'done':'running'),
+      el('div',{class:'note'},'Arms with all five seeds finished')],S[4]==='done'?'All arms complete':'Blocked on: Stage 3'));
+  cards.push(card(5,'Neighbour analysis',[lane('K=1,2,3',N?'done':d.analysis_running?'running':'waiting',N?100:0,S[5])],
+    N?'analysis/out/neighbor_analysis.json written':'LLM-free; runs on CPU'));
+  $('pipeline').replaceChildren(...cards);}
+
+// ---------- results ----------
+function paired(arm,base,key,sd){ // paired by seed when seeds overlap, else difference of means
+  const bs=Object.fromEntries(base.runs.map(r=>[r.seed,r[key]])),d=arm.runs.filter(r=>r.seed in bs).map(r=>r[key]-bs[r.seed]);
+  if(!d.length)return null;const m=d.reduce((a,b)=>a+b,0)/d.length,noise=Math.max(arm[sd]||0,base[sd]||0);
+  return {d:m,n:d.length,cls:Math.abs(m)<noise?'tie':m>0?'win':'loss'};}
+const dSpan=v=>v==null?el('span',{class:'muted'},'—'):el('span',{class:sign(v)[0]==='+'?'d-win':sign(v)[0]==='−'?'d-loss':'d-tie'},sign(v));
+function renderResults(d){
+  const base=d.results.find(r=>r.exp.startsWith('dgp_amazonvideo'));
+  const rows=d.results.filter(r=>r!==base),got=rows.filter(r=>r.n>0);
+  const full=r=>r.n>=(r.exp==='parity_dgp'?1:5);
+  const cr=rows.filter(r=>r.exp!=='parity_dgp');
+  $('res-n').textContent=`(${cr.filter(full).length} of ${cr.length} arms complete)`;
+  // strip: best arm by AUROC delta among complete arms + noise reminder
+  const done=cr.filter(full).map(r=>({r,v:paired(r,base,'auroc','auroc_sd')})).filter(x=>x.v).sort((a,b)=>b.v.d-a.v.d);
+  const kpi=(k,body,sub)=>el('div',{class:'kpi'},el('div',{class:'k'},k),el('div',{class:'v num'},body),el('div',{class:'wlt num'},sub));
+  const w=done.filter(x=>x.v.cls==='win').length,l=done.filter(x=>x.v.cls==='loss').length,t=done.length-w-l;
+  $('strip').replaceChildren(
+    el('div',{},el('div',{class:'kpis'},
+      kpi('Best Δ AUROC',done.length?el('span',{},dSpan(done[0].v.d),' ',el('span',{class:'muted',style:'font-size:13px;font-weight:500'},done[0].r.label)):'—',done.length?'complete arms only':'no arm has 5 seeds yet'),
+      kpi('Complete arms vs A',`${done.length}/${cr.length}`,[el('span',{class:w?'d-win':'d-tie'},`${w} W`),' · ',el('span',{class:l?'d-loss':'d-tie'},`${l} L`),' · ',el('span',{class:'d-tie'},`${t} T`)])),
+      el('p',{class:'muted',style:'margin:6px 0 0;font-size:12px'},`Baseline A has ${base.n} seeds (std ≈ ${base.auroc_sd.toFixed(2)} AUROC). W/L/T = better / worse / within noise; partial arms are shown but not counted.`)),
+    el('div',{class:'cmpwrap'},el('table',{class:'breakdown'},el('thead',{},el('tr',{},el('th',{scope:'col'},'Question'),el('th',{scope:'col'},'Arms'),el('th',{scope:'col'},'Reading'))),
+      el('tbody',{},[
+        ['Does target discriminative text help?','C vs A','Prompt only; labels never reach the generator'],
+        ['Does neighbour discriminative text help?','B, B+C vs A, C','Replaces the task-agnostic summaries'],
+        ['Does residual text help as input?','D vs A','Negative control: it carries what the task ignores'],
+        ['Does a residual auxiliary loss help?','E1, E2 vs A, C','FLAG-style: uniform-KL + orthogonality, training only'],
+        ['What does K change?','K=1, K=3 vs K=2','Metapath length and diffusion steps move together']
+      ].map(([q,a,r])=>el('tr',{},el('th',{scope:'row'},q),el('td',{},a),el('td',{class:'muted'},r)))))));
+  const out=[],mk=(r,isBase)=>{
+    const cells=METRICS.flatMap(([k,sd])=>{
+      if(!r.n)return [el('td',{class:'m muted',colspan:isBase?1:2},'—')];
+      const v=isBase?null:paired(r,base,k,sd);
+      return [el('td',{class:'m num'},ms(r[k],r[sd])),isBase?el('td',{class:'d muted'},'ref'):el('td',{class:'d num '+(v&&full(r)?'d-'+v.cls:'d-tie'),title:v?(full(r)?(v.cls==='tie'?'|Δ| below the larger std: may be noise':v.cls==='win'?'better than A':'worse than A'):'partial: not counted'):null},v?sign(v.d):'—')];});
+    return el('tr',{class:isBase?'ref':null,title:r.desc},
+      el('th',{scope:'row'},r.label,el('span',{class:'sub'},r.desc)),
+      el('td',{class:'r num'},`${r.n}/${isBase?r.n:r.exp==='parity_dgp'?1:5}`,r.n&&!isBase&&!full(r)?el('span',{class:'badge b-partial'},'partial'):null),
+      el('td',{class:'r num muted'},r.n?`${r.minutes}`:'—'),...cells);};
+  out.push(mk(base,true));
+  rows.forEach(r=>out.push(mk(r,false)));
+  $('cmp').replaceChildren(...out);
+}
+
+// ---------- GPUs ----------
+function spark(vals){const v=vals.filter(x=>x!=null);if(v.length<2)return el('span',{class:'muted'},'history: collecting…');
+  const w=120,h=20,pts=v.map((x,i)=>`${(i*(w/(v.length-1))).toFixed(1)},${(h-1-(x/100)*(h-2)).toFixed(1)}`).join(' ');
+  return svg('svg',{class:'spark',viewBox:`0 0 ${w} ${h}`,role:'img','aria-label':`utilisation, last ${v.length} samples`},svg('polyline',{points:pts}));}
+function renderGpus(d){const hist=d.gpu_history||[],J=d.jobs;
+  $('gpus').replaceChildren(...(d.gpus.length?d.gpus.map(g=>{const busy=g.util>5,mem=100*g.used/g.total,jobs=J.filter(j=>j.state==='running'&&j.gpu===g.index).map(j=>j.name.replace('train_','').replace('gen_','gen '));
+    return el('div',{class:'grow'},el('span',{class:'name num'},`GPU ${g.index}`),
+      el('div',{class:'metric'},el('span',{class:'lbl'},'util'),bar(g.util,busy?'c-run':'c-idle'),el('span',{class:'val num'},`${busy?'':'idle · '}${g.util}%`)),
+      el('div',{class:'metric'},el('span',{class:'lbl'},'memory'),bar(mem,mem>95?'c-warn':'c-run'),el('span',{class:'val num'},`${Math.round(g.used/1024)} / ${Math.round(g.total/1024)} GB`)),
+      el('div',{class:'sub num'},spark(hist.map(h=>h.util[g.index]??h.util[String(g.index)])),`${g.temp} °C · ${g.power} W`,jobs.length?` · ${jobs.join(', ')}`:''));}):[el('p',{class:'muted'},'nvidia-smi unavailable')]),
+    el('div',{class:'jobs'},`Jobs: ${J.filter(j=>j.state==='running'&&j.group==='train').length} training · ${J.filter(j=>j.state==='running'&&j.group==='gen').length} generation`));}
+
+// ---------- unfinished jobs ----------
+function chip(cat,value,label){const on=UI.f[cat].includes(value);
+  return el('button',{type:'button',class:'chip','aria-pressed':String(on),onclick:()=>{UI.f[cat]=on?UI.f[cat].filter(v=>v!==value):[...UI.f[cat],value];saveUI();renderTable(DATA);}},label);}
+const SORT={name:j=>j.name,group:j=>j.group,now:j=>nowOf(j),el:j=>elapsedS(j)??-1};
+function armOf(n){return n.startsWith('gen_')?'Generation':n.replace(/^train_/,'').replace(/_s\d$/,'');}
+function renderTable(d){
+  const all=d.jobs.filter(j=>j.state!=='done'),f=UI.f;
+  const has=(fn,v)=>all.some(j=>fn(j)===v);
+  const active=Object.values(f).some(a=>a.length);
+  $('filters').replaceChildren(...[
+    el('div',{class:'fgroup',role:'group','aria-label':'Kind'},el('span',{},'Kind'),['gen','train'].filter(k=>has(j=>j.group,k)).map(k=>chip('kind',k,k==='gen'?'Generation':'Training'))),
+    el('div',{class:'fgroup',role:'group','aria-label':'State'},el('span',{},'Now'),['Running','Queued','Failed'].filter(k=>has(nowOf,k)).map(k=>chip('now',k,k))),
+    active?el('button',{type:'button',class:'chip reset',onclick:()=>{UI.f={kind:[],now:[]};saveUI();renderTable(DATA);}},'Reset filters'):null].filter(Boolean));
+  const cells=all.filter(j=>(!f.kind.length||f.kind.includes(j.group))&&(!f.now.length||f.now.includes(nowOf(j))));
+  $('open-n').textContent=all.length?`(${cells.length===all.length?all.length:cells.length+' of '+all.length})`:'';
+  document.querySelectorAll('#open-table thead th').forEach(th=>th.setAttribute('aria-sort',th.dataset.key===UI.sort.key?UI.sort.dir:'none'));
+  const key=SORT[UI.sort.key]||SORT.now,dir=UI.sort.dir==='ascending'?1:-1,cmp=(a,b)=>{const x=key(a),y=key(b);return (x<y?-1:x>y?1:0)*dir;};
+  const tb=$('open');
+  if(!all.length){tb.replaceChildren(el('tr',{},el('td',{colspan:4,class:'empty t-done'},'✓ Every job is done')));return;}
+  if(!cells.length){tb.replaceChildren(el('tr',{},el('td',{colspan:4,class:'empty muted'},'No jobs match the filters.')));return;}
+  const byA={};cells.forEach(j=>(byA[armOf(j.name)]=byA[armOf(j.name)]||[]).push(j));
+  const rank=l=>Math.min(...l.map(j=>j.state==='running'?0:j.state==='failed'?-1:1)),order=Object.keys(byA).sort((a,b)=>rank(byA[a])-rank(byA[b]));
+  const rows=[];
+  for(const a of order){const list=byA[a].sort(cmp),active=list.some(j=>j.state!=='waiting'),open=UI.collapsed.includes(a)?false:(active||UI.open.includes(a));
+    rows.push(el('tr',{class:'grp'},el('th',{colspan:4,scope:'rowgroup'},el('button',{type:'button','aria-expanded':String(open),
+      onclick:()=>{if(open){UI.open=UI.open.filter(x=>x!==a);UI.collapsed=[...new Set([...UI.collapsed,a])];}else{UI.collapsed=UI.collapsed.filter(x=>x!==a);UI.open=[...new Set([...UI.open,a])];}saveUI();renderTable(DATA);}},
+      a,el('span',{class:'muted num'},`${list.length} ${list.length===1?'job':'jobs'}${list.some(j=>j.state==='running')?` · ${list.filter(j=>j.state==='running').length} running`:' · all queued'}`)))));
+    if(!open)continue;
+    for(const j of list){const e=elapsedS(j);
+      rows.push(el('tr',{},el('td',{},j.name),el('td',{class:'hide-sm muted'},j.group==='gen'?'generation':'training'),
+        el('td',{},j.state==='running'?el('span',{class:'badge b-run'},`GPU ${j.gpu}`):j.state==='failed'?el('span',{class:'badge b-fail'},'Failed'):el('span',{class:'badge b-wait'},'Queued')),
+        el('td',{class:'eta r num'},e!=null?fmt(e):'—')));}}
+  tb.replaceChildren(...rows);}
+document.querySelectorAll('#open-table thead th').forEach(th=>th.querySelector('button').addEventListener('click',()=>{
+  const k=th.dataset.key;UI.sort=UI.sort.key===k?{key:k,dir:UI.sort.dir==='ascending'?'descending':'ascending'}:{key:k,dir:k==='el'?'descending':'ascending'};
+  saveUI();if(DATA)renderTable(DATA);}));
+
+// ---------- neighbours, failures, coverage ----------
+function renderNeighbours(d){const N=d.neighbours;
+  if(!N){$('nb').replaceChildren(el('p',{class:'muted'},d.analysis_running?'Analysis running: it reads the K=1,2,3 neighbour sets on CPU.':'Analysis not started.'));return;}
+  const R=N.stats.filter(r=>r.metapath==='ALL'),n=x=>x==null?'—':typeof x==='number'?(Number.isInteger(x)?x.toLocaleString():x.toFixed(3)):x;
+  $('nb').replaceChildren(el('div',{class:'cmpwrap'},el('table',{},el('thead',{},el('tr',{},
+    ['K','Metapaths','Kept nbrs','Unique','Dup ratio','Raw tokens','Nbr fraud rate | target fraud','| target benign'].map((h,i)=>el('th',{scope:'col',class:i?'r':null},h)))),
+    el('tbody',{},R.map(r=>el('tr',{},el('th',{scope:'row'},`K=${r.K}`),
+      [r.n_metapaths,r.mean_kept,r.unique_nbrs_mean,r.dup_ratio,Math.round(r.mean_kept_raw_tokens),r.nbr_fraud_rate_if_target_fraud,r.nbr_fraud_rate_if_target_benign].map(x=>el('td',{class:'r num'},n(x)))))))));}
+function renderBottom(d){
+  const f=d.jobs.filter(j=>j.state==='failed').map(j=>`${j.name}${j.gpu!=null?' (GPU '+j.gpu+')':''}`);
+  $('fail-sec').replaceChildren(f.length?el('details',{open:true},el('summary',{},el('h2',{id:'h-fail',style:'display:inline'},'Failures ',el('span',{class:'t-fail'},`(${f.length})`))),
+      el('ul',{class:'fails'},f.map(x=>el('li',{},'✕ '+x))))
+    :el('div',{class:'oneline'},el('h2',{id:'h-fail'},'Failures'),el('span',{class:'t-done'},'✓ None')));
+  $('cov').replaceChildren(...d.stores.map(t=>{const p=t.expected?Math.min(100,Math.round(100*t.lines/t.expected)):null;
+    return el('tr',{},el('th',{scope:'row'},t.label),el('td',{class:'num'},`${t.lines.toLocaleString()}${t.expected?' / '+t.expected.toLocaleString():''}`),
+      p==null?el('td',{class:'muted'},'—'):el('td',{class:'num '+(p<25?'h-low':p<=75?'h-mid':'h-high'),title:`${t.label}: ${p}%`},p+'%'));}));}
+
+function render(d){DATA=d;renderExperiments(d);renderHeader(d);renderPipeline(d);renderResults(d);renderGpus(d);renderTable(d);renderNeighbours(d);renderBottom(d);}
+async function poll(){
+  try{const d=await (await fetch('/api/state',{cache:'no-store'})).json();render(d);lastData=Date.now();$('banner').hidden=true;}
+  catch(e){$('banner').hidden=false;$('banner').textContent="Can't reach the status service. Is server.py running?";}
+  const age=(Date.now()-lastData)/1000;
+  $('upd').textContent=lastData?`updated ${new Date(lastData).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}${age>90?' · stale':''}`:'';}
+poll();setInterval(poll,10000);
+</script></body></html>

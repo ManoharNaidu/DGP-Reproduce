@@ -1,0 +1,7 @@
+# Arm B+C: discriminative text for neighbours and for the target.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: B+C
+templates: {node: node_discriminative, final: final_prompt_disc}
+target_text:
+  disc: {template: node_discriminative, budget: 40}

@@ -1,0 +1,969 @@
+{
+  "stats": [
+    {
+      "K": 1,
+      "metapath": "RUR",
+      "hops": 1,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 1,
+      "metapath": "RPR",
+      "hops": 1,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 1,
+      "metapath": "RSR",
+      "hops": 1,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.91,
+      "mean_kept_raw_tokens": 579.7
+    },
+    {
+      "K": 1,
+      "metapath": "ALL",
+      "hops": "-",
+      "mean_kept": 11.91,
+      "unique_nbrs_mean": 11.78,
+      "dup_ratio": 0.011,
+      "mean_kept_raw_tokens": 1682.1,
+      "n_metapaths": 3,
+      "nbr_fraud_rate_if_target_fraud": 0.2115,
+      "nbr_fraud_rate_if_target_benign": 0.094,
+      "nbr_fraud_gap": 0.1175
+    },
+    {
+      "K": 2,
+      "metapath": "RUR",
+      "hops": 1,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 2,
+      "metapath": "RPR",
+      "hops": 1,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 2,
+      "metapath": "RSR",
+      "hops": 1,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.91,
+      "mean_kept_raw_tokens": 579.7
+    },
+    {
+      "K": 2,
+      "metapath": "RUR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 2,
+      "metapath": "RUR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 677.8,
+      "median_full_nbrs": 509.0,
+      "p95_full_nbrs": 1811.7999999999993,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 646.0
+    },
+    {
+      "K": 2,
+      "metapath": "RUR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 1070.2,
+      "median_full_nbrs": 867.0,
+      "p95_full_nbrs": 2785.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.03,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 634.8
+    },
+    {
+      "K": 2,
+      "metapath": "RPR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 676.2,
+      "median_full_nbrs": 390.0,
+      "p95_full_nbrs": 2287.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 760.2
+    },
+    {
+      "K": 2,
+      "metapath": "RPR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 2,
+      "metapath": "RPR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 6119.2,
+      "median_full_nbrs": 4660.0,
+      "p95_full_nbrs": 17939.699999999983,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 638.9
+    },
+    {
+      "K": 2,
+      "metapath": "RSR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 1061.4,
+      "median_full_nbrs": 986.0,
+      "p95_full_nbrs": 2275.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 717.6
+    },
+    {
+      "K": 2,
+      "metapath": "RSR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 6078.7,
+      "median_full_nbrs": 6234.0,
+      "p95_full_nbrs": 12930.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 638.0
+    },
+    {
+      "K": 2,
+      "metapath": "RSR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 1.74,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.9,
+      "mean_kept_raw_tokens": 576.5
+    },
+    {
+      "K": 2,
+      "metapath": "ALL",
+      "hops": "-",
+      "mean_kept": 47.74,
+      "unique_nbrs_mean": 32.59,
+      "dup_ratio": 0.317,
+      "mean_kept_raw_tokens": 7396.5,
+      "n_metapaths": 12,
+      "nbr_fraud_rate_if_target_fraud": 0.1822,
+      "nbr_fraud_rate_if_target_benign": 0.0852,
+      "nbr_fraud_gap": 0.097
+    },
+    {
+      "K": 3,
+      "metapath": "RUR",
+      "hops": 1,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 3,
+      "metapath": "RPR",
+      "hops": 1,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 3,
+      "metapath": "RSR",
+      "hops": 1,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.91,
+      "mean_kept_raw_tokens": 579.7
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 677.8,
+      "median_full_nbrs": 509.0,
+      "p95_full_nbrs": 1811.7999999999993,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 647.6
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 1070.2,
+      "median_full_nbrs": 867.0,
+      "p95_full_nbrs": 2785.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.03,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 633.9
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 676.2,
+      "median_full_nbrs": 390.0,
+      "p95_full_nbrs": 2287.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 773.8
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 6119.2,
+      "median_full_nbrs": 4660.0,
+      "p95_full_nbrs": 17939.699999999983,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 639.7
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RUR",
+      "hops": 2,
+      "mean_full_nbrs": 1061.4,
+      "median_full_nbrs": 986.0,
+      "p95_full_nbrs": 2275.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 727.3
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RPR",
+      "hops": 2,
+      "mean_full_nbrs": 6078.7,
+      "median_full_nbrs": 6234.0,
+      "p95_full_nbrs": 12930.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 638.6
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RSR",
+      "hops": 2,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 1.74,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.9,
+      "mean_kept_raw_tokens": 576.5
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RUR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 9.7,
+      "median_full_nbrs": 6.0,
+      "p95_full_nbrs": 27.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 501.9
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RUR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 766.9,
+      "median_full_nbrs": 597.0,
+      "p95_full_nbrs": 1943.699999999999,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 646.4
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RUR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 1180.2,
+      "median_full_nbrs": 989.0,
+      "p95_full_nbrs": 2939.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 636.5
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RPR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 4066.3,
+      "median_full_nbrs": 3535.0,
+      "p95_full_nbrs": 9411.099999999997,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 703.0
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RPR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 687.5,
+      "median_full_nbrs": 516.0,
+      "p95_full_nbrs": 1829.8999999999996,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 639.9
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RPR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 20489.7,
+      "median_full_nbrs": 21535.0,
+      "p95_full_nbrs": 30667.699999999997,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 657.4
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RSR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 5741.7,
+      "median_full_nbrs": 5014.0,
+      "p95_full_nbrs": 13180.899999999996,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 691.1
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RSR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 18065.8,
+      "median_full_nbrs": 18620.0,
+      "p95_full_nbrs": 27853.8,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 674.7
+    },
+    {
+      "K": 3,
+      "metapath": "RUR-RSR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 1077.2,
+      "median_full_nbrs": 873.0,
+      "p95_full_nbrs": 2796.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.01,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 643.6
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RUR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 765.3,
+      "median_full_nbrs": 431.0,
+      "p95_full_nbrs": 2599.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 848.3
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RUR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 13144.1,
+      "median_full_nbrs": 12616.0,
+      "p95_full_nbrs": 25879.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 682.4
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RUR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 20233.4,
+      "median_full_nbrs": 20896.0,
+      "p95_full_nbrs": 32993.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 657.7
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RPR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 686.0,
+      "median_full_nbrs": 401.0,
+      "p95_full_nbrs": 2292.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 749.1
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RPR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 89.1,
+      "median_full_nbrs": 41.0,
+      "p95_full_nbrs": 357.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 600.5
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RPR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 6199.5,
+      "median_full_nbrs": 4778.0,
+      "p95_full_nbrs": 18157.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 643.9
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RSR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 18048.4,
+      "median_full_nbrs": 18625.0,
+      "p95_full_nbrs": 33502.999999999985,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 691.1
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RSR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 27956.3,
+      "median_full_nbrs": 30604.0,
+      "p95_full_nbrs": 36023.0,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 683.0
+    },
+    {
+      "K": 3,
+      "metapath": "RPR-RSR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 6145.1,
+      "median_full_nbrs": 4692.0,
+      "p95_full_nbrs": 18005.199999999983,
+      "empty_pct": 0.0,
+      "lt_M_pct": 0.0,
+      "mean_kept": 4.0,
+      "mean_kept_raw_tokens": 641.0
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RUR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 1170.7,
+      "median_full_nbrs": 1093.0,
+      "p95_full_nbrs": 2508.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 783.5
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RUR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 20272.8,
+      "median_full_nbrs": 22822.0,
+      "p95_full_nbrs": 28966.9,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 661.1
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RUR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 24998.3,
+      "median_full_nbrs": 28609.0,
+      "p95_full_nbrs": 32174.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.92,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 655.2
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RPR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 20492.4,
+      "median_full_nbrs": 23720.0,
+      "p95_full_nbrs": 31728.9,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 689.2
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RPR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 6160.6,
+      "median_full_nbrs": 6320.0,
+      "p95_full_nbrs": 13086.9,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 640.5
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RPR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 31133.3,
+      "median_full_nbrs": 34126.0,
+      "p95_full_nbrs": 35210.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 661.4
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RSR-RUR",
+      "hops": 3,
+      "mean_full_nbrs": 1068.4,
+      "median_full_nbrs": 993.0,
+      "p95_full_nbrs": 2279.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 722.7
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RSR-RPR",
+      "hops": 3,
+      "mean_full_nbrs": 6103.7,
+      "median_full_nbrs": 6285.0,
+      "p95_full_nbrs": 12938.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 0.91,
+      "mean_kept": 3.96,
+      "mean_kept_raw_tokens": 644.0
+    },
+    {
+      "K": 3,
+      "metapath": "RSR-RSR-RSR",
+      "hops": 3,
+      "mean_full_nbrs": 168.1,
+      "median_full_nbrs": 149.0,
+      "p95_full_nbrs": 425.0,
+      "empty_pct": 0.91,
+      "lt_M_pct": 3.5,
+      "mean_kept": 3.91,
+      "mean_kept_raw_tokens": 579.7
+    },
+    {
+      "K": 3,
+      "metapath": "ALL",
+      "hops": "-",
+      "mean_kept": 155.36,
+      "unique_nbrs_mean": 51.03,
+      "dup_ratio": 0.672,
+      "mean_kept_raw_tokens": 25450.5,
+      "n_metapaths": 39,
+      "nbr_fraud_rate_if_target_fraud": 0.177,
+      "nbr_fraud_rate_if_target_benign": 0.0819,
+      "nbr_fraud_gap": 0.095
+    }
+  ],
+  "stability": [
+    {
+      "metapath": "RUR",
+      "K_a": 1,
+      "K_b": 2,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RUR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RUR",
+      "K_a": 1,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RPR",
+      "K_a": 1,
+      "K_b": 2,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RPR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RPR",
+      "K_a": 1,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RSR",
+      "K_a": 1,
+      "K_b": 2,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RSR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RSR",
+      "K_a": 1,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RUR-RUR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RUR-RPR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.917
+    },
+    {
+      "metapath": "RUR-RSR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.969
+    },
+    {
+      "metapath": "RPR-RUR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.874
+    },
+    {
+      "metapath": "RPR-RPR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RPR-RSR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.973
+    },
+    {
+      "metapath": "RSR-RUR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.861
+    },
+    {
+      "metapath": "RSR-RPR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 0.896
+    },
+    {
+      "metapath": "RSR-RSR",
+      "K_a": 2,
+      "K_b": 3,
+      "mean_jaccard": 1.0
+    },
+    {
+      "metapath": "RUR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RUR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RPR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.842,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RSR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.912,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RUR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.78,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RPR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RSR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.927,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RUR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.794,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RPR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 0.858,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RSR",
+      "K_a": "diff1",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RUR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RPR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.917,
+      "decoupled": true
+    },
+    {
+      "metapath": "RUR-RSR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.969,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RUR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.874,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RPR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    },
+    {
+      "metapath": "RPR-RSR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.973,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RUR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.861,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RPR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 0.896,
+      "decoupled": true
+    },
+    {
+      "metapath": "RSR-RSR",
+      "K_a": "diff3",
+      "K_b": "diff2",
+      "mean_jaccard": 1.0,
+      "decoupled": true
+    }
+  ]
+}

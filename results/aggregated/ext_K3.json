@@ -1,0 +1,54 @@
+{
+  "experiment": "ext_K3",
+  "dataset": "amazonvideo",
+  "mode": "GPU_REPRODUCTION",
+  "seeds": [
+    4
+  ],
+  "test": {
+    "n_seeds": 1,
+    "macro_f1_mean": 65.3231793467247,
+    "macro_f1_std": 0.0,
+    "auroc_mean": 75.494542022868,
+    "auroc_std": 0.0,
+    "auprc_mean": 33.24418108599202,
+    "auprc_std": 0.0,
+    "macro_f1_at_0.5_mean": 56.68498653706282,
+    "macro_f1_at_0.5_std": 0.0
+  },
+  "val": {
+    "n_seeds": 1,
+    "macro_f1_mean": 68.85248667048228,
+    "macro_f1_std": 0.0,
+    "auroc_mean": 77.63719216598798,
+    "auroc_std": 0.0,
+    "auprc_mean": 37.182581493683976,
+    "auprc_std": 0.0,
+    "macro_f1_at_0.5_mean": 56.622106363039,
+    "macro_f1_at_0.5_std": 0.0
+  },
+  "token_usage": {
+    "mean_raw_target_tokens": 117.01267085702884,
+    "mean_raw_neighbor_tokens": 27788275.22368552,
+    "mean_trimmed_neighbor_raw_tokens": 25450.467025840568,
+    "mean_node_summary_tokens": 4362.038810735309,
+    "mean_metapath_summary_tokens": 1527.0824104559513,
+    "mean_final_prompt_tokens": 2357.636635737803,
+    "mean_num_neighbors_full": 273137.8326848249,
+    "mean_num_neighbors_trimmed": 155.3644617380026,
+    "nodes": 10023,
+    "average_prompt_length": 2357.636635737803,
+    "p95_prompt_length": 3018.8999999999996,
+    "max_prompt_length": 3852.0,
+    "mean_full_neighbor_prompt_tokens": 27788392.23635638,
+    "compression_ratio": 11786.545820984935,
+    "token_reduction": 0.9999151575011722,
+    "targets_truncated": 93,
+    "num_metapaths": 39,
+    "K": 3,
+    "M": 4,
+    "B_node": 10,
+    "B_meta": 10
+  },
+  "config_hash": "b7b7d3035f"
+}

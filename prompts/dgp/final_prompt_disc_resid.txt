@@ -1,0 +1,6 @@
+Target: {target_text}
+Key signals: {target_disc}
+Background: {target_residual}
+Metapaths:
+{metapath_blocks}
+Question: {question}

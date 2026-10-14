@@ -1,0 +1,36 @@
+{
+  "checks": {
+    "single_relation_K1": {
+      "dgp_vs_dense_maxabs": 8.881784197001252e-16,
+      "flag_vs_dense_maxabs": 8.881784197001252e-16,
+      "dgp_vs_flag_maxabs": 4.440892098500626e-16,
+      "distances_equal": true,
+      "top4_sets_equal": true
+    },
+    "single_relation_K2": {
+      "dgp_vs_dense_maxabs": 4.440892098500626e-16,
+      "flag_vs_dense_maxabs": 4.440892098500626e-16,
+      "dgp_vs_flag_maxabs": 2.220446049250313e-16,
+      "distances_equal": true,
+      "top4_sets_equal": true
+    },
+    "single_relation_K3": {
+      "dgp_vs_dense_maxabs": 3.3306690738754696e-16,
+      "flag_vs_dense_maxabs": 3.885780586188048e-16,
+      "dgp_vs_flag_maxabs": 3.3306690738754696e-16,
+      "distances_equal": true,
+      "top4_sets_equal": true
+    },
+    "composite_metapath_K2": {
+      "weighted_vs_dense": 4.440892098500626e-16,
+      "binary_vs_dense": 6.661338147750939e-16,
+      "weighted_vs_binary_maxabs": 0.17529349334648725,
+      "targets_with_gt4_candidates": 38,
+      "top4_set_changed_by_weighting": 9
+    },
+    "operator_paper_eq6_vs_paper_eq6_top4_sets_changed": 0,
+    "operator_mean_k0_vs_paper_eq6_top4_sets_changed": 0,
+    "operator_walk_only_vs_paper_eq6_top4_sets_changed": 13
+  },
+  "single_relation_equivalence_holds": true
+}
