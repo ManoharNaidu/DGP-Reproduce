@@ -1,0 +1,12 @@
+# R2: R1 + FLAG's residual branch. The same LoRA model reads a residual-only prompt (the non-causal line); loss =
+# CE + alpha * KL(uniform || p_residual) + beta * squared cosine(h_main, h_residual), alpha = beta = 0.1 (FLAG defaults).
+# Orthogonality uses the paper's squared form (FLAG's code uses a signed cosine; research/paper_notes.md in FLAG-Reproduce).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: R2 disc-in-prompt + residual aux loss
+templates: {final: dr_final_disc}
+target_text:
+  disc: {template: dr_discriminative, budget: 40, truncate_chars: 1200, fallback_raw: true}
+  residual: {template: dr_residual, budget: 40, truncate_chars: 1200, fallback_raw: true}
+training:
+  residual_aux: {enabled: true, alpha: 0.1, beta: 0.1, template: dr_residual_only}

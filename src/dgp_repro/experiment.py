@@ -120,7 +120,8 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
 
     aux_prompts = None
     if cfg["training"].get("residual_aux", {}).get("enabled"):
-        template = (REPO_ROOT / "prompts" / "dgp" / "residual_only_prompt.txt").read_text(encoding="utf-8")
+        name = cfg["training"]["residual_aux"].get("template", "residual_only_prompt")
+        template = (REPO_ROOT / "prompts" / "dgp" / f"{name}.txt").read_text(encoding="utf-8")
         question = cfg["dataset"].get("task", {}).get("question", "Is this fraud?")
         aux_prompts = [template.replace("{target_residual}", " ".join(prompt_set.extras[int(v)]["target_residual"].split()))
                        .replace("{question}", question) for v in ids["train"]]

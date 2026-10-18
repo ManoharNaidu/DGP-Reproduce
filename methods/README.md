@@ -9,16 +9,16 @@ Detailed per-method records (paper, requirements, entry points, adaptation, devi
 
 | Method | Family | Official repository | Pinned commit | Licence | Provenance | Status |
 |---|---|---|---|---|---|---|
-| **DGP** | Graph-enhanced LLM | `Xtra-Computing/DGP` — **README only, code unreleased** | — | — | PAPER_RECONSTRUCTION (in `src/dgp_repro/`) | REPRODUCED (AmazonVideo, 5 seeds, GPU) |
-| MLP | Graph-agnostic | none exists | — | — | PAPER_RECONSTRUCTION (`src/dgp_repro/baselines/mlp.py`) | IMPLEMENTED |
+| **DGP** | Graph-enhanced LLM | `Xtra-Computing/DGP` — **README only, code unreleased** | — | — | PAPER_RECONSTRUCTION (in `src/dgp_repro/`) | REPRODUCED (AmazonVideo, 5 seeds, GPU: 65.16 / 75.07 / 32.33 vs paper 66.91 / 77.32 / 34.63); extension study complete (README §17) |
+| MLP | Graph-agnostic | none exists | — | — | PAPER_RECONSTRUCTION (`src/dgp_repro/baselines/mlp.py`) | PARTIALLY_REPRODUCED (AmazonVideo, 5 seeds: 59.86 / 68.35 / 25.14 vs paper 61.74 / 70.47 / 26.55) |
 | LLM (Qwen3-8B, target only) | Graph-agnostic | n/a | — | Apache-2.0 (model) | PAPER_RECONSTRUCTION (DGP with neighbours off) | SMOKE_TESTED |
 | GraphSAGE | GNN | [williamleif/GraphSAGE](https://github.com/williamleif/GraphSAGE) | `a0fdef95` | NOASSERTION | BASELINE_ADAPTED | NOT_STARTED |
 | HGT | GNN | [acbull/pyHGT](https://github.com/acbull/pyHGT) | `85eaccd4` | MIT | BASELINE_ADAPTED | NOT_STARTED |
-| ConsisGAD | GNN | [Xtra-Computing/ConsisGAD](https://github.com/Xtra-Computing/ConsisGAD) | `36811c5b` | MIT | BASELINE_ADAPTED | NOT_STARTED |
+| ConsisGAD | GNN | [Xtra-Computing/ConsisGAD](https://github.com/Xtra-Computing/ConsisGAD) | `36811c5b` | MIT | BASELINE_ADAPTED | SMOKE_TESTED — official code runs unmodified on our graph and split; 5-seed run deferred (≈35 CPU-hours) |
 | PMP | GNN | [Xtra-Computing/PMP](https://github.com/Xtra-Computing/PMP) (= `JhuoW/PMP`) | `3f7629f6` | **none** | BASELINE_ADAPTED | NOT_STARTED |
 | GAAP | GNN | [AtwoodDuan/GAAP](https://github.com/AtwoodDuan/GAAP) | `6a7dbb04` | **none** | BASELINE_ADAPTED | NOT_STARTED |
 | TAPE | LLM-enhanced GNN | [XiaoxinHe/TAPE](https://github.com/XiaoxinHe/TAPE) | `d9881f7e` | MIT | BASELINE_ADAPTED | NOT_STARTED |
-| FLAG (KDD'25) | LLM-enhanced GNN | [BUPT-GAMMA/FLAG](https://github.com/BUPT-GAMMA/FLAG) | `cb83944e` | **none** | BASELINE_ADAPTED | NOT_STARTED |
+| FLAG (KDD'25) | LLM-enhanced GNN | [BUPT-GAMMA/FLAG](https://github.com/BUPT-GAMMA/FLAG) | `cb83944e` | **none** | BASELINE_ADAPTED | NOT_STARTED on AmazonVideo-DGP; reproduced separately on its own datasets in `../FLAG-Reproduce` |
 | GraphGPT | Graph-enhanced LLM | [HKUDS/GraphGPT](https://github.com/HKUDS/GraphGPT) | `db25a66f` | Apache-2.0 | BASELINE_ADAPTED | NOT_STARTED |
 | HiGPT | Graph-enhanced LLM | [HKUDS/HiGPT](https://github.com/HKUDS/HiGPT) | `2b0793e7` | Apache-2.0 | BASELINE_ADAPTED | NOT_STARTED |
 | InstructGLM | Graph-enhanced LLM | [agiresearch/InstructGLM](https://github.com/agiresearch/InstructGLM) | `dd2dd5ec` | Apache-2.0 | BASELINE_ADAPTED | NOT_STARTED |

@@ -1,0 +1,37 @@
+{
+  "nodes": 37126,
+  "targets": 10023,
+  "split": {
+    "train": 1299,
+    "val": 1299,
+    "test": 7425
+  },
+  "feature_dim": 769,
+  "cache_dirs": {
+    "1": "67de15edc8654e59",
+    "2": "30447a444d0aa6e2",
+    "3": "1c622db13f26ce5a"
+  },
+  "audit_sample": {
+    "train_val": 400,
+    "test": 200
+  },
+  "per_K": {
+    "1": {
+      "tasks": 3,
+      "audited_pairs": 1800,
+      "mismatches": 0
+    },
+    "2": {
+      "tasks": 12,
+      "audited_pairs": 7200,
+      "mismatches": 0
+    },
+    "3": {
+      "tasks": 39,
+      "audited_pairs": 23400,
+      "mismatches": 0
+    }
+  },
+  "pass": true
+}

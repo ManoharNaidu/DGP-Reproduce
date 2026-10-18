@@ -1,0 +1,89 @@
+{
+  "n_targets": 10023,
+  "n_probe": 2598,
+  "probe_prevalence": 11.78,
+  "texts": {
+    "disc_flag": {
+      "coverage": 10023,
+      "empty": 0,
+      "multi_line": 54,
+      "hit_cap": 3,
+      "tokens_mean": 30.7,
+      "tokens_p95": 41.0,
+      "mentions_class_word": 9258,
+      "jaccard_with_raw": 0.091,
+      "verdict_on_train_val": {
+        "says_unhelpful_given_fraud": 52.0,
+        "says_unhelpful_given_benign": 18.5,
+        "says_helpful_given_fraud": 40.8,
+        "says_helpful_given_benign": 73.5
+      },
+      "jaccard_with_residual": 0.145
+    },
+    "disc_noverdict": {
+      "coverage": 10023,
+      "empty": 0,
+      "multi_line": 10,
+      "hit_cap": 7,
+      "tokens_mean": 26.7,
+      "tokens_p95": 40.0,
+      "mentions_class_word": 26,
+      "jaccard_with_raw": 0.16,
+      "verdict_on_train_val": {
+        "says_unhelpful_given_fraud": 0.0,
+        "says_unhelpful_given_benign": 0.0,
+        "says_helpful_given_fraud": 0.3,
+        "says_helpful_given_benign": 0.2
+      },
+      "jaccard_with_residual": 0.221
+    },
+    "residual": {
+      "coverage": 10023,
+      "empty": 0,
+      "multi_line": 72,
+      "hit_cap": 24,
+      "tokens_mean": 22.6,
+      "tokens_p95": 37.0,
+      "mentions_class_word": 1,
+      "jaccard_with_raw": 0.182
+    }
+  },
+  "probe": {
+    "raw": {
+      "auroc": 63.43,
+      "auroc_std": 1.79,
+      "auprc": 21.85,
+      "auprc_std": 2.96
+    },
+    "disc_flag": {
+      "auroc": 71.62,
+      "auroc_std": 3.99,
+      "auprc": 30.47,
+      "auprc_std": 4.51
+    },
+    "disc_noverdict": {
+      "auroc": 70.54,
+      "auroc_std": 3.35,
+      "auprc": 26.62,
+      "auprc_std": 5.04
+    },
+    "residual": {
+      "auroc": 66.21,
+      "auroc_std": 2.93,
+      "auprc": 24.92,
+      "auprc_std": 4.12
+    },
+    "raw+disc_flag": {
+      "auroc": 72.62,
+      "auroc_std": 2.27,
+      "auprc": 30.31,
+      "auprc_std": 3.93
+    },
+    "raw+disc_noverdict": {
+      "auroc": 68.75,
+      "auroc_std": 1.94,
+      "auprc": 25.91,
+      "auprc_std": 4.42
+    }
+  }
+}

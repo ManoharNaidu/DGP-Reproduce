@@ -1,5 +1,9 @@
 # Hand-off to the 4-GPU instance  (2026-10-12 10:52)
 
+> **Historical (2026-10-15).** The queue resumed on the 4-GPU instance and **all 46 jobs finished** on 2026-10-13
+> (last event 08:20 UTC; see `results/ext/done/` and `results/ext/status.jsonl`). Results and analysis are in
+> `README.md` §17. The lists below describe the state at hand-off time only.
+
 The 2-GPU queue was stopped on request; gen_B (about 52k of 119,829 metapath summaries) and train_armC_s3 were killed mid-run and restart from their caches (gen_B) or epoch 0 (armC_s3). Everything below is on disk
 in this folder; copy it as-is and restart the queue.
 

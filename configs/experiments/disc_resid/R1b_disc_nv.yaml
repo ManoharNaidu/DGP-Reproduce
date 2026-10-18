@@ -1,0 +1,8 @@
+# R1b: as R1 (discriminative line next to the raw text), but generated with the no-verdict prompt
+# prompts/dgp/dr_discriminative_nv.txt (the causal line may not state the class).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: R1b disc-in-prompt (no-verdict prompt)
+templates: {final: dr_final_disc}
+target_text:
+  disc: {template: dr_discriminative_nv, budget: 40, truncate_chars: 1200, fallback_raw: true}

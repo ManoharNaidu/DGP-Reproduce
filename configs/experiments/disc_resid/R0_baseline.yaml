@@ -1,0 +1,4 @@
+# Disc/resid study (2026-10-15), R0: the original DGP configuration, re-run on this machine's stack as the reference.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: R0 baseline

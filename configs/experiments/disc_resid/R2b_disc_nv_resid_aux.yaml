@@ -1,0 +1,11 @@
+# R2b: as R2 (R1b prompt + FLAG residual branch, alpha = beta = 0.1, squared-cosine orthogonality), with the
+# no-verdict discriminative prompt prompts/dgp/dr_discriminative_nv.txt.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+variant: R2b (no-verdict prompt) disc-in-prompt + residual aux loss
+templates: {final: dr_final_disc}
+target_text:
+  disc: {template: dr_discriminative_nv, budget: 40, truncate_chars: 1200, fallback_raw: true}
+  residual: {template: dr_residual, budget: 40, truncate_chars: 1200, fallback_raw: true}
+training:
+  residual_aux: {enabled: true, alpha: 0.1, beta: 0.1, template: dr_residual_only}

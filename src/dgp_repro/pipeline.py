@@ -214,11 +214,19 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
     for kind, spec in target_text_specs(cfg).items():
         store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
                       "template": spec["template"], "B_node": spec["budget"], "role": "target"}
+        cut = spec.get("truncate_chars")      # FLAG feeds the LLM raw_text[:1200]; key omitted when unset
+        if cut:
+            store_meta["truncate_chars"] = cut
+        source = [t[:cut] for t in graph.texts] if cut else graph.texts
         store = TextStore(ArtifactCache("node_summaries", store_meta, cache_root).path("summaries.jsonl"))
         tl = [int(t) for t in targets]
         log(f"target {kind}: {len(tl)} targets, {sum(str(u) in store for u in tl)} cached")
-        target_extra[kind] = node_summaries(graph.texts, tl, summarizer, load_template(spec["template"]),
-                                            spec["budget"], store)
+        generated = node_summaries(source, tl, summarizer, load_template(spec["template"]), spec["budget"], store)
+        if spec.get("fallback_raw"):         # FLAG: a node whose LLM text is unusable keeps its raw text
+            empty = [u for u, s in generated.items() if not s.strip()]
+            generated.update({u: source[u] for u in empty})
+            log(f"target {kind}: {len(empty)} empty outputs replaced by raw text")
+        target_extra[kind] = generated
 
     # ---- 4. prompts (Eq. 11-12) and token accounting -------------------------------------------
     question = cfg["dataset"].get("task", {}).get("question", "Is this fraud?")

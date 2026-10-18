@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disc/Resid Study</title>
+<style>
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e4e3df;
+  --accent: #2f6fdb; --ok: #1f8a4c; --bad: #c0392b; --idle: #e6e5e1; --run: #2f6fdb;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #151514; --panel: #1e1e1c; --ink: #ecebe6; --muted: #9a9993; --line: #33332f;
+    --accent: #6ea0ff; --ok: #4cc283; --bad: #ff6b5b; --idle: #2c2c29; --run: #6ea0ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; z-index: 2; background: var(--panel); border-bottom: 1px solid var(--line); padding: 12px 16px; }
+header h1 { margin: 0; font-size: 17px; font-weight: 650; }
+.sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.overall { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 8px; font-size: 13px; }
+.overall b { font-variant-numeric: tabular-nums; }
+main { max-width: 1120px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+h2 { margin: 0 0 10px; font-size: 14.5px; font-weight: 650; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+h2 small { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.bar { height: 8px; background: var(--idle); border-radius: 4px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); transition: width .4s; }
+.bar.done > i { background: var(--ok); }
+.gen { display: grid; grid-template-columns: minmax(150px, 220px) 1fr auto; gap: 6px 12px; align-items: center; }
+.n { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.grid { display: grid; grid-template-columns: minmax(150px, 230px) repeat(5, minmax(64px, 1fr)); gap: 6px; min-width: 520px; }
+.hd { color: var(--muted); font-size: 12px; text-align: center; align-self: end; }
+.lab { font-size: 13px; }
+.lab small { display: block; color: var(--muted); font-size: 11.5px; }
+.cell { border-radius: 6px; padding: 6px; font-size: 11.5px; text-align: center; background: var(--idle); color: var(--muted); min-height: 42px; display: flex; flex-direction: column; justify-content: center; font-variant-numeric: tabular-nums; }
+.cell.done { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ink); }
+.cell.running { background: color-mix(in srgb, var(--run) 22%, transparent); color: var(--ink); outline: 2px solid var(--run); }
+.cell.failed, .cell.stopped { background: color-mix(in srgb, var(--bad) 20%, transparent); color: var(--ink); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; font-size: 12px; }
+.pos { color: var(--ok); } .neg { color: var(--bad); }
+.scroll { overflow-x: auto; }
+.muted { color: var(--muted); font-size: 12.5px; }
+pre { margin: 8px 0 0; font-size: 11.5px; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow: auto; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; background: var(--idle); }
+.pill.ok { background: color-mix(in srgb, var(--ok) 22%, transparent); }
+.pill.run { background: color-mix(in srgb, var(--run) 22%, transparent); }
+@media (max-width: 640px) { .gen { grid-template-columns: 1fr; } .lab small { display: none; } .grid { grid-template-columns: 100px repeat(5, minmax(60px, 1fr)); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Disc/Resid Study: FLAG's discriminative and residual text in DGP (AmazonVideo)</h1>
+  <div class="sub">Qwen3-8B writes a discriminative and a residual line from each review's raw text; DGP + LoRA is trained with them. Read-only, refreshes every 10 s. <span id="now"></span></div>
+  <div class="overall" id="overall"></div>
+</header>
+<main>
+  <section><h2>1 · Text generation <small id="genstate"></small></h2><div class="gen" id="gen"></div><pre id="genlog"></pre></section>
+  <section><h2>2 · Training queue <small id="qstate"></small></h2><div class="scroll"><div class="grid" id="queue"></div></div><pre id="qlog"></pre></section>
+  <section><h2>3 · Results (test set) <small>Δ paired by seed: arms vs R0; R0 vs the original September run</small></h2><div class="scroll"><table id="res"></table></div>
+    <div class="muted">± is the std across finished seeds (ddof=0). With 5 seeds, differences under ~0.5 point are within seed noise. The full analysis (bootstrap CIs, prediction agreement) goes to results/disc_resid/deviation.md when the queue finishes.</div></section>
+  <section><h2>4 · Generated-text diagnostics <small>train + val labels only; TF-IDF + logistic-regression probe, 5-fold CV</small></h2><div id="diag" class="scroll muted">Runs after generation finishes.</div></section>
+  <section><h2>5 · GPU</h2><div id="gpu" class="muted"></div></section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === "style") e.style.cssText = v; else if (k === "cls") e.className = v; else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat(Infinity)) if (k != null) e.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  return e;
+}
+const put = (id, ...kids) => $(id).replaceChildren(...kids.flat(Infinity));
+const f2 = x => x == null ? "—" : x.toFixed(2);
+const signed = x => x == null ? "—" : el("span", {cls: x > 0 ? "pos" : x < 0 ? "neg" : ""}, (x > 0 ? "+" : "") + x.toFixed(2));
+const dur = s => { if (s == null) return "—"; s = Math.round(s); const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return h ? `${h} h ${m} min` : `${m} min`; };
+const pill = (cls, text) => el("span", {cls: "pill " + cls}, text);
+const ARMS = [["R0", "R0 baseline", "original config, this stack"], ["R1", "R1 disc (FLAG prompt)", "+ discriminative line"],
+  ["R1b", "R1b disc (no-verdict)", "+ disc line, class not stated"], ["R2", "R2 disc + residual loss", "R1 + FLAG residual branch"],
+  ["R2b", "R2b no-verdict + residual", "R1b + FLAG residual branch"]];
+const M = ["macro_f1", "auroc", "auprc"];
+
+function render(s) {
+  $("now").textContent = "· updated " + s.now;
+  const g = s.generation, q = s.queue;
+  const genDone = g.texts.reduce((a, t) => a + Math.min(t.done, t.total), 0), genTot = g.texts.reduce((a, t) => a + t.total, 0);
+  const jd = q.jobs.filter(j => j.state === "done").length;
+  put("overall", el("span", {}, "Generation ", el("b", {}, (100 * genDone / genTot).toFixed(1) + "%")),
+    el("span", {}, "Training ", el("b", {}, `${jd} / ${q.jobs.length}`), " runs"),
+    el("span", {}, "Training ETA ", el("b", {}, dur(q.eta_seconds))));
+
+  put("gen", g.texts.map(t => {
+    const p = Math.min(100, 100 * t.done / t.total);
+    const left = t.rate_per_min && t.done < t.total ? ` · ~${dur((t.total - t.done) / t.rate_per_min * 60)} left` : "";
+    return [el("div", {}, t.label),
+      el("div", {cls: "bar" + (t.done >= t.total ? " done" : "")}, el("i", {style: `width:${p}%`})),
+      el("div", {cls: "n"}, `${t.done.toLocaleString()} / ${t.total.toLocaleString()}` + (t.rate_per_min ? ` · ${Math.round(t.rate_per_min)}/min` : "") + left)];
+  }));
+  put("genstate", g.finished ? pill("ok", "finished") : pill("run", "running"));
+  $("genlog").textContent = g.log.join("\n");
+
+  const cells = [el("div"), [0, 1, 2, 3, 4].map(sd => el("div", {cls: "hd"}, "seed " + sd))];
+  for (const [k, lab, what] of ARMS) {
+    cells.push(el("div", {cls: "lab"}, lab, el("small", {}, what)));
+    for (const sd of [0, 1, 2, 3, 4]) {
+      const j = q.jobs.find(x => x.arm === k && x.seed === sd) || {state: "waiting"};
+      const lines = [j.state];
+      if (j.state === "done") lines.push(dur(j.seconds));
+      if (j.state === "running") {
+        lines.push("epoch " + (j.epochs ?? 0));
+        if (j.last_epoch && j.last_epoch.val_auroc != null) lines.push("val AUROC " + j.last_epoch.val_auroc.toFixed(1));
+      }
+      cells.push(el("div", {cls: "cell " + j.state}, lines.map(x => el("div", {}, x))));
+    }
+  }
+  put("queue", cells);
+  put("qstate", q.finished ? pill("ok", "finished") : q.log.length ? pill("run", "running") : pill("", "not started (waits for generation)"));
+  $("qlog").textContent = q.log.join("\n");
+
+  const r = s.results;
+  const rows = [el("tr", {}, ["arm", "seeds", "Macro-F1", "AUROC", "AUPRC", "Δ F1", "Δ AUROC", "Δ AUPRC", "seeds better (F1 · AUROC · AUPRC)", "vs"].map(h => el("th", {}, h)))];
+  for (const a of r.arms) {
+    const ps = Object.values(a.per_seed), n = ps.length;
+    const mean = k => ps.reduce((x, p) => x + p[k], 0) / n;
+    const sd = k => { const m = mean(k); return Math.sqrt(ps.reduce((x, p) => x + (p[k] - m) ** 2, 0) / n); };
+    const dd = ps.filter(p => p.delta), dm = k => dd.length ? dd.reduce((x, p) => x + p.delta[k], 0) / dd.length : null;
+    rows.push(el("tr", {}, el("td", {}, a.label), el("td", {}, n),
+      M.map(k => el("td", {}, n ? `${f2(mean(k))} ± ${f2(sd(k))}` : "—")),
+      M.map(k => el("td", {}, signed(dm(k)))),
+      el("td", {}, dd.length ? M.map(k => `${dd.filter(p => p.delta[k] > 0).length}/${dd.length}`).join(" · ") : "—"),
+      el("td", {}, a.ref)));
+  }
+  rows.push(el("tr", {}, el("td", {cls: "muted"}, "original Sept. run (5 seeds)"), el("td"), M.map(k => el("td", {cls: "muted"}, f2(r.original_mean[k]))), el("td", {colspan: 5})));
+  rows.push(el("tr", {}, el("td", {cls: "muted"}, "paper"), el("td"), M.map(k => el("td", {cls: "muted"}, f2(r.paper[k]))), el("td", {colspan: 5})));
+  put("res", rows);
+
+  const d = s.diagnostics;
+  if (d) {
+    const t1 = el("table", {}, el("tr", {}, ["text", "coverage", "empty", "multi-line", "hit cap", "tokens mean", "mentions class word", "Jaccard w/ raw"].map(h => el("th", {}, h))),
+      Object.entries(d.texts).map(([k, v]) => el("tr", {}, [k, v.coverage, v.empty, v.multi_line, v.hit_cap, v.tokens_mean, v.mentions_class_word, v.jaccard_with_raw].map(x => el("td", {}, x)))));
+    const t2 = el("table", {style: "margin-top:10px"}, el("tr", {}, ["probe input", "AUROC", "AUPRC"].map(h => el("th", {}, h))),
+      Object.entries(d.probe).map(([k, v]) => el("tr", {}, el("td", {}, k), el("td", {}, `${v.auroc} ± ${v.auroc_std}`), el("td", {}, `${v.auprc} ± ${v.auprc_std}`))));
+    put("diag", t1, t2, el("div", {cls: "muted", style: "margin-top:6px"}, `Probe prevalence ${d.probe_prevalence}% fraud; chance AUROC = 50.`));
+  }
+  put("gpu", s.gpus.length ? s.gpus.map(x => el("div", {}, `${x.name} · ${x.util}% util · ${(+x.mem_used / 1024).toFixed(1)} / ${(+x.mem_total / 1024).toFixed(0)} GB · ${x.temp} °C`)) : ["nvidia-smi unavailable"]);
+}
+// Carry the portal token (from ?token=) to the data request, so it is authorised even when the auth cookie is not sent.
+const TOKEN = new URLSearchParams(location.search).get("token");
+const API = "api/state" + (TOKEN ? "?token=" + encodeURIComponent(TOKEN) : "");
+async function tick() {
+  let r;
+  try { r = await fetch(API, {cache: "no-store", credentials: "same-origin"}); }
+  catch (e) { $("now").textContent = "· cannot reach the server, retrying (" + e.message + ")"; return; }
+  if (!r.ok) {
+    $("now").textContent = r.status === 401
+      ? "· data request not authorised (401): open this page with ?token=<OPEN_BUTTON_TOKEN> in the URL"
+      : "· data request failed: HTTP " + r.status;
+    return;
+  }
+  try { render(await r.json()); }
+  catch (e) { $("now").textContent = "· render error: " + e.message; console.error(e); }
+}
+tick(); setInterval(tick, 10000);
+</script>
+</body>
+</html>

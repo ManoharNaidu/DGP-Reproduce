@@ -1,0 +1,2871 @@
+{
+ "base_fraud_rate": 0.11794968485697355,
+ "n_targets": 10023,
+ "n_probe": 2598,
+ "n_probe_fraud": 306,
+ "verify": {
+  "1": {
+   "tasks": 3,
+   "audited_pairs": 1800,
+   "mismatches": 0
+  },
+  "2": {
+   "tasks": 12,
+   "audited_pairs": 7200,
+   "mismatches": 0
+  },
+  "3": {
+   "tasks": 39,
+   "audited_pairs": 23400,
+   "mismatches": 0
+  }
+ },
+ "per_path": [
+  {
+   "K": 1,
+   "metapath": "RPR",
+   "hops": 1,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940161,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 1,
+   "metapath": "RSR",
+   "hops": 1,
+   "mean_full_nbrs": 168.14047690312282,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.912201935548239,
+   "mean_kept_raw_tokens": 579.6956001197246,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728165459285691,
+   "text_cos_cands": 0.9372565815428726,
+   "raw_dist_kept": 6.31932405234359,
+   "sel_ratio": 0.7301195955169427,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 1,
+   "metapath": "RUR",
+   "hops": 1,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88406664671254,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927026,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  },
+  {
+   "K": 2,
+   "metapath": "RPR",
+   "hops": 1,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940161,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 2,
+   "metapath": "RSR",
+   "hops": 1,
+   "mean_full_nbrs": 168.14047690312282,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.912201935548239,
+   "mean_kept_raw_tokens": 579.6956001197246,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728165459285691,
+   "text_cos_cands": 0.9372565815428726,
+   "raw_dist_kept": 6.31932405234359,
+   "sel_ratio": 0.7310267565404152,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 2,
+   "metapath": "RUR",
+   "hops": 1,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88406664671254,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927023,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  },
+  {
+   "K": 2,
+   "metapath": "RPR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940161,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 2,
+   "metapath": "RPR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 6119.161428713958,
+   "median_full_nbrs": 4660.0,
+   "p95_full_nbrs": 17939.699999999983,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 638.8900528783797,
+   "rating_match_kept": 0.6180035917390003,
+   "rating_match_cands": 0.5056497755980746,
+   "text_cos_kept": 0.9805109811009944,
+   "text_cos_cands": 0.9349570465087891,
+   "raw_dist_kept": 5.403502616858409,
+   "sel_ratio": 0.5836796680051615,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 38.5,
+   "mdk_eq_cos_pct": 16.666666666666664,
+   "jac_mdk_raw": 0.7057936507936508,
+   "jac_mdk_cos": 0.5177301587301588
+  },
+  {
+   "K": 2,
+   "metapath": "RPR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 676.2352589045196,
+   "median_full_nbrs": 390.0,
+   "p95_full_nbrs": 2287.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 760.2479297615484,
+   "rating_match_kept": 0.5395091290032924,
+   "rating_match_cands": 0.3947607385818129,
+   "text_cos_kept": 0.9735958414137583,
+   "text_cos_cands": 0.9391623393694559,
+   "raw_dist_kept": 6.265459933469763,
+   "sel_ratio": 0.6600953341802034,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 7.833333333333334,
+   "mdk_eq_cos_pct": 4.666666666666667,
+   "jac_mdk_raw": 0.39955555555555555,
+   "jac_mdk_cos": 0.3395714285714286
+  },
+  {
+   "K": 2,
+   "metapath": "RSR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 6078.701287039808,
+   "median_full_nbrs": 6234.0,
+   "p95_full_nbrs": 12930.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 638.0304300109748,
+   "rating_match_kept": 0.664745267821184,
+   "rating_match_cands": 0.44400667895230805,
+   "text_cos_kept": 0.9804762063628236,
+   "text_cos_cands": 0.9360502006626931,
+   "raw_dist_kept": 5.39408648921639,
+   "sel_ratio": 0.5804540350037142,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 25.5,
+   "mdk_eq_cos_pct": 9.666666666666666,
+   "jac_mdk_raw": 0.6295079365079365,
+   "jac_mdk_cos": 0.43146031746031743
+  },
+  {
+   "K": 2,
+   "metapath": "RSR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 168.13219594931658,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 1.7360071834780006,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.9039209817419933,
+   "mean_kept_raw_tokens": 576.5472413449068,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728518311829141,
+   "text_cos_cands": 0.9371775652063636,
+   "raw_dist_kept": 6.31619873258953,
+   "sel_ratio": 0.7301195955169427,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 2,
+   "metapath": "RSR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 1061.4366956001197,
+   "median_full_nbrs": 986.0,
+   "p95_full_nbrs": 2275.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 717.6405267883868,
+   "rating_match_kept": 0.7169250906161901,
+   "rating_match_cands": 0.478762077857795,
+   "text_cos_kept": 0.9761993457329546,
+   "text_cos_cands": 0.9385454201898655,
+   "raw_dist_kept": 5.935289756791166,
+   "sel_ratio": 0.6240877006469712,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 10.333333333333334,
+   "mdk_eq_cos_pct": 4.5,
+   "jac_mdk_raw": 0.4336190476190476,
+   "jac_mdk_cos": 0.3277301587301587
+  },
+  {
+   "K": 2,
+   "metapath": "RUR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 677.8205128205128,
+   "median_full_nbrs": 509.0,
+   "p95_full_nbrs": 1811.7999999999993,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 645.9739598922479,
+   "rating_match_kept": 0.5460440985732814,
+   "rating_match_cands": 0.4127902767075367,
+   "text_cos_kept": 0.9762802154961596,
+   "text_cos_cands": 0.9372070869803428,
+   "raw_dist_kept": 5.963507267898632,
+   "sel_ratio": 0.6427630772689708,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 15.833333333333332,
+   "mdk_eq_cos_pct": 7.333333333333333,
+   "jac_mdk_raw": 0.5543650793650793,
+   "jac_mdk_cos": 0.45231746031746034
+  },
+  {
+   "K": 2,
+   "metapath": "RUR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 1070.2342611992417,
+   "median_full_nbrs": 867.0,
+   "p95_full_nbrs": 2785.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.029931158335827598,
+   "mean_kept": 3.9996009178888556,
+   "mean_kept_raw_tokens": 634.7529681732017,
+   "rating_match_kept": 0.6107313909399321,
+   "rating_match_cands": 0.5491843322698701,
+   "text_cos_kept": 0.9780467549107361,
+   "text_cos_cands": 0.9355064362287522,
+   "raw_dist_kept": 5.7493908768858075,
+   "sel_ratio": 0.6199583967602187,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 29.166666666666668,
+   "mdk_eq_cos_pct": 14.499999999999998,
+   "jac_mdk_raw": 0.6459047619047618,
+   "jac_mdk_cos": 0.5285873015873015
+  },
+  {
+   "K": 2,
+   "metapath": "RUR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88416641724035,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927026,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  },
+  {
+   "K": 3,
+   "metapath": "RPR",
+   "hops": 1,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940162,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 3,
+   "metapath": "RSR",
+   "hops": 1,
+   "mean_full_nbrs": 168.14047690312282,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.912201935548239,
+   "mean_kept_raw_tokens": 579.6956001197246,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728165459285691,
+   "text_cos_cands": 0.9372565815428726,
+   "raw_dist_kept": 6.31932405234359,
+   "sel_ratio": 0.7301195955169427,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 3,
+   "metapath": "RUR",
+   "hops": 1,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88416641724035,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927026,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940161,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 6119.161428713958,
+   "median_full_nbrs": 4660.0,
+   "p95_full_nbrs": 17939.699999999983,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 639.7137583557817,
+   "rating_match_kept": 0.6173550833083907,
+   "rating_match_cands": 0.5056497755980746,
+   "text_cos_kept": 0.9804875206952679,
+   "text_cos_cands": 0.9349570465087891,
+   "raw_dist_kept": 5.406868045629016,
+   "sel_ratio": 0.583662367076499,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 36.5,
+   "mdk_eq_cos_pct": 16.0,
+   "jac_mdk_raw": 0.6929206349206348,
+   "jac_mdk_cos": 0.5109682539682538
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 676.2352589045196,
+   "median_full_nbrs": 390.0,
+   "p95_full_nbrs": 2287.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 773.7904818916492,
+   "rating_match_kept": 0.5349695699890252,
+   "rating_match_cands": 0.3947607385818129,
+   "text_cos_kept": 0.973217209817989,
+   "text_cos_cands": 0.9391623393694559,
+   "raw_dist_kept": 6.307945874030077,
+   "sel_ratio": 0.6561427869198984,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 5.5,
+   "mdk_eq_cos_pct": 3.166666666666667,
+   "jac_mdk_raw": 0.36846031746031743,
+   "jac_mdk_cos": 0.31282539682539684
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 6078.701287039808,
+   "median_full_nbrs": 6234.0,
+   "p95_full_nbrs": 12930.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 638.604010775217,
+   "rating_match_kept": 0.6614226741844543,
+   "rating_match_cands": 0.44400667895230805,
+   "text_cos_kept": 0.9803472282968843,
+   "text_cos_cands": 0.9360502006626931,
+   "raw_dist_kept": 5.413083314059866,
+   "sel_ratio": 0.5793374172704653,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 22.5,
+   "mdk_eq_cos_pct": 9.0,
+   "jac_mdk_raw": 0.5977142857142856,
+   "jac_mdk_cos": 0.4162063492063492
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 168.13219594931658,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 1.7360071834780006,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.9039209817419933,
+   "mean_kept_raw_tokens": 576.5472413449068,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728518311829141,
+   "text_cos_cands": 0.9371775652063636,
+   "raw_dist_kept": 6.31619873258953,
+   "sel_ratio": 0.7301195955169427,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 1061.4366956001197,
+   "median_full_nbrs": 986.0,
+   "p95_full_nbrs": 2275.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 727.3224583458046,
+   "rating_match_kept": 0.7216320982682239,
+   "rating_match_cands": 0.478762077857795,
+   "text_cos_kept": 0.9758869749788335,
+   "text_cos_cands": 0.9385454201898655,
+   "raw_dist_kept": 5.97356871009016,
+   "sel_ratio": 0.620185464268178,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 8.666666666666668,
+   "mdk_eq_cos_pct": 4.333333333333334,
+   "jac_mdk_raw": 0.4015873015873016,
+   "jac_mdk_cos": 0.30682539682539683
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RPR",
+   "hops": 2,
+   "mean_full_nbrs": 677.8205128205128,
+   "median_full_nbrs": 509.0,
+   "p95_full_nbrs": 1811.7999999999993,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 647.6205726828294,
+   "rating_match_kept": 0.542402474309089,
+   "rating_match_cands": 0.4127902767075367,
+   "text_cos_kept": 0.9761374274122493,
+   "text_cos_cands": 0.9372070869803428,
+   "raw_dist_kept": 5.983302371825306,
+   "sel_ratio": 0.641592508309792,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 14.000000000000002,
+   "mdk_eq_cos_pct": 7.666666666666666,
+   "jac_mdk_raw": 0.5283333333333333,
+   "jac_mdk_cos": 0.4413015873015873
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RSR",
+   "hops": 2,
+   "mean_full_nbrs": 1070.2342611992417,
+   "median_full_nbrs": 867.0,
+   "p95_full_nbrs": 2785.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.029931158335827598,
+   "mean_kept": 3.9996009178888556,
+   "mean_kept_raw_tokens": 633.8696996907114,
+   "rating_match_kept": 0.6104819397325884,
+   "rating_match_cands": 0.5491843322698701,
+   "text_cos_kept": 0.9780061054930932,
+   "text_cos_cands": 0.9355064362287522,
+   "raw_dist_kept": 5.755107956067833,
+   "sel_ratio": 0.6196120756382705,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 26.833333333333332,
+   "mdk_eq_cos_pct": 14.000000000000002,
+   "jac_mdk_raw": 0.6313015873015873,
+   "jac_mdk_cos": 0.5199365079365079
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RUR",
+   "hops": 2,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88406664671254,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927023,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RPR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 89.06125910406067,
+   "median_full_nbrs": 41.0,
+   "p95_full_nbrs": 357.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 600.5004489673751,
+   "rating_match_kept": 0.5078818716951012,
+   "rating_match_cands": 0.4460164720235207,
+   "text_cos_kept": 0.9677150581178106,
+   "text_cos_cands": 0.9386147397259871,
+   "raw_dist_kept": 6.93289738530849,
+   "sel_ratio": 0.8129539157940161,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 51.66666666666667,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.783063492063492
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RPR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 6199.53267484785,
+   "median_full_nbrs": 4778.0,
+   "p95_full_nbrs": 18157.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 643.8898533373241,
+   "rating_match_kept": 0.6514516611792877,
+   "rating_match_cands": 0.5214161309114801,
+   "text_cos_kept": 0.9806883873149067,
+   "text_cos_cands": 0.9349922387798627,
+   "raw_dist_kept": 5.375864234219284,
+   "sel_ratio": 0.5809474980300079,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 36.333333333333336,
+   "mdk_eq_cos_pct": 16.166666666666664,
+   "jac_mdk_raw": 0.6951746031746031,
+   "jac_mdk_cos": 0.5128730158730158
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RPR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 685.9501147361069,
+   "median_full_nbrs": 401.0,
+   "p95_full_nbrs": 2292.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 749.0558714955603,
+   "rating_match_kept": 0.5570437992616981,
+   "rating_match_cands": 0.3991844494513224,
+   "text_cos_kept": 0.975083267364354,
+   "text_cos_cands": 0.9398967237273852,
+   "raw_dist_kept": 6.0732442314689745,
+   "sel_ratio": 0.6399280125597826,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 5.166666666666667,
+   "mdk_eq_cos_pct": 3.166666666666667,
+   "jac_mdk_raw": 0.3743015873015873,
+   "jac_mdk_cos": 0.32873015873015876
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RSR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 27956.321460640527,
+   "median_full_nbrs": 30604.0,
+   "p95_full_nbrs": 36023.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 682.951910605607,
+   "rating_match_kept": 0.6602065249925172,
+   "rating_match_cands": 0.40122315063762687,
+   "text_cos_kept": 0.983212773009925,
+   "text_cos_cands": 0.9355228929718336,
+   "raw_dist_kept": 4.991448977345815,
+   "sel_ratio": 0.5378943689824031,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 32.5,
+   "mdk_eq_cos_pct": 9.333333333333334,
+   "jac_mdk_raw": 0.6884126984126984,
+   "jac_mdk_cos": 0.4552222222222222
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RSR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 6145.126409258705,
+   "median_full_nbrs": 4692.0,
+   "p95_full_nbrs": 18005.199999999983,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 641.0059862316672,
+   "rating_match_kept": 0.6198244038710965,
+   "rating_match_cands": 0.5051542905561295,
+   "text_cos_kept": 0.9805721874027972,
+   "text_cos_cands": 0.9350076320767403,
+   "raw_dist_kept": 5.393077352610888,
+   "sel_ratio": 0.5837030484900834,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 43.166666666666664,
+   "mdk_eq_cos_pct": 16.0,
+   "jac_mdk_raw": 0.7392539682539682,
+   "jac_mdk_cos": 0.5245873015873015
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RSR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 18048.387907812034,
+   "median_full_nbrs": 18625.0,
+   "p95_full_nbrs": 33502.999999999985,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 691.0970767235359,
+   "rating_match_kept": 0.6541205227975656,
+   "rating_match_cands": 0.399550791652082,
+   "text_cos_kept": 0.9824229141891115,
+   "text_cos_cands": 0.9363446559508641,
+   "raw_dist_kept": 5.104145361470911,
+   "sel_ratio": 0.5491665615276013,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 32.33333333333333,
+   "mdk_eq_cos_pct": 10.833333333333334,
+   "jac_mdk_raw": 0.669063492063492,
+   "jac_mdk_cos": 0.4448730158730158
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RUR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 13144.11313977851,
+   "median_full_nbrs": 12616.0,
+   "p95_full_nbrs": 25879.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 682.4371944527586,
+   "rating_match_kept": 0.6325451461638232,
+   "rating_match_cands": 0.40340907521123853,
+   "text_cos_kept": 0.9820069050709788,
+   "text_cos_cands": 0.9362581739823024,
+   "raw_dist_kept": 5.172051309846292,
+   "sel_ratio": 0.5527854749107032,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 21.666666666666668,
+   "mdk_eq_cos_pct": 9.333333333333334,
+   "jac_mdk_raw": 0.5957936507936508,
+   "jac_mdk_cos": 0.4308571428571429
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RUR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 20233.37393993814,
+   "median_full_nbrs": 20896.0,
+   "p95_full_nbrs": 32993.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 657.6648707971665,
+   "rating_match_kept": 0.6498303901027637,
+   "rating_match_cands": 0.4540571600116076,
+   "text_cos_kept": 0.9828029277557077,
+   "text_cos_cands": 0.9350298130512238,
+   "raw_dist_kept": 5.062123844549992,
+   "sel_ratio": 0.5449912171492601,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 52.166666666666664,
+   "mdk_eq_cos_pct": 15.5,
+   "jac_mdk_raw": 0.7946349206349206,
+   "jac_mdk_cos": 0.5116666666666667
+  },
+  {
+   "K": 3,
+   "metapath": "RPR-RUR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 765.2965180085803,
+   "median_full_nbrs": 431.0,
+   "p95_full_nbrs": 2599.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 848.2790581662177,
+   "rating_match_kept": 0.5304549536067046,
+   "rating_match_cands": 0.39999265867521555,
+   "text_cos_kept": 0.9719344812019682,
+   "text_cos_cands": 0.9391487486163775,
+   "raw_dist_kept": 6.443912240966296,
+   "sel_ratio": 0.6428850499402493,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 2.0,
+   "mdk_eq_cos_pct": 1.5,
+   "jac_mdk_raw": 0.28168253968253965,
+   "jac_mdk_cos": 0.24660317460317457
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RPR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 6160.609498154246,
+   "median_full_nbrs": 6320.0,
+   "p95_full_nbrs": 13086.9,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 640.47949715654,
+   "rating_match_kept": 0.6741592831252518,
+   "rating_match_cands": 0.4533395476498481,
+   "text_cos_kept": 0.980376642048839,
+   "text_cos_cands": 0.9360745788622303,
+   "raw_dist_kept": 5.406609390140834,
+   "sel_ratio": 0.5784581567847408,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 18.666666666666668,
+   "mdk_eq_cos_pct": 6.666666666666667,
+   "jac_mdk_raw": 0.5702539682539681,
+   "jac_mdk_cos": 0.40036507936507937
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RPR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 31133.32086201736,
+   "median_full_nbrs": 34126.0,
+   "p95_full_nbrs": 35210.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 661.3948917489773,
+   "rating_match_kept": 0.6747382198952879,
+   "rating_match_cands": 0.4033744872324168,
+   "text_cos_kept": 0.9833078267674652,
+   "text_cos_cands": 0.9349960746885347,
+   "raw_dist_kept": 4.980997407788763,
+   "sel_ratio": 0.5360711316365887,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 48.333333333333336,
+   "mdk_eq_cos_pct": 13.833333333333334,
+   "jac_mdk_raw": 0.7770158730158729,
+   "jac_mdk_cos": 0.4851269841269842
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RPR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 20492.403072932255,
+   "median_full_nbrs": 23720.0,
+   "p95_full_nbrs": 31728.9,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 689.1549436296518,
+   "rating_match_kept": 0.6751661296818365,
+   "rating_match_cands": 0.399368621048868,
+   "text_cos_kept": 0.9823720586357508,
+   "text_cos_cands": 0.9366523406084846,
+   "raw_dist_kept": 5.117980821981376,
+   "sel_ratio": 0.5448905047081806,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 29.5,
+   "mdk_eq_cos_pct": 8.833333333333334,
+   "jac_mdk_raw": 0.6178730158730158,
+   "jac_mdk_cos": 0.40295238095238095
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RSR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 6103.658784794971,
+   "median_full_nbrs": 6285.0,
+   "p95_full_nbrs": 12938.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 643.9960091788886,
+   "rating_match_kept": 0.663889448248087,
+   "rating_match_cands": 0.44430395150337126,
+   "text_cos_kept": 0.9804519158842412,
+   "text_cos_cands": 0.936068268783954,
+   "raw_dist_kept": 5.398671227668883,
+   "sel_ratio": 0.577960483889793,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 23.166666666666664,
+   "mdk_eq_cos_pct": 8.0,
+   "jac_mdk_raw": 0.6042539682539682,
+   "jac_mdk_cos": 0.4163650793650794
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RSR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 168.14047690312282,
+   "median_full_nbrs": 149.0,
+   "p95_full_nbrs": 425.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 3.501945525291829,
+   "mean_kept": 3.912201935548239,
+   "mean_kept_raw_tokens": 579.6956001197246,
+   "rating_match_kept": 1.0,
+   "rating_match_cands": 1.0,
+   "text_cos_kept": 0.9728165459285691,
+   "text_cos_cands": 0.9372565815428726,
+   "raw_dist_kept": 6.31932405234359,
+   "sel_ratio": 0.7301195955169427,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 54.0,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.7906190476190477
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RSR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 1068.3729422328645,
+   "median_full_nbrs": 993.0,
+   "p95_full_nbrs": 2279.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 722.7389005287838,
+   "rating_match_kept": 0.7245267821184052,
+   "rating_match_cands": 0.4795092995623568,
+   "text_cos_kept": 0.9768740014036936,
+   "text_cos_cands": 0.9389652902338685,
+   "raw_dist_kept": 5.8414892899226585,
+   "sel_ratio": 0.6100545475964332,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 9.833333333333332,
+   "mdk_eq_cos_pct": 4.666666666666667,
+   "jac_mdk_raw": 0.41007936507936504,
+   "jac_mdk_cos": 0.31377777777777777
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RUR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 20272.80854035718,
+   "median_full_nbrs": 22822.0,
+   "p95_full_nbrs": 28966.9,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 661.0744288137284,
+   "rating_match_kept": 0.6747130487313734,
+   "rating_match_cands": 0.40354938917964206,
+   "text_cos_kept": 0.9827176398427747,
+   "text_cos_cands": 0.9358505852082196,
+   "raw_dist_kept": 5.069090443779874,
+   "sel_ratio": 0.5438336725028822,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 37.5,
+   "mdk_eq_cos_pct": 12.333333333333334,
+   "jac_mdk_raw": 0.7040317460317459,
+   "jac_mdk_cos": 0.45992063492063495
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RUR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 24998.29601915594,
+   "median_full_nbrs": 28609.0,
+   "p95_full_nbrs": 32174.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9178888556320464,
+   "mean_kept": 3.9635837573580766,
+   "mean_kept_raw_tokens": 655.1932555123217,
+   "rating_match_kept": 0.7222292143881994,
+   "rating_match_cands": 0.4456251178921978,
+   "text_cos_kept": 0.9829737732684516,
+   "text_cos_cands": 0.9349286783643129,
+   "raw_dist_kept": 5.024515150052527,
+   "sel_ratio": 0.5394537608279679,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 47.333333333333336,
+   "mdk_eq_cos_pct": 14.000000000000002,
+   "jac_mdk_raw": 0.7691428571428571,
+   "jac_mdk_cos": 0.4810952380952381
+  },
+  {
+   "K": 3,
+   "metapath": "RSR-RUR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 1170.6802354584456,
+   "median_full_nbrs": 1093.0,
+   "p95_full_nbrs": 2508.0,
+   "empty_pct": 0.9079118028534372,
+   "lt_M_pct": 0.9079118028534372,
+   "mean_kept": 3.9636835278858626,
+   "mean_kept_raw_tokens": 783.5469420333234,
+   "rating_match_kept": 0.7986055175191301,
+   "rating_match_cands": 0.5241861684963339,
+   "text_cos_kept": 0.9747588186871007,
+   "text_cos_cands": 0.9385003980468302,
+   "raw_dist_kept": 6.09607841591565,
+   "sel_ratio": 0.6078080159419015,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 3.833333333333333,
+   "mdk_eq_cos_pct": 3.0,
+   "jac_mdk_raw": 0.30326984126984124,
+   "jac_mdk_cos": 0.24007936507936506
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RPR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 687.5353686521001,
+   "median_full_nbrs": 516.0,
+   "p95_full_nbrs": 1829.8999999999996,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 639.8928464531577,
+   "rating_match_kept": 0.5597376035119226,
+   "rating_match_cands": 0.41486052837978604,
+   "text_cos_kept": 0.9772153107049305,
+   "text_cos_cands": 0.9376050128539404,
+   "raw_dist_kept": 5.829295658811665,
+   "sel_ratio": 0.6296050985035481,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 18.5,
+   "mdk_eq_cos_pct": 11.5,
+   "jac_mdk_raw": 0.5629365079365078,
+   "jac_mdk_cos": 0.4821746031746032
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RPR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 20489.734410855035,
+   "median_full_nbrs": 21535.0,
+   "p95_full_nbrs": 30667.699999999997,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 657.3604709168911,
+   "rating_match_kept": 0.6490322258804749,
+   "rating_match_cands": 0.4653697044226256,
+   "text_cos_kept": 0.9829468953045116,
+   "text_cos_cands": 0.9349390212694804,
+   "raw_dist_kept": 5.040935958137401,
+   "sel_ratio": 0.5427611246167494,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 49.0,
+   "mdk_eq_cos_pct": 13.833333333333334,
+   "jac_mdk_raw": 0.780126984126984,
+   "jac_mdk_cos": 0.5038730158730158
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RPR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 4066.2815524294124,
+   "median_full_nbrs": 3535.0,
+   "p95_full_nbrs": 9411.099999999997,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 703.0100768233063,
+   "rating_match_kept": 0.6009677741195251,
+   "rating_match_cands": 0.38589044955985957,
+   "text_cos_kept": 0.9796125330317107,
+   "text_cos_cands": 0.9380719341834386,
+   "raw_dist_kept": 5.504476725289839,
+   "sel_ratio": 0.5812181681899156,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 14.166666666666666,
+   "mdk_eq_cos_pct": 5.5,
+   "jac_mdk_raw": 0.48644444444444446,
+   "jac_mdk_cos": 0.35169841269841273
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RSR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 18065.758754863815,
+   "median_full_nbrs": 18620.0,
+   "p95_full_nbrs": 27853.8,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 674.6952010376135,
+   "rating_match_kept": 0.6514267185473411,
+   "rating_match_cands": 0.4139411490735437,
+   "text_cos_kept": 0.9827126433951501,
+   "text_cos_cands": 0.9356762779752413,
+   "raw_dist_kept": 5.068983725038758,
+   "sel_ratio": 0.5458521838203565,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 33.666666666666664,
+   "mdk_eq_cos_pct": 10.0,
+   "jac_mdk_raw": 0.6907936507936507,
+   "jac_mdk_cos": 0.458015873015873
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RSR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 1077.1938541354884,
+   "median_full_nbrs": 873.0,
+   "p95_full_nbrs": 2796.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.009977052778609198,
+   "mean_kept": 3.999800458944428,
+   "mean_kept_raw_tokens": 643.562506235658,
+   "rating_match_kept": 0.6108256423048142,
+   "rating_match_cands": 0.5487635079648006,
+   "text_cos_kept": 0.9786583884959508,
+   "text_cos_cands": 0.9357113833228747,
+   "raw_dist_kept": 5.656770205122688,
+   "sel_ratio": 0.6113526191221282,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 32.666666666666664,
+   "mdk_eq_cos_pct": 16.5,
+   "jac_mdk_raw": 0.6712698412698411,
+   "jac_mdk_cos": 0.541968253968254
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RSR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 5741.674249226779,
+   "median_full_nbrs": 5014.0,
+   "p95_full_nbrs": 13180.899999999996,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 691.0538760850045,
+   "rating_match_kept": 0.6391300009977052,
+   "rating_match_cands": 0.40889801340238385,
+   "text_cos_kept": 0.9808889856051152,
+   "text_cos_cands": 0.9373663563529651,
+   "raw_dist_kept": 5.323166928125669,
+   "sel_ratio": 0.5713241357780824,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 21.166666666666668,
+   "mdk_eq_cos_pct": 9.333333333333334,
+   "jac_mdk_raw": 0.5886349206349206,
+   "jac_mdk_cos": 0.4283650793650794
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RUR-RPR",
+   "hops": 3,
+   "mean_full_nbrs": 766.8817719245735,
+   "median_full_nbrs": 597.0,
+   "p95_full_nbrs": 1943.699999999999,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 646.4264192357577,
+   "rating_match_kept": 0.5565698892547142,
+   "rating_match_cands": 0.4160229415349879,
+   "text_cos_kept": 0.9766842676641626,
+   "text_cos_cands": 0.9373325543602308,
+   "raw_dist_kept": 5.910910611242727,
+   "sel_ratio": 0.6351564216120176,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 15.5,
+   "mdk_eq_cos_pct": 9.833333333333332,
+   "jac_mdk_raw": 0.5446666666666666,
+   "jac_mdk_cos": 0.43234920634920637
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RUR-RSR",
+   "hops": 3,
+   "mean_full_nbrs": 1180.1896637733214,
+   "median_full_nbrs": 989.0,
+   "p95_full_nbrs": 2939.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 636.4918687019855,
+   "rating_match_kept": 0.6911852738700988,
+   "rating_match_cands": 0.5869946004892764,
+   "text_cos_kept": 0.978341931631248,
+   "text_cos_cands": 0.9355715403954188,
+   "raw_dist_kept": 5.690874385735441,
+   "sel_ratio": 0.6137725738789712,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 28.499999999999996,
+   "mdk_eq_cos_pct": 13.5,
+   "jac_mdk_raw": 0.6428095238095237,
+   "jac_mdk_cos": 0.5126190476190476
+  },
+  {
+   "K": 3,
+   "metapath": "RUR-RUR-RUR",
+   "hops": 3,
+   "mean_full_nbrs": 9.714855831587348,
+   "median_full_nbrs": 6.0,
+   "p95_full_nbrs": 27.0,
+   "empty_pct": 0.0,
+   "lt_M_pct": 0.0,
+   "mean_kept": 4.0,
+   "mean_kept_raw_tokens": 501.88406664671254,
+   "rating_match_kept": 0.5241694103561808,
+   "rating_match_cands": 0.502497518767828,
+   "text_cos_kept": 0.9629898943727296,
+   "text_cos_cands": 0.9547088049848874,
+   "raw_dist_kept": 7.36957220904615,
+   "sel_ratio": 1.0591020061927023,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 78.83333333333333,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.9072698412698412
+  }
+ ],
+ "agg_by_K_hop": {
+  "1|1": {
+   "mean_full_nbrs": 88.97219727959028,
+   "median_full_nbrs": 65.33333333333333,
+   "p95_full_nbrs": 269.6666666666667,
+   "empty_pct": 0.3026372676178124,
+   "lt_M_pct": 1.1673151750972763,
+   "mean_kept": 3.97073397851608,
+   "mean_kept_raw_tokens": 560.6933719112708,
+   "rating_match_kept": 0.6773504273504273,
+   "rating_match_cands": 0.6495046635971162,
+   "text_cos_kept": 0.9678404994730364,
+   "text_cos_cands": 0.943526708751249,
+   "raw_dist_kept": 6.873931215566077,
+   "sel_ratio": 0.8673918391678871,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 61.5,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.826984126984127,
+   "n_paths": 3
+  },
+  "2|1": {
+   "mean_full_nbrs": 88.97219727959028,
+   "median_full_nbrs": 65.33333333333333,
+   "p95_full_nbrs": 269.6666666666667,
+   "empty_pct": 0.3026372676178124,
+   "lt_M_pct": 1.1673151750972763,
+   "mean_kept": 3.97073397851608,
+   "mean_kept_raw_tokens": 560.6933719112708,
+   "rating_match_kept": 0.6773504273504273,
+   "rating_match_cands": 0.6495046635971162,
+   "text_cos_kept": 0.9678404994730364,
+   "text_cos_cands": 0.943526708751249,
+   "raw_dist_kept": 6.873931215566077,
+   "sel_ratio": 0.8676942261757112,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 61.5,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.826984126984127,
+   "n_paths": 3
+  },
+  "2|2": {
+   "mean_full_nbrs": 1772.2775283514584,
+   "median_full_nbrs": 1538.0,
+   "p95_full_nbrs": 4537.499999999998,
+   "empty_pct": 0.39464786546498615,
+   "lt_M_pct": 0.5941889210371701,
+   "mean_kept": 3.981209883933619,
+   "mean_kept_raw_tokens": 634.9408582482513,
+   "rating_match_kept": 0.6364455389715736,
+   "rating_match_cands": 0.5259630967509717,
+   "text_cos_kept": 0.9742962365212091,
+   "text_cos_cands": 0.9391032933174596,
+   "raw_dist_kept": 6.1477672520071485,
+   "sel_ratio": 0.7014681921521002,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 47.46296296296296,
+   "mdk_eq_cos_pct": 26.870370370370367,
+   "jac_mdk_raw": 0.7076384479717812,
+   "jac_mdk_cos": 0.5642610229276895,
+   "n_paths": 9
+  },
+  "3|1": {
+   "mean_full_nbrs": 88.97219727959028,
+   "median_full_nbrs": 65.33333333333333,
+   "p95_full_nbrs": 269.6666666666667,
+   "empty_pct": 0.3026372676178124,
+   "lt_M_pct": 1.1673151750972763,
+   "mean_kept": 3.97073397851608,
+   "mean_kept_raw_tokens": 560.6934051681134,
+   "rating_match_kept": 0.6773504273504273,
+   "rating_match_cands": 0.6495046635971162,
+   "text_cos_kept": 0.9678404994730364,
+   "text_cos_cands": 0.943526708751249,
+   "raw_dist_kept": 6.873931215566077,
+   "sel_ratio": 0.8673918391678872,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 100.0,
+   "mdk_eq_cos_pct": 61.5,
+   "jac_mdk_raw": 1.0,
+   "jac_mdk_cos": 0.826984126984127,
+   "n_paths": 3
+  },
+  "3|2": {
+   "mean_full_nbrs": 1772.2775283514584,
+   "median_full_nbrs": 1538.0,
+   "p95_full_nbrs": 4537.499999999998,
+   "empty_pct": 0.39464786546498615,
+   "lt_M_pct": 0.5941889210371701,
+   "mean_kept": 3.981209883933619,
+   "mean_kept_raw_tokens": 637.7614154112208,
+   "rating_match_kept": 0.6355905690936726,
+   "rating_match_cands": 0.5259630967509717,
+   "text_cos_kept": 0.9741821389297525,
+   "text_cos_cands": 0.9391032933174596,
+   "raw_dist_kept": 6.162060510960713,
+   "sel_ratio": 0.7003009041096404,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 46.0,
+   "mdk_eq_cos_pct": 26.51851851851852,
+   "jac_mdk_raw": 0.6911463844797177,
+   "jac_mdk_cos": 0.5543350970017636,
+   "n_paths": 9
+  },
+  "3|3": {
+   "mean_full_nbrs": 9515.571049549,
+   "median_full_nbrs": 9958.74074074074,
+   "p95_full_nbrs": 15547.185185185182,
+   "empty_pct": 0.30263726761781234,
+   "lt_M_pct": 0.3994516316176498,
+   "mean_kept": 3.9859766980389555,
+   "mean_kept_raw_tokens": 667.7234841346384,
+   "rating_match_kept": 0.6501641280081816,
+   "rating_match_cands": 0.46764811760334635,
+   "text_cos_kept": 0.9786347768185167,
+   "text_cos_cands": 0.9372996778118653,
+   "raw_dist_kept": 5.599944723849313,
+   "sel_ratio": 0.61126108698163,
+   "exact_ties_pct": 0.0,
+   "mdk_eq_raw_pct": 35.4320987654321,
+   "mdk_eq_cos_pct": 15.839506172839505,
+   "jac_mdk_raw": 0.6504415049970604,
+   "jac_mdk_cos": 0.4758189300411522,
+   "n_paths": 27
+  }
+ },
+ "union": {
+  "1": {
+   "mean_kept_total": 11.91220193554824,
+   "mean_unique": 11.77920782200938,
+   "dup_ratio": 0.011164528124895323,
+   "unique_by_hop_le": {
+    "1": 11.77920782200938
+   },
+   "raw_tokens_unique": 1623.3551122194515
+  },
+  "2": {
+   "mean_kept_total": 47.74309089095081,
+   "mean_unique": 32.589144966576875,
+   "dup_ratio": 0.3174060506259808,
+   "unique_by_hop_le": {
+    "1": 11.77920782200938,
+    "2": 32.589144966576875
+   },
+   "raw_tokens_unique": 5163.907730673317
+  },
+  "3": {
+   "mean_kept_total": 155.3644617380026,
+   "mean_unique": 51.03192656889155,
+   "dup_ratio": 0.6715341076201277,
+   "unique_by_hop_le": {
+    "1": 11.77920782200938,
+    "2": 32.61418736905118,
+    "3": 51.03192656889155
+   },
+   "raw_tokens_unique": 8978.28927680798
+  },
+  "new_2_vs_1": 20.809937144567495,
+  "new_3_vs_2": 19.07782101167315,
+  "jac_union_1_2": 0.36425383851938553,
+  "jac_union_2_3": 0.6330154224789525,
+  "u1_subset_u2": 1.0,
+  "u2_subset_u3": 0.5315773720442981
+ },
+ "stability": [
+  {
+   "metapath": "RPR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 2,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RPR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RPR",
+   "hops": 1,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RPR-RPR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RPR-RSR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.9727160863347634
+  },
+  {
+   "metapath": "RPR-RUR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.8738187882156753
+  },
+  {
+   "metapath": "RSR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 2,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RSR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RSR",
+   "hops": 1,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RSR-RPR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.8962567048170162
+  },
+  {
+   "metapath": "RSR-RSR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RSR-RUR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.8608913784011059
+  },
+  {
+   "metapath": "RUR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 2,
+   "jaccard": 1.0
+  },
+  {
+   "metapath": "RUR",
+   "hops": 1,
+   "Ka": 1,
+   "Kb": 3,
+   "jaccard": 0.9999600917888856
+  },
+  {
+   "metapath": "RUR",
+   "hops": 1,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.9999600917888856
+  },
+  {
+   "metapath": "RUR-RPR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.9173101865708868
+  },
+  {
+   "metapath": "RUR-RSR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.9685124214307095
+  },
+  {
+   "metapath": "RUR-RUR",
+   "hops": 2,
+   "Ka": 2,
+   "Kb": 3,
+   "jaccard": 0.9999600917888856
+  }
+ ],
+ "direct": {
+  "1": {
+   "any": 1.0,
+   "RUR": 0.34156767676767674,
+   "RPR": 0.3441787878787878,
+   "RSR": 0.35296515151515157
+  },
+  "2": {
+   "any": 0.3702105482921313,
+   "RUR": 0.12757707499682783,
+   "RPR": 0.1260915641208436,
+   "RSR": 0.1315318024148973
+  },
+  "3": {
+   "any": 0.2502060241094692,
+   "RUR": 0.08814532615689365,
+   "RPR": 0.08436121463715104,
+   "RSR": 0.08787643653600952
+  }
+ },
+ "labels": {
+  "1|1": {
+   "rate_if_fraud": 0.21146349112035384,
+   "rate_if_benign": 0.09395636116840306,
+   "gap": 0.11750712995195078,
+   "ci": [
+    0.10081490566747789,
+    0.13495074734659676
+   ]
+  },
+  "1|all": {
+   "rate_if_fraud": 0.21146349112035384,
+   "rate_if_benign": 0.09395636116840306,
+   "gap": 0.11750712995195078,
+   "ci": [
+    0.10081490566747789,
+    0.13495074734659676
+   ]
+  },
+  "2|1": {
+   "rate_if_fraud": 0.21146349112035384,
+   "rate_if_benign": 0.09395636116840306,
+   "gap": 0.11750712995195078,
+   "ci": [
+    0.10081490566747789,
+    0.13495074734659676
+   ]
+  },
+  "2|2": {
+   "rate_if_fraud": 0.17253496442149846,
+   "rate_if_benign": 0.08229441136547695,
+   "gap": 0.09024055305602151,
+   "ci": [
+    0.07741865653760877,
+    0.10320087270124462
+   ]
+  },
+  "2|all": {
+   "rate_if_fraud": 0.18223317965906544,
+   "rate_if_benign": 0.08519533956152218,
+   "gap": 0.09703784009754325,
+   "ci": [
+    0.0839372409642367,
+    0.1103157172788804
+   ]
+  },
+  "3|1": {
+   "rate_if_fraud": 0.21146349112035384,
+   "rate_if_benign": 0.09395636116840306,
+   "gap": 0.11750712995195078,
+   "ci": [
+    0.10081490566747789,
+    0.13495074734659676
+   ]
+  },
+  "3|2": {
+   "rate_if_fraud": 0.17232098994281808,
+   "rate_if_benign": 0.08190167755583909,
+   "gap": 0.09041931238697899,
+   "ci": [
+    0.07776616616990502,
+    0.10311846020392808
+   ]
+  },
+  "3|3": {
+   "rate_if_fraud": 0.17468273279082025,
+   "rate_if_benign": 0.08059910260295099,
+   "gap": 0.09408363018786926,
+   "ci": [
+    0.08019775795947688,
+    0.10812047411881272
+   ]
+  },
+  "3|all": {
+   "rate_if_fraud": 0.1769608229135255,
+   "rate_if_benign": 0.08191564277941166,
+   "gap": 0.09504518013411384,
+   "ci": [
+    0.08196122199314188,
+    0.10800347012146932
+   ]
+  }
+ },
+ "baselines": {
+  "1|1": {
+   "mdk": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "raw": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "cos": {
+    "gap": 0.1184918458136055,
+    "ci": [
+     0.06918575822271256,
+     0.16618815621238509
+    ],
+    "rate_if_fraud": 0.21665181224004756,
+    "rate_if_benign": 0.09815996642644206
+   },
+   "rand": {
+    "gap": 0.10257101330469724,
+    "ci": [
+     0.0667853731417216,
+     0.1381710074924731
+    ],
+    "rate_if_fraud": 0.2048176389957097,
+    "rate_if_benign": 0.10224662569101246
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  },
+  "2|1": {
+   "mdk": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "raw": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "cos": {
+    "gap": 0.1184918458136055,
+    "ci": [
+     0.06918575822271256,
+     0.16618815621238509
+    ],
+    "rate_if_fraud": 0.21665181224004756,
+    "rate_if_benign": 0.09815996642644206
+   },
+   "rand": {
+    "gap": 0.10257101330469724,
+    "ci": [
+     0.0667853731417216,
+     0.1381710074924731
+    ],
+    "rate_if_fraud": 0.2048176389957097,
+    "rate_if_benign": 0.10224662569101246
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  },
+  "2|2": {
+   "mdk": {
+    "gap": 0.12186105672487924,
+    "ci": [
+     0.0862244810606603,
+     0.15879185926763165
+    ],
+    "rate_if_fraud": 0.20275397740795667,
+    "rate_if_benign": 0.08089292068307743
+   },
+   "raw": {
+    "gap": 0.11734619981483238,
+    "ci": [
+     0.07863483289171241,
+     0.15573872524855964
+    ],
+    "rate_if_fraud": 0.2004462569341462,
+    "rate_if_benign": 0.08310005711931381
+   },
+   "cos": {
+    "gap": 0.0716381633369493,
+    "ci": [
+     0.045212672125473204,
+     0.09798650914731305
+    ],
+    "rate_if_fraud": 0.16551006023324363,
+    "rate_if_benign": 0.09387189689629433
+   },
+   "rand": {
+    "gap": 0.052185245609829636,
+    "ci": [
+     0.03601085843376563,
+     0.06835302858117169
+    ],
+    "rate_if_fraud": 0.14924794225795826,
+    "rate_if_benign": 0.09706269664812862
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  },
+  "3|1": {
+   "mdk": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "raw": {
+    "gap": 0.14150109726967974,
+    "ci": [
+     0.08470434370674555,
+     0.19544715867592152
+    ],
+    "rate_if_fraud": 0.2354426619132501,
+    "rate_if_benign": 0.09394156464357037
+   },
+   "cos": {
+    "gap": 0.1184918458136055,
+    "ci": [
+     0.06918575822271256,
+     0.16618815621238509
+    ],
+    "rate_if_fraud": 0.21665181224004756,
+    "rate_if_benign": 0.09815996642644206
+   },
+   "rand": {
+    "gap": 0.10257101330469724,
+    "ci": [
+     0.0667853731417216,
+     0.1381710074924731
+    ],
+    "rate_if_fraud": 0.2048176389957097,
+    "rate_if_benign": 0.10224662569101246
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  },
+  "3|2": {
+   "mdk": {
+    "gap": 0.11650273781629063,
+    "ci": [
+     0.08176298943575966,
+     0.15196937394824214
+    ],
+    "rate_if_fraud": 0.19812434777832702,
+    "rate_if_benign": 0.08162160996203639
+   },
+   "raw": {
+    "gap": 0.11734619981483238,
+    "ci": [
+     0.07863483289171241,
+     0.15573872524855964
+    ],
+    "rate_if_fraud": 0.2004462569341462,
+    "rate_if_benign": 0.08310005711931381
+   },
+   "cos": {
+    "gap": 0.0716381633369493,
+    "ci": [
+     0.045212672125473204,
+     0.09798650914731305
+    ],
+    "rate_if_fraud": 0.16551006023324363,
+    "rate_if_benign": 0.09387189689629433
+   },
+   "rand": {
+    "gap": 0.052185245609829636,
+    "ci": [
+     0.03601085843376563,
+     0.06835302858117169
+    ],
+    "rate_if_fraud": 0.14924794225795826,
+    "rate_if_benign": 0.09706269664812862
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  },
+  "3|3": {
+   "mdk": {
+    "gap": 0.11826688360585699,
+    "ci": [
+     0.08169742128721073,
+     0.15770223447281803
+    ],
+    "rate_if_fraud": 0.19936985583368452,
+    "rate_if_benign": 0.08110297222782753
+   },
+   "raw": {
+    "gap": 0.11611802519229036,
+    "ci": [
+     0.07777380834783111,
+     0.15736839629807486
+    ],
+    "rate_if_fraud": 0.19745322908907156,
+    "rate_if_benign": 0.0813352038967812
+   },
+   "cos": {
+    "gap": 0.06918091038467765,
+    "ci": [
+     0.04392066832696925,
+     0.0946184939146599
+    ],
+    "rate_if_fraud": 0.16012356371847902,
+    "rate_if_benign": 0.09094265333380137
+   },
+   "rand": {
+    "gap": 0.0264418202487524,
+    "ci": [
+     0.01847157061455683,
+     0.03432178439588668
+    ],
+    "rate_if_fraud": 0.12473574528850098,
+    "rate_if_benign": 0.09829392503974858
+   },
+   "n_targets": 400,
+   "n_fraud": 51
+  }
+ },
+ "clique": {
+  "relations": {
+   "RUR": {
+    "components": 5130,
+    "nodes_in_clique_components_pct": 100.0,
+    "singleton_pct": 0.0,
+    "max_component": 123,
+    "median_component": 6.0
+   },
+   "RPR": {
+    "components": 1685,
+    "nodes_in_clique_components_pct": 100.0,
+    "singleton_pct": 0.0,
+    "max_component": 455,
+    "median_component": 10.0
+   },
+   "RSR": {
+    "components": 1363,
+    "nodes_in_clique_components_pct": 100.0,
+    "singleton_pct": 0.8727037655551365,
+    "max_component": 656,
+    "median_component": 7.0
+   }
+  },
+  "proportionality": {
+   "1": {
+    "pairs": 119309,
+    "median_rel_err": 1.6387351969252265e-16,
+    "p99_rel_err": 6.626858260412813e-16,
+    "max_rel_err": 2.692610544672297e-15
+   },
+   "2": {
+    "pairs": 119392,
+    "median_rel_err": 1.7540613399788774e-16,
+    "p99_rel_err": 8.009840388173962e-16,
+    "max_rel_err": 4.177847052658531e-15
+   },
+   "3": {
+    "pairs": 119309,
+    "median_rel_err": 2.1394231265135547e-16,
+    "p99_rel_err": 1.1747298741687038e-15,
+    "max_rel_err": 7.59243358608137e-15
+   }
+  },
+  "mdk_equals_raw_top4_pct_1hop": {
+   "1": {
+    "RUR": 100.0,
+    "RPR": 100.0,
+    "RSR": 100.0
+   },
+   "2": {
+    "RUR": 100.0,
+    "RPR": 100.0,
+    "RSR": 100.0
+   },
+   "3": {
+    "RUR": 100.0,
+    "RPR": 100.0,
+    "RSR": 100.0
+   }
+  }
+ },
+ "scale": {
+  "mean_text_emb_norm": 27.319807052612305,
+  "rating_std": 1.1185346841812134,
+  "mean_rating_share_of_sq_dist": 0.02095176788039667
+ },
+ "cases": [
+  {
+   "id": 9288,
+   "label": 1,
+   "rating": 3.0,
+   "split": "train",
+   "text": "I wrote seemingly in my title because when examined from a sociological viewpoint, one begins to recognize patterns, and realizes not only are most of these stories tragedies, but all of these women who victimized were also victims themselves. Truly a national\u2026",
+   "union_sizes": {
+    "1": 12,
+    "2": 36,
+    "3": 66
+   },
+   "k1": [
+    {
+     "path": "RUR",
+     "rank": 1,
+     "id": 22377,
+     "rating": 3.0,
+     "label": 1,
+     "d": 5.8034662072444805,
+     "text": "I think Gen is right on in her style- I appreciate the ecclectic blend, and her use of the traditional, and the clearly not so traditional in all of h\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 2,
+     "id": 12298,
+     "rating": 3.0,
+     "label": 0,
+     "d": 6.425672145341736,
+     "text": "Interesting enough. Some of this was new to me, some not, but the show is a lot better than most on history channel."
+    },
+    {
+     "path": "RUR",
+     "rank": 3,
+     "id": 20855,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.546007897127732,
+     "text": "We also love it, when we need to unwind before bed with something soothing&#8230; oddly this also serves that need."
+    },
+    {
+     "path": "RUR",
+     "rank": 4,
+     "id": 9916,
+     "rating": 3.0,
+     "label": 0,
+     "d": 6.860527949968163,
+     "text": "...it is addicting. It is an unfortunate sociological study into the ramifications of poverty and the tragic situations that result."
+    },
+    {
+     "path": "RPR",
+     "rank": 1,
+     "id": 9296,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.240670445409884,
+     "text": "I love how they tell two or more stories in one segment, And they are based on true events. I have always liked it when they survive and love survival\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 2,
+     "id": 9289,
+     "rating": 4.0,
+     "label": 0,
+     "d": 7.534929494766276,
+     "text": "Personal supernatural stories told by celebrities, in crisp and clear HD!! I love this show and look forward to more seasons being added. Keep up the \u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 3,
+     "id": 9294,
+     "rating": 3.0,
+     "label": 0,
+     "d": 7.7439839574805465,
+     "text": "These stories are told by the victims themselves which makes the show more believable and very unnerving. Definitely worth watching!"
+    },
+    {
+     "path": "RPR",
+     "rank": 4,
+     "id": 9300,
+     "rating": 5.0,
+     "label": 0,
+     "d": 8.031043892598836,
+     "text": "I really enjoyed watching all the episodes of &#34;I Survived&#34; and I hope to order complete seasons. I will be seeing season 5 next!"
+    },
+    {
+     "path": "RSR",
+     "rank": 1,
+     "id": 25382,
+     "rating": 3.0,
+     "label": 1,
+     "d": 5.837378177672154,
+     "text": "A Promise To My Father-Tim Gray  This documentary shows that the Holocaust still has far reaching effects on the survivors and children of survivors. \u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 2,
+     "id": 21963,
+     "rating": 3.0,
+     "label": 0,
+     "d": 6.6117663626346355,
+     "text": "I honestly feel asleep watching it, pity too, I am sure it had some redeemable qualities therefore my review is incomplete and it would be unfair to e\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 3,
+     "id": 13910,
+     "rating": 3.0,
+     "label": 0,
+     "d": 7.147037314742739,
+     "text": "On a budget, but it does not show much.  Very good story and acting.  Watched the whole movie in one sitting.  Enjoyable.  Good old fashion horror sto\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 4,
+     "id": 22500,
+     "rating": 3.0,
+     "label": 0,
+     "d": 7.282796715471024,
+     "text": "All the acting was fine with what the actors had to work with. But the dialogue didn't flow very well at all. Also, the idea of 5 young men on opposit\u2026"
+    }
+   ],
+   "new2": [
+    {
+     "path": "RPR-RSR",
+     "rank": 1,
+     "id": 27941,
+     "rating": 5.0,
+     "label": 0,
+     "text": "This series was a real eye opener for me on the colonization of Kenya by Britain, their culture living and the\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 2,
+     "id": 31795,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I love that this is a series with an engaging anti-hero, wonderful characters, and little violence, yet a good\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 3,
+     "id": 4242,
+     "rating": 3.0,
+     "label": 0,
+     "text": "Good when it started but fading as writers imagination declines.  I liked the concept of an Ancient race trave\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 4,
+     "id": 16372,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I actually watched the movie and rated mit so I was wondering why this was here, and why it had the cover of E\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 1,
+     "id": 8159,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I love watching these episodes and it is uplifting that these kids change their attitudes after visiting the p\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 2,
+     "id": 4291,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This was a good series on empires and The Saga of the Israelites was very good and informative.  This series i\u2026"
+    }
+   ],
+   "new3": [
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 1,
+     "id": 28276,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This series is a unique way of presenting a documentary film.  The setting was historical, beautiful and impos\u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 2,
+     "id": 3857,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This is a short but mostly good ending for a great series, with Monk finally finding out what was in the prese\u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 3,
+     "id": 23597,
+     "rating": 3.0,
+     "label": 0,
+     "text": "Whoever thought two valley girl/ghetto types would ever be saving the world demons conjured from hell? I sure \u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 4,
+     "id": 21473,
+     "rating": 4.0,
+     "label": 0,
+     "text": "Having lived and served in the military during this time period I can agree with a lot of what the writers of \u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 1,
+     "id": 28480,
+     "rating": 3.0,
+     "label": 0,
+     "text": "Quirky.  Definitely for those who enjoy films which are not from the main stream.  Romance, sweet characters a\u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 2,
+     "id": 31809,
+     "rating": 4.0,
+     "label": 0,
+     "text": "If you have been following White Collar, you will know that this season the writers have presented some discom\u2026"
+    }
+   ],
+   "new2_total": 24,
+   "new3_total": 31
+  },
+  {
+   "id": 24196,
+   "label": 1,
+   "rating": 4.0,
+   "split": "val",
+   "text": "The show was non-stop fast-paced hilarious jokes with a great cast, but I don't know if it can keep people interested for several seasons.  I think it could face the same problems as 30 Rock where people get bored with it after a while.",
+   "union_sizes": {
+    "1": 11,
+    "2": 25,
+    "3": 38
+   },
+   "k1": [
+    {
+     "path": "RUR",
+     "rank": 1,
+     "id": 23759,
+     "rating": 4.0,
+     "label": 0,
+     "d": 4.1970203701546005,
+     "text": "Like most musical shows, I enjoyed it as a fun, lighthearted, quirky comedy.  It may not be something I'd get hooked on, but I do think I'd take the t\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 2,
+     "id": 24840,
+     "rating": 2.0,
+     "label": 0,
+     "d": 4.925201975540211,
+     "text": "I like the Daily Show and Colbert, but don't want yet another show that just makes fun of republicans the whole time.  Especially when they're just fi\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 3,
+     "id": 24488,
+     "rating": 5.0,
+     "label": 0,
+     "d": 5.301170225415198,
+     "text": "Probably my favorite pilot.  It's like the Facebook movie but with likable characters.  The overall plot structure may not be very original (some peop\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 4,
+     "id": 23893,
+     "rating": 1.0,
+     "label": 1,
+     "d": 5.89336782306199,
+     "text": "Not sure why, but I didn't find this very funny or entertaining at all.  I guess the jokes weren't very clever, the plot was unoriginal, and the chara\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 1,
+     "id": 24119,
+     "rating": 5.0,
+     "label": 0,
+     "d": 5.231186664022354,
+     "text": "This was hilarious. A nice chance to laugh heartily. The Onion can be hit-or-miss, but this was definitely a hit. The satire is omnipresent, the jokes\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 2,
+     "id": 24147,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.268588540414684,
+     "text": "This pilot had a lot of laughs and some cool characters.  It was really, really absurdist and more than a bit frenetic.  It jumped quickly from one cr\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 3,
+     "id": 24102,
+     "rating": 5.0,
+     "label": 0,
+     "d": 5.447545126128099,
+     "text": "I think we all know that a narrative show based on The Onion will never be everyone's cup of tea. They've already tried it on IFC and it didn't work. \u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 4,
+     "id": 24069,
+     "rating": 5.0,
+     "label": 0,
+     "d": 5.491733726782494,
+     "text": "I loved it -- haven't enjoyed a show this much in decades!  One of the funniest sitcoms I have ever seen.  It's even funnier than the Onion News itsel\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 1,
+     "id": 14020,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.2575293363944,
+     "text": "I like this sort of movie, so for me all that was missing was some popcorn.  I thought some of the actors were very good.  The movie changes venues a \u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 2,
+     "id": 23969,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.297422547184799,
+     "text": "Like all of these Amazon Pilots that I have been loving, this has a great setting.  It is a little more cheesy and cliche in some of its choices than \u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 3,
+     "id": 23663,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.505956357561288,
+     "text": "The idea of a musical comedy TV show is something I've always wanted.  This looks like it'll be better than the only other example I can remember (Eli\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 4,
+     "id": 23759,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.51608391506033,
+     "text": "Like most musical shows, I enjoyed it as a fun, lighthearted, quirky comedy.  It may not be something I'd get hooked on, but I do think I'd take the t\u2026"
+    }
+   ],
+   "new2": [
+    {
+     "path": "RPR-RSR",
+     "rank": 1,
+     "id": 23833,
+     "rating": 5.0,
+     "label": 0,
+     "text": "This was the best pilot offered out of the selection. It has a lot of great comedic potential. It is well writ\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 2,
+     "id": 24359,
+     "rating": 5.0,
+     "label": 0,
+     "text": "Smart and funny. I have to admit I didn't really expect much, but was pleasantly surprised by how much I liked\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 3,
+     "id": 23517,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I was very excited to see a new show by the ladies who formally did Blue's Clues as it's still one of our fave\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 4,
+     "id": 24577,
+     "rating": 3.0,
+     "label": 0,
+     "text": "In theory this show sounds like a good concept. Throw a bunch of Republican congressman in a house together an\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 1,
+     "id": 34501,
+     "rating": 3.0,
+     "label": 0,
+     "text": "The premise and execution of this pilot didn't connect with me on any level. There were way too many extraneou\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 2,
+     "id": 23851,
+     "rating": 4.0,
+     "label": 0,
+     "text": "Those Who Can't is pretty amusing, though like most comedy shows it goes over the top at times.  It has some c\u2026"
+    }
+   ],
+   "new3": [
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 1,
+     "id": 20967,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I loved the first season of Smash immensely, but the quality of the scripts did start to decline midway throug\u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 1,
+     "id": 33304,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I am definitely interested in watching more because the premise has a lot of potential and I love post-apocaly\u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 2,
+     "id": 26565,
+     "rating": 4.0,
+     "label": 0,
+     "text": "Very interesting series.  Not sure where they are going to go with this, but since it is based on a Stephen Ki\u2026"
+    },
+    {
+     "path": "RPR-RUR-RPR",
+     "rank": 1,
+     "id": 34760,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I have checked out 3 of the latest pilots so far. This was the best of them. Titus Welliver does a nice job, t\u2026"
+    },
+    {
+     "path": "RPR-RUR-RPR",
+     "rank": 2,
+     "id": 33834,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This is an extremely well written series.  Intelligent, honest, and funny.  Gaby Hoffman and Jeffrey Tambor bo\u2026"
+    },
+    {
+     "path": "RPR-RUR-RSR",
+     "rank": 4,
+     "id": 27862,
+     "rating": 4.0,
+     "label": 1,
+     "text": "While I really liked Brave and the Bold, I knew that couldn't go on forever. Batman is typically a darker char\u2026"
+    }
+   ],
+   "new2_total": 14,
+   "new3_total": 13
+  },
+  {
+   "id": 16946,
+   "label": 0,
+   "rating": 4.0,
+   "split": "train",
+   "text": "This movie was very entertaining. I really enjoyed Richard Gere's performance. I also thought the story was well written and the plot was good.",
+   "union_sizes": {
+    "1": 12,
+    "2": 31,
+    "3": 45
+   },
+   "k1": [
+    {
+     "path": "RUR",
+     "rank": 1,
+     "id": 13382,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.352951011182745,
+     "text": "I really enjoyed the whole premise of this movie. I thought the actors did an excellent job. I loved the character development both of the main actors\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 2,
+     "id": 17809,
+     "rating": 4.0,
+     "label": 0,
+     "d": 6.512517569567464,
+     "text": "I was quite impressed by the acting chops of Keough and Temple. The story was interesting and the reactions depicted by the young women were believabl\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 3,
+     "id": 13417,
+     "rating": 4.0,
+     "label": 0,
+     "d": 6.520766205652531,
+     "text": "This movie kept my husband & I on edge through the whole thing. Lots of death and blood. Love the actors and they did a great job with the story."
+    },
+    {
+     "path": "RUR",
+     "rank": 4,
+     "id": 15284,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.30902996364537,
+     "text": "This was a very good season of this show. They did a good job of plot development and left me wanting to see the next season."
+    },
+    {
+     "path": "RPR",
+     "rank": 1,
+     "id": 16967,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.555398300729465,
+     "text": "I love Richard Gere and he was the reason I recently purchased this item.  He did not disappoint.  The writing and all the acting is so good.  The sto\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 2,
+     "id": 16983,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.764739529678828,
+     "text": "A very different ending that's for sure.  Richard Gere carried this film and deserved his Golden Globe nomination.  The movie has you rooting for the \u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 3,
+     "id": 16957,
+     "rating": 2.0,
+     "label": 0,
+     "d": 8.40486711070384,
+     "text": "This was not a good role for Richard Gere.  He has made movies I have enjoyed. \"Unfaithful\" for example. Mr. Gere just wasn't believable as a tough ar\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 4,
+     "id": 16980,
+     "rating": 4.0,
+     "label": 0,
+     "d": 8.442234810659299,
+     "text": "Great acting, engaging story with plenty of intrigue. I had read positive reviews and it did not dissapoint. I reccommend"
+    },
+    {
+     "path": "RSR",
+     "rank": 1,
+     "id": 2166,
+     "rating": 4.0,
+     "label": 0,
+     "d": 7.37600510827306,
+     "text": "The show was great back in the day and I still enjoyed it now. Definitely ahead of its time. If this show was made with today's technology and storyte\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 2,
+     "id": 10118,
+     "rating": 4.0,
+     "label": 0,
+     "d": 7.842640392679101,
+     "text": "It was a little weird having an all English speaking cast in Italy, but the acting and stories were good.  I really liked the character of Zen.  Wish \u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 3,
+     "id": 7102,
+     "rating": 4.0,
+     "label": 0,
+     "d": 7.996061586108596,
+     "text": "I've loved myth busters ever since they started broadcasting. This season is as entertaining and informative as any of the others. Highly recommended."
+    },
+    {
+     "path": "RSR",
+     "rank": 4,
+     "id": 4364,
+     "rating": 4.0,
+     "label": 0,
+     "d": 7.9963788832135245,
+     "text": "Cute and fun, it kept me entertained along with my son ... Interesting to see how the show evolved since I watched it as a child 20+ years ago"
+    }
+   ],
+   "new2": [
+    {
+     "path": "RPR-RSR",
+     "rank": 1,
+     "id": 13390,
+     "rating": 4.0,
+     "label": 1,
+     "text": "Though predictable, this movie was adorably endearing.  I thought the acting was great, the story was unique a\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 2,
+     "id": 28829,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I really like this series and can't get enough of it.  I love the interaction of the family.  Donnie Wahlberg \u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 3,
+     "id": 26640,
+     "rating": 4.0,
+     "label": 1,
+     "text": "I liked the book, and although there are differences in the show, it's still entertaining.  The acting is pret\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 4,
+     "id": 5994,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This series is intense and exciting. The acting and writing are very good. I can't understand why it wasn't re\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 1,
+     "id": 23265,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I watched the entire season and really liked it. It is a bit grisly and sort of depressing, but worth seeing."
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 2,
+     "id": 11605,
+     "rating": 5.0,
+     "label": 0,
+     "text": "This show shows you just how things can get out of control.  I feel for these people who live alone and have j\u2026"
+    }
+   ],
+   "new3": [
+    {
+     "path": "RPR-RPR-RUR",
+     "rank": 2,
+     "id": 2892,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I am not a football fan by any means, but this show is entertaining on all levels. Drama, comedy and tragedy. \u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 2,
+     "id": 21342,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I really enjoyed the series. Nick was a character that was hard to figure out, but Lulu was even more difficul\u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 4,
+     "id": 13705,
+     "rating": 4.0,
+     "label": 0,
+     "text": "This is a great show. It's well written, has wonderful cinematography and interesting story lines. I would hig\u2026"
+    },
+    {
+     "path": "RPR-RSR-RSR",
+     "rank": 4,
+     "id": 7018,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I really liked this show.  The actors, especially Tim Roth were amazing.  The story lines were suspenseful and\u2026"
+    },
+    {
+     "path": "RPR-RUR-RPR",
+     "rank": 3,
+     "id": 34784,
+     "rating": 4.0,
+     "label": 0,
+     "text": "I thought that the pilot episode was great! The story line was easy to follow and the characters were likable.\u2026"
+    },
+    {
+     "path": "RPR-RUR-RUR",
+     "rank": 4,
+     "id": 14203,
+     "rating": 5.0,
+     "label": 0,
+     "text": "The entire cast was great.  Virginia Masden is such an underrated actor, the children were all very good.  Thi\u2026"
+    }
+   ],
+   "new2_total": 19,
+   "new3_total": 16
+  },
+  {
+   "id": 13436,
+   "label": 0,
+   "rating": 5.0,
+   "split": "train",
+   "text": "Educational and thoroughly enjoyable on many levels.  Highly recommended.  Great story with fantastic acting.  It doesn't get much better than I, Claudius.",
+   "union_sizes": {
+    "1": 12,
+    "2": 32,
+    "3": 46
+   },
+   "k1": [
+    {
+     "path": "RUR",
+     "rank": 1,
+     "id": 37001,
+     "rating": 2.0,
+     "label": 0,
+     "d": 5.807503550372599,
+     "text": "Season 1 was rather mediocre, but still watchable.  Season 2 is just plain dumb.  Nothing is holding my interest any more and I've watched my last epi\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 2,
+     "id": 3414,
+     "rating": 4.0,
+     "label": 0,
+     "d": 5.962279747866852,
+     "text": "I enjoyed this show.  It was fun to watch after a hard day at work.  It's certainly not one of the great shows of all time, but definitely above avera\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 3,
+     "id": 18268,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.173601357734521,
+     "text": "This is a wonderful and engrossing show.  While I did struggle at times to suspend my disbelief, the writing, acting and directing make this one of my\u2026"
+    },
+    {
+     "path": "RUR",
+     "rank": 4,
+     "id": 870,
+     "rating": 2.0,
+     "label": 0,
+     "d": 6.474670349833381,
+     "text": "I started off liking the show, but it soon lost my interest.  I found much of it to be rather maudlin.  The series is just not very well written."
+    },
+    {
+     "path": "RPR",
+     "rank": 1,
+     "id": 13434,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.791510901004454,
+     "text": "I remember watching the series years ago on TV and was pleased to see it listed on Amazon Instant Videos.  The whole cast is marvelous, the history is\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 2,
+     "id": 13431,
+     "rating": 3.0,
+     "label": 1,
+     "d": 6.79687817863094,
+     "text": "I watched this because I have a deep interest in Roman history. I may have been spoiled because I had watched \"Rome\" before this one, and in compariso\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 3,
+     "id": 13437,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.04069861240536,
+     "text": "When I saw this series twenty years ago, I was very affected by the way the families and royalty of Rome must have lived. It is shocking to see the ev\u2026"
+    },
+    {
+     "path": "RPR",
+     "rank": 4,
+     "id": 13433,
+     "rating": 5.0,
+     "label": 0,
+     "d": 7.1750835561196755,
+     "text": "It is one of the best performances ever captured on film. The depth of the ensemble cast is mind blowing."
+    },
+    {
+     "path": "RSR",
+     "rank": 1,
+     "id": 18209,
+     "rating": 5.0,
+     "label": 0,
+     "d": 5.695002419721043,
+     "text": "Great writing, interesting characters, evolving plot lines, plain and simply enjoyable.  I wish there were more shows like this being created. Sorry t\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 2,
+     "id": 4774,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.52250468751361,
+     "text": "Great fun. Always entertaining and I like to try figuring out the solution before Poirot does...hasn't happened yet but I'll keep trying.  David Suche\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 3,
+     "id": 26250,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.649708982428783,
+     "text": "I highly recommend this show, it is very well written, one of the few time travels shows I've watched with no gawking holes in the plot.  The characte\u2026"
+    },
+    {
+     "path": "RSR",
+     "rank": 4,
+     "id": 12659,
+     "rating": 5.0,
+     "label": 0,
+     "d": 6.789922685689936,
+     "text": "Outstanding writing and acting. Every episode kept my attention. I particularly liked how they worked into the main characters' backgrounds throughout\u2026"
+    }
+   ],
+   "new2": [
+    {
+     "path": "RPR-RSR",
+     "rank": 1,
+     "id": 4132,
+     "rating": 5.0,
+     "label": 0,
+     "text": "Cumberbatch is better than ever in this tense drama.Everyone's acting is terrific; writing is top notch.Grabs \u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 2,
+     "id": 19075,
+     "rating": 5.0,
+     "label": 1,
+     "text": "I enjoy the series a great deal. It has a great mixture of mystery, suspense, and romance. Great show to watch\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 3,
+     "id": 9494,
+     "rating": 5.0,
+     "label": 0,
+     "text": "Suits is an exceptionally entertaining show. Very good character development, good stories and excellent dialo\u2026"
+    },
+    {
+     "path": "RPR-RSR",
+     "rank": 4,
+     "id": 20966,
+     "rating": 5.0,
+     "label": 0,
+     "text": "This was a great show. Clearly not all agreed as it wasn't renewed for the 2013/2014 season. Perhaps the audie\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 1,
+     "id": 9687,
+     "rating": 5.0,
+     "label": 0,
+     "text": "What a delightful series.  Never even heard of it before.  Only watched because I found it on Amazon Prime.  T\u2026"
+    },
+    {
+     "path": "RPR-RUR",
+     "rank": 2,
+     "id": 13972,
+     "rating": 4.0,
+     "label": 0,
+     "text": "They have made Pride and Prejudice many time and they all seam to have a certain charm, but this is my favorit\u2026"
+    }
+   ],
+   "new3": [
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 1,
+     "id": 16771,
+     "rating": 5.0,
+     "label": 0,
+     "text": "What else can you say?  Very good acting, outstanding writing by Kurt Sutter, and twists and turns that keep y\u2026"
+    },
+    {
+     "path": "RPR-RSR-RPR",
+     "rank": 3,
+     "id": 4682,
+     "rating": 5.0,
+     "label": 0,
+     "text": "I've enjoyed each and every episode.  Extremely well crafted and acted.  We need more quality programming like\u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 1,
+     "id": 2555,
+     "rating": 5.0,
+     "label": 0,
+     "text": "This is a totally addictive show.  One of the few I've watched all seasons of.  Great writing and acting - wis\u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 2,
+     "id": 13732,
+     "rating": 5.0,
+     "label": 0,
+     "text": "Excellent entertainment...gritty and real.  Can't wait for next season.  I love the Irish setting, gives me a \u2026"
+    },
+    {
+     "path": "RPR-RSR-RUR",
+     "rank": 4,
+     "id": 9376,
+     "rating": 5.0,
+     "label": 0,
+     "text": "A must see for anyone who likes flea markets, antique malls, and the like.  Amazing the stuff these guys find!"
+    },
+    {
+     "path": "RPR-RUR-RPR",
+     "rank": 2,
+     "id": 33732,
+     "rating": 5.0,
+     "label": 0,
+     "text": "Terrific premise with great cast.  Can't wait to see more of this show.  Funny, well written, timely.  Highly \u2026"
+    }
+   ],
+   "new2_total": 20,
+   "new3_total": 14
+  }
+ ]
+}

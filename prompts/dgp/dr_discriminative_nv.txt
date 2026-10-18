@@ -1,0 +1,10 @@
+Don't have extra blank lines and symbols after Answer!
+Prompt: You are provided with a customer review of an Amazon Instant Video title. Each review is classified as either helpful or unhelpful based on how other shoppers rate its usefulness.
+Your task is to generate a brief causal text for the review that directly relates to classifying it as either helpful or unhelpful. Ensure that the generated text is specific to the review and reflects features that help distinguish it between these two categories.
+Generate the causal text as follows:
+[Generated causal text for the review]
+Describe the cues only; do not state or predict whether the review is helpful or unhelpful.
+Remember: The causal text should occupy only one single line.
+Question: The review is as follows:
+[{text}]
+Answer:
