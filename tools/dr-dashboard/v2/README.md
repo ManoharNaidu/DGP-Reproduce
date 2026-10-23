@@ -59,3 +59,38 @@ cd tools/dr-dashboard/v2/test && npm install jsdom@24.1.3 && node render_test.js
 `full` covers every state (completed / failed generation, done / running / failed / queued runs, leakage alert,
 GPU over 80 °C and over 90% VRAM, half-written cache lines); `empty` has no data at all and must render "—" everywhere
 without script errors.
+
+## Traceability and export (added 2026-10-23)
+
+Everything below is read from files written at launch or run time; nothing is reconstructed at display time, and a
+value that was never recorded is shown as "unknown". `history.json` is unchanged (no new keys).
+
+| Feature | Source |
+|---|---|
+| Header: git hash / branch / dirty, run dates, hypothesis | latest `results/<study>/batch_*.json` (branch, hypothesis, command, dirty files) and each run's `results/raw/<run>/run_manifest.json` (commit + `-dirty`, written) |
+| `/api/manifest?study=dr\|fa[&download=1]`, `server.py --manifest fa` | run manifests (config = hyperparameters, prompt_version, templates), `metrics.json` (val + test), batch records, generation cache `metadata.json` |
+| View Config Diff | the two arms' flattened run-manifest configs; only differing fields |
+| Failed runs | last error block of `logs/<study>/train_<job>.log` (kind: OOM / parse error / killed / error) |
+| `/api/samples?study=&arm=&n=1..5`, View Samples | random byte offsets into `datasets/cache/prompts/<exp>_<hash>.jsonl` (newest file of the arm), text capped at 1500 chars; split from `split.json`, label from `labels.npy` for train/val only (test hidden), rating from `numeric.npy`, neighbour counts from `results/token_usage/token_usage_<exp>.csv` |
+| Gold border | winner = highest mean **validation** AUROC over the arm's finished seeds (`pick_winner` in server.py) |
+| Box plots | the finished seeds of each mean ± std (box for n ≥ 4, range + median for n 2–3, dots always) |
+
+Record a batch at launch so branch, command and hypothesis are known:
+
+```bash
+python scripts/record_batch.py --study flag_arch --hypothesis "…" \
+    --command "nohup scripts/fa_queue.sh > logs/flag_arch/queue.log 2>&1 &" --config configs/experiments/flagarch/F1_disc.yaml
+```
+
+Tests (mock trees only; the endpoint test also checks that the data tree is byte-for-byte unchanged afterwards):
+
+```bash
+/venv/main/bin/python -I tools/dr-dashboard/v2/test/test_trace_endpoints.py
+python tools/dr-dashboard/v2/mock/make_mock.py /tmp/m && python tools/dr-dashboard/v2/mock/make_fa_mock.py /tmp/m/fa
+python tools/dr-dashboard/v2/mock/make_trace_mock.py /tmp/m/full /tmp/m/fa
+python tools/dr-dashboard/v2/server.py 18797 --root /tmp/m/full --no-insights &
+node tools/dr-dashboard/v2/test/trace_ui_test.js http://127.0.0.1:18797/      # exit 1 on any failed check
+```
+
+Currently installed as supervisor program `dgp-dashboard` (127.0.0.1:18781, external port 10200, token); the
+service name and port in "Run" above are from the first install.
