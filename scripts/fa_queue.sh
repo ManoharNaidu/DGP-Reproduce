@@ -1,7 +1,8 @@
 #!/bin/bash
-# FLAG-architecture study: (1) FLAG-style D and R text per trimmed target subgraph, the metapath summaries of those
-# lines and the prompts, for F2 then F1 (F1 reuses F2's D caches) and F0; (2) train F0, F1, F2 x seeds 0-4 on one GPU,
-# seed-major so paired comparisons appear early. Resumable: caches skip finished items, a finished run leaves
+# FLAG-architecture study: (1) FLAG-style D text per trimmed target subgraph, the metapath summaries of those lines
+# and the prompts, for F1 then F0; (2) train F0, F1 x seeds 0-4 on one GPU, seed-major so paired comparisons appear
+# early. F2 (R text + FLAG's +FLAG* loss / fine-tuning phase) is out of scope for this experiment (user, 2026-10-23);
+# its config stays in configs/experiments/flagarch/ but is not run. Resumable: caches skip finished items, a finished run leaves
 # results/flag_arch/done/<job>, a stopped run restarts that seed from epoch 0. Times are UTC.
 #   nohup scripts/fa_queue.sh > logs/flag_arch/queue.log 2>&1 &
 cd "$(dirname "$0")/.."
@@ -12,7 +13,7 @@ GEN=logs/flag_arch/gen_all.log
 mkdir -p "$DONE" logs/flag_arch
 
 if ! grep -q GEN_DONE "$GEN" 2>/dev/null; then
-  for arm in F2_disc_resid_finetune:fa_F2 F1_disc:fa_F1 F0_baseline:fa_F0; do
+  for arm in F1_disc:fa_F1 F0_baseline:fa_F0; do
     cfg=${arm%%:*}; exp=${arm##*:}
     echo "[$(date -u +%FT%T)] generate $exp" >> "$GEN"
     if ! "$PY" -W ignore scripts/generate_summaries.py --dataset amazonvideo \
@@ -26,7 +27,7 @@ if ! grep -q GEN_DONE "$GEN" 2>/dev/null; then
   echo "[$(date -u +%FT%T)] GEN_DONE" >> "$GEN"
 fi
 
-ARMS="F0_baseline:fa_F0 F1_disc:fa_F1 F2_disc_resid_finetune:fa_F2"
+ARMS="F0_baseline:fa_F0 F1_disc:fa_F1"
 for seed in 0 1 2 3 4; do
   for arm in $ARMS; do
     cfg=${arm%%:*}; exp=${arm##*:}; job=${exp}_s${seed}
