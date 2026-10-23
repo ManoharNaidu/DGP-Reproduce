@@ -9,11 +9,13 @@
   --bg: #0b0c0e; --panel: #111316; --panel-2: #16191d; --ink: #e7e9ec; --ink-2: #b4b9c0; --muted: #7d848d; --line: #23272d; --line-2: #2d3239;
   --accent: #5b9dff; --ok: #3fb950; --warn: #d29922; --bad: #f85149; --run: #5b9dff; --idle: #1c1f24; --neutral: #8b949e;
   --chart: #5b9dff; --chart-2: #d29922; --chart-3: #bc8cff;
+  --gold: #e3b341;
 }
 :root[data-theme="light"] {
   --bg: #f6f7f9; --panel: #ffffff; --panel-2: #f3f4f6; --ink: #16181c; --ink-2: #3d434b; --muted: #68707a; --line: #e3e6ea; --line-2: #d5d9de;
   --accent: #1f6feb; --ok: #1a7f37; --warn: #9a6700; --bad: #cf222e; --run: #1f6feb; --idle: #eef0f3; --neutral: #6e7781;
   --chart: #1f6feb; --chart-2: #9a6700; --chart-3: #8250df;
+  --gold: #b08800;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--ink); }
@@ -131,6 +133,29 @@ svg { display: block; }
 .matrix.fam { grid-template-columns: minmax(190px, 1.3fr) repeat(5, minmax(120px, 1fr)); min-width: 780px; margin-top: 12px; }
 .fapilot { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; margin-bottom: 12px; }
 .fapilot .kpi .v { font-size: 15px; }
+/* traceability: provenance line, hypothesis, gold winner, error blocks, help tips, box plots, modal */
+.prov { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+.prov b { color: var(--ink-2); font-weight: 600; } .prov .mono { color: var(--ink-2); }
+.prov .unk, .hyp .unk { color: var(--muted); font-style: italic; }
+.hyp { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-2); } .hyp b { color: var(--ink); }
+table.data tr.gold td { border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold); }
+table.data tr.gold td:first-child { border-left: 2px solid var(--gold); } table.data tr.gold td:last-child { border-right: 2px solid var(--gold); }
+.goldkey { display: inline-block; width: 10px; height: 10px; border: 2px solid var(--gold); border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+.cell.failed { background: color-mix(in srgb, var(--bad) 18%, var(--panel-2)); }
+.err { font-size: 11px; color: var(--ink); } .err .kind { font-weight: 700; color: var(--bad); margin-right: 4px; text-transform: uppercase; letter-spacing: .03em; }
+.err .sum { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+.err details summary { cursor: pointer; color: var(--ink-2); font-size: 11px; } .err pre { margin: 4px 0 0; padding: 6px; max-height: 220px; overflow: auto; white-space: pre-wrap; word-break: break-word; font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+.help { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; margin-left: 4px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--muted); font-size: 10px; font-weight: 700; cursor: help; position: relative; text-transform: none; letter-spacing: 0; }
+.help:hover::after, .help:focus::after { content: attr(data-tip); position: absolute; left: 50%; top: 18px; transform: translateX(-50%); width: 240px; padding: 6px 8px; border-radius: 6px; background: var(--panel); color: var(--ink); border: 1px solid var(--line-2); font-size: 11.5px; font-weight: 400; line-height: 1.4; white-space: normal; text-align: left; z-index: 30; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+.ms { display: inline-flex; align-items: center; gap: 6px; } .ms svg { flex: none; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-start; justify-content: center; padding: 6vh 16px; z-index: 50; }
+.modal { width: min(920px, 100%); max-height: 86vh; overflow: auto; background: var(--panel); color: var(--ink); border: 1px solid var(--line-2); border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+.modal .mh { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); flex-wrap: wrap; }
+.modal .mh h3 { margin: 0; font-size: 13px; } .modal .mb { padding: 12px 14px; }
+.modal select { height: 26px; background: var(--panel-2); color: var(--ink); border: 1px solid var(--line-2); border-radius: 6px; font: inherit; font-size: 12px; }
+.sample { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-bottom: 10px; background: var(--panel-2); }
+.sample .sm { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin-bottom: 6px; } .sample .sm b { color: var(--ink-2); font-weight: 600; }
+.sample pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 11.5px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-2); max-height: 260px; overflow: auto; }
 .fasub { margin: 14px 0 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } section.half { grid-column: span 12; } .samples, .dgrid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .hwrap, main { padding: 0 12px; } .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gauges { grid-template-columns: 1fr; } .overall { grid-template-columns: 1fr; } }
@@ -145,9 +170,12 @@ svg { display: block; }
       <span class="spacer"></span>
       <span class="small muted" id="refresh">connecting…</span>
       <a class="btn" id="csv" href="api/results.csv">Download results CSV</a>
+      <a class="btn" id="manifestdl" href="api/manifest?study=fa&amp;download=1" title="experiment_manifest.json: git, hypothesis, hyperparameters per arm, launch command, mean/std per arm — recorded data only">Download Manifest JSON</a>
       <a class="btn" id="devlink" aria-disabled="true" target="_blank" rel="noopener">deviation.md</a>
       <button class="btn" id="theme" type="button">Light</button>
     </div>
+    <div class="prov" id="prov"></div>
+    <div class="hyp" id="hyp"></div>
     <div class="kpis" id="kpis"></div>
     <div class="overall"><span>Overall progress</span><div class="bar" id="overallbar"><i></i></div><span class="mono" id="overallpct">—</span></div>
     <div class="banner" id="stale"></div>
@@ -161,9 +189,9 @@ svg { display: block; }
       <div class="fasub">Pilot (200 random targets; measured before the full run)</div><div class="fapilot" id="fapilot"></div>
       <div class="fasub">Generation · one FLAG prompt per target subgraph (target + MDK Top-4 per metapath), one line per node required</div>
       <div class="scroll"><table class="gtable" id="fagen"></table></div>
-      <div class="fasub">Training · F0 baseline, F1 FLAG-arch D, F2 F1 + FLAG's +FLAG* phase · 5 seeds</div>
+      <div class="fasub">Training · F0 baseline, F1 FLAG-arch D, F2 F1 + FLAG's +FLAG* phase · 5 seeds <button class="btn" type="button" id="cfgdiff-fa" style="margin-left:8px">View Config Diff</button></div>
       <div class="scroll"><div class="matrix fam" id="famatrix"></div></div>
-      <div class="fasub">Results · test set · mean ± std over finished seeds · Δ paired by seed against F0 · grey = |Δ| &lt; 0.5</div>
+      <div class="fasub">Results · test set · mean ± std over finished seeds, box = the seeds · Δ paired by seed against F0 · grey = |Δ| &lt; 0.5 · <span id="fawin"></span></div>
       <div class="scroll"><table class="data" id="fares"></table></div>
       <pre class="log" id="falog"></pre>
     </div>
@@ -175,15 +203,15 @@ svg { display: block; }
       <pre class="log" id="genlog"></pre></div>
   </section>
   <section>
-    <div class="sh"><h2>2 · Training queue</h2><span id="qbadge"></span><span class="meta" id="qmeta"></span><span class="spacer"></span><div class="filters" id="filters"></div></div>
+    <div class="sh"><h2>2 · Training queue</h2><span id="qbadge"></span><span class="meta" id="qmeta"></span><span class="spacer"></span><button class="btn" type="button" id="cfgdiff-dr">View Config Diff</button><div class="filters" id="filters"></div></div>
     <div class="sb"><div class="scroll"><div class="matrix" id="matrix"></div></div><div id="failed"></div><pre class="log" id="qlog"></pre></div>
   </section>
   <section>
-    <div class="sh"><h2>3 · Results · test set</h2><span class="meta">mean ± std over finished seeds (ddof=0) · Δ paired by seed (arms vs R0; R0 vs original) · grey = |Δ| &lt; 0.5 (seed noise) · underline = best arm</span></div>
+    <div class="sh"><h2>3 · Results · test set</h2><span class="meta">mean ± std over finished seeds (ddof=0), box = the seeds · Δ paired by seed (arms vs R0; R0 vs original) · grey = |Δ| &lt; 0.5 (seed noise) · underline = best arm per metric · <span id="drwin"></span></span></div>
     <div class="sb"><div class="scroll"><table class="data" id="res"></table></div></div>
   </section>
   <section>
-    <div class="sh"><h2>4 · Generated-text diagnostics</h2><span class="meta">train + val labels only · TF-IDF + logistic-regression probe, 5-fold CV</span></div>
+    <div class="sh"><h2>4 · Generated-text diagnostics</h2><span class="meta">train + val labels only · TF-IDF + logistic-regression probe, 5-fold CV</span><span class="spacer"></span><button class="btn" type="button" id="samples-btn">View Samples</button></div>
     <div class="sb" id="diag"><div class="empty">Appears when generation completes.</div></div>
   </section>
   <section>
@@ -191,6 +219,7 @@ svg { display: block; }
     <div class="sb" id="gpu"><div class="empty">—</div></div>
   </section>
 </main>
+<div id="modalroot"></div>
 <script>
 "use strict";
 // ---------- tiny DOM helpers (no innerHTML anywhere) ----------
@@ -253,6 +282,135 @@ function dotPlot(vals, lo, hi, w = 70, h = 14) {
   for (const v of vs) s.append(sv("circle", {cx: x(v).toFixed(1), cy: h / 2, r: 2.4, fill: "var(--accent)", opacity: .85}, sv("title", {}, v.toFixed(2))));
   return s;
 }
+// help tip: hover / keyboard focus shows the text; also exposed to screen readers
+const helpTip = text => el("span", {cls: "help", tabindex: "0", role: "note", "aria-label": text, "data-tip": text}, "?");
+// tiny box plot of the finished seeds: box q1..q3 + median for n >= 4, range line + median for n 2-3, dots always
+function quantile(v, q) { const a = v.slice().sort((x, y) => x - y), i = (a.length - 1) * q, lo = Math.floor(i); return a[lo] + (a[Math.ceil(i)] - a[lo]) * (i - lo); }
+function boxPlot(vals, lo, hi, w = 58, h = 14) {
+  const vs = (vals || []).filter(isNum);
+  const s = sv("svg", {width: w, height: h, viewBox: `0 0 ${w} ${h}`, role: "img",
+    "aria-label": vs.length ? `${vs.length} seeds: ${vs.map(v => v.toFixed(2)).join(", ")}` : "no finished seeds"});
+  if (!vs.length || !isNum(lo) || !isNum(hi)) return s;
+  const x = v => 3 + ((v - lo) / Math.max(1e-9, hi - lo)) * (w - 6), y = h / 2;
+  const mn = Math.min(...vs), mx = Math.max(...vs), med = quantile(vs, .5);
+  const tip = `n=${vs.length} · min ${mn.toFixed(2)} · median ${med.toFixed(2)} · max ${mx.toFixed(2)}${vs.length < 5 ? ` · ${5 - vs.length} seed(s) not finished` : ""}`;
+  s.append(sv("title", {}, tip));
+  if (vs.length >= 2) s.append(sv("line", {x1: x(mn), x2: x(mx), y1: y, y2: y, stroke: "var(--muted)", "stroke-width": 1}));
+  if (vs.length >= 4) { const q1 = quantile(vs, .25), q3 = quantile(vs, .75);
+    s.append(sv("rect", {x: x(q1), y: 3, width: Math.max(1.5, x(q3) - x(q1)), height: h - 6, rx: 1.5, fill: "var(--panel)", stroke: "var(--ink-2)", "stroke-width": 1})); }
+  if (vs.length >= 2) s.append(sv("line", {x1: x(med), x2: x(med), y1: 2, y2: h - 2, stroke: "var(--ink)", "stroke-width": 1.5}));
+  for (const v of vs) s.append(sv("circle", {cx: x(v).toFixed(1), cy: y, r: vs.length >= 4 ? 1.4 : 2.2, fill: "var(--accent)", opacity: .9}));
+  return s;
+}
+const meanCell = (st, lo, hi, cls) => el("td", {cls}, st ? el("span", {cls: "ms"}, `${f(st.mean)} ± ${f(st.std)}`, boxPlot(st.vals, lo, hi)) : "—");
+const statRange = lists => { const all = lists.flat().filter(isNum); return all.length ? [Math.min(...all) - .3, Math.max(...all) + .3] : [null, null]; };
+// error block of a failed run: kind + one-line summary (clamped), full block on expand; text nodes only
+function errorBlock(e) {
+  if (!e) return null;
+  return el("div", {cls: "err"}, el("div", {cls: "sum", title: e.summary}, el("span", {cls: "kind"}, e.kind), e.summary),
+    el("details", {}, el("summary", {}, "show error"), el("pre", {}, e.text)));
+}
+// modal: focus moves in, Escape / backdrop / close button close it and focus returns to the opener
+function openModal(title, opener, build) {
+  const close = () => { put("modalroot"); document.removeEventListener("keydown", onKey); if (opener) opener.focus(); };
+  const onKey = e => { if (e.key === "Escape") close(); };
+  const body = el("div", {cls: "mb"}), closeBtn = el("button", {cls: "btn", type: "button", onclick: close}, "Close");
+  const head = el("div", {cls: "mh"}, el("h3", {id: "modaltitle"}, title));
+  const ov = el("div", {cls: "overlay", onclick: e => { if (e.target === ov) close(); }},
+    el("div", {cls: "modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "modaltitle"}, head, body));
+  put("modalroot", ov);
+  document.addEventListener("keydown", onKey);
+  build(head, body, closeBtn);
+  head.append(el("span", {cls: "spacer"}), closeBtn);
+  closeBtn.focus();
+}
+async function getJSON(u) { const r = await fetch(withToken(u), {cache: "no-store", credentials: "same-origin"}); if (!r.ok) throw new Error(`${u}: HTTP ${r.status}`); return r.json(); }
+const unk = v => v == null || v === "unknown";
+const showVal = v => v === undefined ? "(absent)" : typeof v === "string" ? v : JSON.stringify(v);
+
+// ---------- config diff (hyperparameters from each arm's run_manifest.json) ----------
+const DIFF_DEFAULT = {dr: ["R1b", "R2b"], fa: ["F1", "F2"]};
+function openConfigDiff(study, opener) {
+  openModal(`Config diff · ${study === "fa" ? "FLAG-architecture study" : "disc/resid study"}`, opener, async (head, body) => {
+    put(body, el("div", {cls: "empty"}, "Loading manifest…"));
+    let m;
+    try { m = await getJSON(`api/manifest?study=${study}`); } catch (e) { put(body, el("div", {cls: "alert bad"}, String(e.message || e))); return; }
+    const arms = m.arms || [], keys = arms.map(a => a.arm);
+    const pick = (id, def) => el("select", {id, "aria-label": id === "cdA" ? "first arm" : "second arm", onchange: draw}, keys.map(k => { const o = el("option", {value: k}, k); if (k === def) o.selected = true; return o; }));
+    const [dA, dB] = DIFF_DEFAULT[study];
+    const selA = pick("cdA", dA), selB = pick("cdB", dB);
+    head.append(selA, el("span", {cls: "muted"}, "vs"), selB);
+    function draw() {
+      const A = arms.find(a => a.arm === selA.value), B = arms.find(a => a.arm === selB.value);
+      const kids = [];
+      if (!A || !B) { put(body, el("div", {cls: "empty"}, "Pick two arms.")); return; }
+      for (const X of [A, B]) if (unk(X.hyperparameters)) kids.push(el("div", {cls: "alert"}, el("b", {}, X.arm + ": "), "hyperparameters unknown — no run_manifest.json recorded for this arm yet."));
+      if (!unk(A.hyperparameters) && !unk(B.hyperparameters)) {
+        const ha = A.hyperparameters, hb = B.hyperparameters;
+        const all = [...new Set([...Object.keys(ha), ...Object.keys(hb)])].sort();
+        const diff = all.filter(k => JSON.stringify(ha[k]) !== JSON.stringify(hb[k]));
+        kids.push(el("div", {cls: "small muted", style: "margin-bottom:8px"}, `${diff.length} of ${all.length} fields differ · sources: ${A.hyperparameters_source} · ${B.hyperparameters_source}`));
+        kids.push(diff.length ? el("div", {cls: "scroll"}, el("table", {cls: "data"},
+          el("tr", {}, el("th", {}, "Field"), el("th", {}, A.arm), el("th", {}, B.arm)),
+          diff.map(k => el("tr", {}, el("td", {cls: "mono"}, k), el("td", {cls: "mono", style: "white-space:normal;max-width:320px"}, showVal(ha[k])), el("td", {cls: "mono", style: "white-space:normal;max-width:320px"}, showVal(hb[k]))))))
+          : el("div", {cls: "empty"}, "No differing fields."));
+      }
+      put(body, kids);
+    }
+    draw();
+  });
+}
+
+// ---------- prompt samples (random records of an arm's prompt JSONL; test labels hidden server-side) ----------
+function openSamples(opener) {
+  openModal("Prompt samples", opener, (head, body) => {
+    const study = faActive(LAST && LAST.fa) ? "fa" : "dr";
+    const opts = {dr: ["R0", "R1", "R1b", "R2", "R2b"], fa: ["F0", "F1", "F2"]};
+    const selS = el("select", {"aria-label": "study", onchange: () => { fillArms(); load(); }}, ["dr", "fa"].map(k => { const o = el("option", {value: k}, k === "fa" ? "FLAG-architecture" : "disc/resid"); if (k === study) o.selected = true; return o; }));
+    const selA = el("select", {"aria-label": "arm", onchange: () => load()});
+    const again = el("button", {cls: "btn", type: "button", onclick: () => load()}, "Resample");
+    const fillArms = () => put(selA, opts[selS.value].map(a => { const o = el("option", {value: a}, a); if (a === (selS.value === "fa" ? "F1" : "R1b")) o.selected = true; return o; }));
+    head.append(selS, selA, again);
+    fillArms();
+    async function load() {
+      put(body, el("div", {cls: "empty"}, "Sampling…"));
+      let d;
+      try { d = await getJSON(`api/samples?study=${selS.value}&arm=${encodeURIComponent(selA.value)}&n=5`); }
+      catch (e) { put(body, el("div", {cls: "alert bad"}, String(e.message || e))); return; }
+      const meta = el("div", {cls: "small muted", style: "margin-bottom:8px"}, `source ${d.source || "unknown"} · features ${d.features_source || "unknown"} · ${d.sampling || ""} · ${d.labels || ""}`);
+      if (!(d.samples || []).length) { put(body, meta, el("div", {cls: "empty"}, d.note || "No samples.")); return; }
+      put(body, meta, d.samples.map(x => {
+        const lab = typeof x.label === "object" && x.label ? `${x.label.value} · ${x.label.name}` : String(x.label);
+        const ft = x.features || {};
+        return el("div", {cls: "sample"},
+          el("div", {cls: "sm"}, el("span", {}, "node ", el("b", {cls: "mono"}, x.node)), el("span", {}, "split ", el("b", {}, x.split)), el("span", {}, "label ", el("b", {}, lab)),
+            Object.entries(ft).map(([k, v]) => el("span", {}, k.replace(/_/g, " ") + " ", el("b", {cls: "mono"}, String(v))))),
+          el("pre", {}, x.prompt + (x.truncated ? `\n… (truncated: ${x.prompt_chars.toLocaleString()} chars in full)` : "")));
+      }));
+    }
+    load();
+  });
+}
+
+// ---------- header provenance (recorded at launch: batch record + each run's run_manifest.json) ----------
+function renderProv(s) {
+  const study = faActive(s.fa) ? "fa" : "dr", p = (s.provenance || {})[study];
+  $("manifestdl").href = withToken(`api/manifest?study=${study}&download=1`);
+  if (!p) { put("prov", el("span", {cls: "unk"}, "provenance unavailable")); put("hyp"); return; }
+  const u = (v, txt) => unk(v) ? el("span", {cls: "unk"}, "unknown") : txt;
+  const dirtyFiles = Array.isArray(p.git_dirty_files) ? p.git_dirty_files : [];
+  const dirty = p.git_dirty === true ? el("span", {title: dirtyFiles.length ? "uncommitted at launch:\n" + dirtyFiles.join("\n") : "uncommitted changes at launch"}, `dirty${dirtyFiles.length ? ` (${dirtyFiles.length} file${dirtyFiles.length > 1 ? "s" : ""})` : ""}`)
+    : p.git_dirty === false ? "clean" : el("span", {cls: "unk"}, "dirty: unknown");
+  const commits = p.run_commits || [];
+  put("prov",
+    el("span", {}, el("b", {}, p.title)),
+    el("span", {}, "git ", u(p.git_commit, el("span", {cls: "mono", title: p.git_commit}, String(p.git_commit).slice(0, 7))), " · branch ", u(p.git_branch, el("span", {cls: "mono"}, p.git_branch)), " · ", dirty),
+    commits.length > 1 ? el("span", {title: commits.map(c => c.commit + (c.dirty === true ? " (dirty)" : "")).join("\n")}, `runs on ${commits.length} commits`) : null,
+    el("span", {}, "runs ", u(p.first_run, p.first_run), " → ", u(p.last_run, p.last_run), el("span", {cls: "muted"}, " (container time, no zone recorded)")),
+    el("span", {}, "batch recorded ", u(p.batch_recorded_at, p.batch_recorded_at)));
+  put("hyp", el("b", {}, "Hypothesis: "), unk(p.run_hypothesis) ? el("span", {cls: "unk"}, "unknown — not recorded at launch (scripts/record_batch.py records it)") : p.run_hypothesis);
+}
+
 function histogram(counts, labels, w = 260, h = 54) {
   const s = sv("svg", {width: "100%", height: h + 14, viewBox: `0 0 ${w} ${h + 14}`, preserveAspectRatio: "none", role: "img"});
   if (!counts || !counts.length) return s;
@@ -275,6 +433,9 @@ $("theme").addEventListener("click", () => { const t = document.documentElement.
 const TOKEN = new URLSearchParams(location.search).get("token");
 const withToken = u => TOKEN ? u + (u.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(TOKEN) : u;
 $("csv").href = withToken("api/results.csv");
+$("cfgdiff-dr").addEventListener("click", e => openConfigDiff("dr", e.currentTarget));
+$("cfgdiff-fa").addEventListener("click", e => openConfigDiff("fa", e.currentTarget));
+$("samples-btn").addEventListener("click", e => openSamples(e.currentTarget));
 const UI = { arm: store.get("arm", "all"), seed: store.get("seed", "all"), status: store.get("status", "all"), sort: store.get("sort", {col: null, dir: -1}) };
 let LAST = null, LAST_OK = null, LAST_ERR = null, sectionKeys = {};
 const changed = (name, obj) => { const k = JSON.stringify(obj); if (sectionKeys[name] === k) return false; sectionKeys[name] = k; return true; };
@@ -352,6 +513,7 @@ function renderHeaderFA(s) {
   if (changed("ticker", ev)) put("ticker", ev.map(ln => { const m = ln.match(/^\[(.*?)\]\s*(.*)$/); return el("span", {}, el("b", {}, "[" + (m ? m[1] : "") + "]"), " " + (m ? m[2] : ln)); }));
 }
 function renderHeader(s) {
+  renderProv(s);
   if (faActive(s.fa)) return renderHeaderFA(s);
   const o = s.overview || {}, g = s.generation || {}, q = s.queue || {};
   const tasks = g.tasks || [], jobs = q.jobs || [];
@@ -433,8 +595,9 @@ function cellFor(j) {
     kids.push(el("div", {cls: "m"}, el("span", {}, "F1"), el("span", {}, f(t.macro_f1)), el("span", {}, "AUROC"), el("span", {}, f(t.auroc)), el("span", {}, "AUPRC"), el("span", {}, f(t.auprc))));
     title += ` · best epoch ${j.best_epoch ?? "—"} · Macro-F1 ${f(t.macro_f1)} · AUROC ${f(t.auroc)} · AUPRC ${f(t.auprc)}`;
   } else if (st === "failed") {
+    kids.push(errorBlock(j.error));
     kids.push(el("a", {href: withToken("api/log?job=" + encodeURIComponent(j.job)), target: "_blank", rel: "noopener", cls: "small"}, "open log ↗"));
-    title += ` · ${j.log}`;
+    title += ` · ${j.error ? j.error.kind + ": " + j.error.summary : j.log}`;
   }
   const hidden = (UI.arm !== "all" && UI.arm !== j.arm) || (UI.seed !== "all" && UI.seed !== String(j.seed)) || (UI.status !== "all" && UI.status !== st);
   return el("div", {cls: `cell ${j.state}${hidden ? " dim" : ""}`, title}, kids);
@@ -455,7 +618,7 @@ function renderQueue(q, force) {
   put("matrix", kids);
   const fl = q.failed || [];
   put("failed", fl.length ? el("div", {cls: "alert bad", style: "margin-top:10px"}, el("b", {}, `${fl.length} failed run${fl.length > 1 ? "s" : ""}: `),
-    fl.map((x, i) => [i ? " · " : "", el("a", {href: withToken("api/log?job=" + encodeURIComponent(x.job)), target: "_blank", rel: "noopener"}, x.job), " ", el("code", {}, x.log)])) : null);
+    fl.map((x, i) => [i ? " · " : "", el("a", {href: withToken("api/log?job=" + encodeURIComponent(x.job)), target: "_blank", rel: "noopener"}, x.job), " ", x.error ? el("span", {}, el("b", {}, x.error.kind), " ", el("code", {}, x.error.summary)) : el("code", {}, x.log)])) : null);
   $("qlog").textContent = (q.log || []).join("\n") || "(queue not started)";
 }
 
@@ -487,9 +650,11 @@ function renderResults(r) {
     label, key && UI.sort.col === key ? el("span", {cls: "arrow"}, UI.sort.dir < 0 ? "↓" : "↑") : null);
   const head = el("tr", {}, th("Arm"), th("Seeds"), MET.map(([k, l]) => th(l, k)), MET.map(([k, l]) => th("Seeds · " + l)), MET.map(([k, l]) => th("Δ " + l, "d_" + k)), MET.map(([k, l]) => th("Better " + l, "w_" + k)), th("Δ vs"));
   const winCell = w => w ? el("span", {cls: "wins " + (w[0] * 2 > w[1] ? "good" : w[0] * 2 < w[1] ? "badw" : "")}, `${w[0]}/${w[1]}`) : "—";
-  const body = rows.map(x => el("tr", {},
+  const win = r.winner;
+  put("drwin", win ? [el("span", {cls: "goldkey"}), `gold = ${win.arm}: highest mean validation AUROC (${f(win.mean)} over ${win.n} seed${win.n > 1 ? "s" : ""})`] : "gold = winner by mean validation AUROC (none yet)");
+  const body = rows.map(x => el("tr", {cls: win && win.arm === x.arm ? "gold" : "", title: win && win.arm === x.arm ? `winner: ${win.rule}` : null},
     el("td", {}, x.label), el("td", {cls: "mono"}, x.n),
-    MET.map(([k]) => el("td", {cls: best[k] === x.arm ? "best" : ""}, x[k] ? `${f(x[k].mean)} ± ${f(x[k].std)}` : "—")),
+    MET.map(([k]) => meanCell(x[k], range[k][0], range[k][1], best[k] === x.arm ? "best" : "")),
     MET.map(([k]) => el("td", {}, dotPlot(x[k] ? x[k].vals : [], range[k][0], range[k][1]))),
     MET.map(([k]) => el("td", {}, signedDelta(x["d_" + k], band))),
     MET.map(([k]) => el("td", {}, winCell(x["w_" + k]))),
@@ -547,22 +712,26 @@ function renderFA(fa) {
       if (j.state === "done" && j.test) body.push(el("div", {cls: "m"}, el("span", {}, "F1"), el("span", {}, f(j.test.macro_f1)), el("span", {}, "AUROC"), el("span", {}, f(j.test.auroc)), el("span", {}, "AUPRC"), el("span", {}, f(j.test.auprc))));
       if (j.state === "done" && j.finetune) body.push(el("span", {cls: "small"}, j.finetune.applied ? `+FLAG* kept (epoch ${j.finetune.best_epoch})` : "+FLAG* not kept"));
       if (j.state === "running") body.push(el("span", {}, `${j.phase || "training"} · epoch ${j.epochs_done ?? 0}/${j.max_epochs ?? 10}`), el("span", {cls: "small"}, `for ${dur(j.elapsed_s)}`));
-      if (j.state === "failed") body.push(el("a", {href: withToken("api/log?job=" + j.job), target: "_blank", rel: "noopener"}, "open log"));
+      if (j.state === "failed") body.push(errorBlock(j.error), el("a", {href: withToken("api/log?job=" + j.job), target: "_blank", rel: "noopener", cls: "small"}, "open log ↗"));
       cells.push(el("div", {cls: "cell " + j.state}, el("div", {cls: "st"}, el("span", {}, j.state === "waiting" ? "queued" : j.state)), body));
     }
   }
   put("famatrix", cells);
   const res = fa.results || {}, band = res.noise_band ?? 0.5;
   const rhead = el("tr", {}, el("th", {}, "Arm"), el("th", {}, "Seeds"), MET.map(([, l]) => el("th", {}, l)), MET.map(([, l]) => el("th", {}, "Δ " + l + " vs F0")), MET.map(([, l]) => el("th", {}, "Better " + l)));
+  const faRange = Object.fromEntries(MET.map(([k]) => [k, statRange((res.arms || []).map(a => Object.values(a.per_seed || {}).map(p => p.metrics[k])))]));
+  const fw = res.winner;
+  put("fawin", fw ? [el("span", {cls: "goldkey"}), `gold = ${fw.arm}: highest mean validation AUROC (${f(fw.mean)} over ${fw.n} seed${fw.n > 1 ? "s" : ""})`] : "gold = winner by mean validation AUROC (none yet)");
   const rbody = (res.arms || []).map(a => {
     const ps = Object.values(a.per_seed || {});
-    return el("tr", {}, el("td", {}, a.label), el("td", {cls: "mono"}, ps.length),
-      MET.map(([k]) => { const st = stats(ps.map(p => p.metrics[k])); return el("td", {}, st ? `${f(st.mean)} ± ${f(st.std)}` : "—"); }),
+    return el("tr", {cls: fw && fw.arm === a.arm ? "gold" : "", title: fw && fw.arm === a.arm ? `winner: ${fw.rule}` : null}, el("td", {}, a.label), el("td", {cls: "mono"}, ps.length),
+      MET.map(([k]) => meanCell(stats(ps.map(p => p.metrics[k])), faRange[k][0], faRange[k][1], "")),
       MET.map(([k]) => { const ds = ps.map(p => p.delta && p.delta[k]).filter(isNum); return el("td", {}, ds.length ? signedDelta(ds.reduce((x, y) => x + y, 0) / ds.length, band) : "—"); }),
       MET.map(([k]) => { const ds = ps.map(p => p.delta && p.delta[k]).filter(isNum); return el("td", {cls: "mono"}, ds.length ? `${ds.filter(d => d > 0).length}/${ds.length}` : "—"); }));
   });
   put("fares", rhead, rbody);
   $("falog").textContent = [...(g.log || []), ...(q.log || [])].join("\n") || (fa.pilot_log || []).join("\n") || "(no FLAG-architecture logs yet)";
+  if (g.error && changed("fagenerr", g.error)) $("falog").before(el("div", {cls: "alert bad", style: "margin-top:10px"}, el("b", {}, "Generation failed · "), errorBlock(g.error)));
 }
 
 // ---------- 4 diagnostics ----------
@@ -586,7 +755,7 @@ function renderDiag(d, g) {
         el("td", {}, v.verdict_on_train_val ? `${f(v.verdict_on_train_val.says_unhelpful_given_fraud, 1)}% / ${f(v.verdict_on_train_val.says_unhelpful_given_benign, 1)}%` : "—"))))));
     const probe = D.probe || {}, base = (probe.raw || {}).auroc;
     kids.push(el("div", {cls: "scroll", style: "margin-top:10px"}, el("table", {cls: "data"},
-      el("tr", {}, ["Probe input", "AUROC", "AUPRC", "Δ AUROC vs raw"].map(h => el("th", {}, h))),
+      el("tr", {}, el("th", {}, "Probe input"), el("th", {}, "Probe AUROC", helpTip("Measures how easily a classifier can extract the label from the generated text alone.")), el("th", {}, "AUPRC"), el("th", {}, "Δ AUROC vs raw")),
       Object.entries(probe).map(([k, v]) => el("tr", {}, el("td", {}, k), el("td", {}, `${f(v.auroc)} ± ${f(v.auroc_std)}`), el("td", {}, `${f(v.auprc)} ± ${f(v.auprc_std)}`),
         el("td", {}, k === "raw" ? "—" : signedDelta(isNum(v.auroc) && isNum(base) ? v.auroc - base : null, 0.5)))))));
     kids.push(el("div", {cls: "small muted", style: "margin-top:4px"}, `Probe on ${D.n_probe ?? "—"} train + val reviews (${f(D.probe_prevalence, 1)}% fraud); chance AUROC = 50; residual text should sit near chance.`));

@@ -873,6 +873,7 @@ def provenance_header(key):
             "git_commit": b.get("git_commit") or (shas[-1][0] if len(shas) == 1 else UNKNOWN),
             "git_branch": b.get("git_branch") or UNKNOWN,
             "git_dirty": b["git_dirty"] if "git_dirty" in b else (shas[-1][1] if len(shas) == 1 else UNKNOWN),
+            "git_dirty_files": b.get("git_dirty_files", UNKNOWN),
             "run_commits": [{"commit": c, "dirty": d} for c, d in shas],
             "run_hypothesis": b.get("run_hypothesis") or UNKNOWN, "batch_recorded_at": b.get("recorded_at") or UNKNOWN,
             "batch_file": b.get("file") or UNKNOWN,
