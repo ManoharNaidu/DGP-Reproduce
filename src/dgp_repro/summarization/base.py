@@ -47,6 +47,19 @@ class MockSummarizer:
             out.append(" ".join(text.split()[:budget]))
         return out
 
+    def complete(self, prompts: list[str], max_new_tokens: int) -> list[str]:
+        """DEBUG_ONLY answer to a FLAG subgraph prompt (summarization/flag_subgraph.py): one numbered line per
+        listed node, made of that node's first words; a prompt containing 'MOCK_FAIL' gets one line too few."""
+        import re
+        out = []
+        for prompt in prompts:
+            items = re.findall(r"^\d+\. \[(.*)\]$", prompt.split("Question:", 1)[-1], flags=re.M)
+            lines = [f"{i}. {' '.join(t.split()[:5]) or 'empty'}" for i, t in enumerate(items, 1)]
+            if "MOCK_FAIL" in prompt:
+                lines = lines[:-1]
+            out.append("\n".join(lines))
+        return out
+
 
 def make_summarizer(cfg: dict, device: str = "cpu") -> Summarizer:
     kind = cfg.get("backend", "qwen")

@@ -18,7 +18,7 @@ from dgp_repro.experiment import build_prompts, config_hash
 
 def main():
     parser = base_parser(__doc__)
-    parser.add_argument("--until", default="prompts", choices=["mdk", "node_summaries", "prompts"])
+    parser.add_argument("--until", default="prompts", choices=["mdk", "fa_text", "node_summaries", "prompts"])
     args = parser.parse_args()
     cfg = experiment_config(args)
     device = device_for(args, cfg)

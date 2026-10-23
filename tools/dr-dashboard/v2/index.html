@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Disc/Resid Study</title>
+<title>Disc/Resid Studies</title>
 <style>
 :root, :root[data-theme="dark"] {
   --bg: #0b0c0e; --panel: #111316; --panel-2: #16191d; --ink: #e7e9ec; --ink-2: #b4b9c0; --muted: #7d848d; --line: #23272d; --line-2: #2d3239;
@@ -128,6 +128,10 @@ table.data td.best { box-shadow: inset 0 -2px 0 var(--accent); color: var(--ink)
 .gauge .gv { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; margin: 2px 0 6px; }
 svg { display: block; }
 .empty { color: var(--muted); font-size: 12px; padding: 6px 0; }
+.matrix.fam { grid-template-columns: minmax(190px, 1.3fr) repeat(5, minmax(120px, 1fr)); min-width: 780px; margin-top: 12px; }
+.fapilot { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.fapilot .kpi .v { font-size: 15px; }
+.fasub { margin: 14px 0 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } section.half { grid-column: span 12; } .samples, .dgrid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .hwrap, main { padding: 0 12px; } .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gauges { grid-template-columns: 1fr; } .overall { grid-template-columns: 1fr; } }
 </style>
@@ -136,7 +140,7 @@ svg { display: block; }
 <header>
   <div class="hwrap">
     <div class="topbar">
-      <h1>Disc/Resid Study <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo</span></h1>
+      <h1>Disc/Resid Studies <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo · current: FLAG-architecture study (first section); header figures below refer to the earlier dr study</span></h1>
       <span id="mockbadge"></span>
       <span class="spacer"></span>
       <span class="small muted" id="refresh">connecting…</span>
@@ -151,6 +155,19 @@ svg { display: block; }
   </div>
 </header>
 <main>
+  <section>
+    <div class="sh"><h2>FLAG-architecture study · D &amp; R written per trimmed subgraph (FLAG's architecture)</h2><span id="fabadge"></span><span class="meta" id="fameta"></span></div>
+    <div class="sb">
+      <div class="fasub">Pilot (200 random targets; measured before the full run)</div><div class="fapilot" id="fapilot"></div>
+      <div class="fasub">Generation · one FLAG prompt per target subgraph (target + MDK Top-4 per metapath), one line per node required</div>
+      <div class="scroll"><table class="gtable" id="fagen"></table></div>
+      <div class="fasub">Training · F0 baseline, F1 FLAG-arch D, F2 F1 + FLAG's +FLAG* phase · 5 seeds</div>
+      <div class="scroll"><div class="matrix fam" id="famatrix"></div></div>
+      <div class="fasub">Results · test set · mean ± std over finished seeds · Δ paired by seed against F0 · grey = |Δ| &lt; 0.5</div>
+      <div class="scroll"><table class="data" id="fares"></table></div>
+      <pre class="log" id="falog"></pre>
+    </div>
+  </section>
   <section>
     <div class="sh"><h2>1 · Text generation</h2><span id="genbadge"></span><span class="meta" id="genmeta"></span></div>
     <div class="sb"><div class="scroll"><table class="gtable" id="gen"></table></div>
@@ -411,6 +428,71 @@ function renderResults(r) {
   put("res", head, body, ref("Original Sept. run", (r.reference || {}).original || {}, origStats), ref("Published paper", (r.reference || {}).paper || {}, null));
 }
 
+// ---------- FLAG-architecture study ----------
+function renderFA(fa) {
+  if (!fa) { put("fapilot", el("div", {cls: "empty"}, "FLAG-architecture data unavailable.")); return; }
+  const g = fa.generation || {}, q = fa.queue || {}, pl = fa.pilot;
+  const jobs = q.jobs || [], jd = jobs.filter(j => j.state === "done").length;
+  put("fabadge", stateBadge(q.state && q.state !== "not started" ? q.state : g.state || "not started"));
+  $("fameta").textContent = `generation ${g.state || "—"} · training ${jd} / ${jobs.length || 15} runs · branch flag-arch`;
+  const kpi = (k, v, sub) => el("div", {cls: "kpi"}, el("div", {cls: "k"}, el("span", {}, k)), el("div", {cls: "v"}, v), el("div", {cls: "s"}, sub));
+  if (pl && pl.kinds) {
+    const D = pl.kinds.discriminative || {}, Rk = pl.kinds.residual || {}, cc = (pl.classifier_check || {}).per_example_mean || {}, est = pl.estimate || {};
+    const sum = o => o ? Object.values(o).reduce((a, b) => a + (b || 0), 0) : null;
+    put("fapilot",
+      kpi("D subgraphs parsed", pct(D.subgraph_success_rate), `node coverage ${pct(D.node_coverage)} · ${D.hit_cap ?? "—"} hit the 550 cap · ${D.overflow ?? 0} overflow`),
+      kpi("R subgraphs parsed", pct(Rk.subgraph_success_rate), `node coverage ${pct(Rk.node_coverage)} · ${Rk.hit_cap ?? "—"} hit cap`),
+      kpi("Subgraph prompt", isNum((D.prompt_tokens || {}).mean) ? Math.round(D.prompt_tokens.mean) + " tok" : "—", `p95 ${f((D.prompt_tokens || {}).p95, 0)} · ${f((D.nodes_per_subgraph || {}).mean, 1)} nodes avg`),
+      kpi("Usable for +FLAG*", `${pl.usable_both_kinds ?? "—"} / ${pl.n ?? "—"}`, "targets whose D and R both parsed"),
+      kpi("Loss terms at init", isNum(cc.squared_dot) ? cc.squared_dot.toExponential(2) : "—", `squared dot · CE ${f(cc.ce, 3)} · KL ${f(cc.kl, 4)} · cos² ${f(cc.squared_cosine, 3)}`),
+      kpi("Estimated full run", isNum(sum(est.generation_h)) ? `${f(sum(est.generation_h) + (sum(est.metapath_summaries_h) || 0), 1)} h prep` : "—",
+          `+FLAG* phase ${f(est.F2_plus_flag_star_phase_h_per_seed, 1)} h per seed (F2 only)`));
+  } else {
+    put("fapilot", el("div", {cls: "empty"}, (fa.pilot_log && fa.pilot_log.length) ? "Pilot running…" : "Pilot not run yet (scripts/fa_pilot.py)."));
+  }
+  const head = el("tr", {}, ["Text", "State", "Progress", "", "Throughput", "Parsed", "Node coverage", "Hit cap", "Overflow", "Prompt tok", "Answer tok", "ETA", "Metapath summaries"].map((h, i) => el("th", {cls: i >= 5 ? "r" : ""}, h)));
+  const rows = (g.tasks || []).map(t => {
+    const p = t.total ? Math.min(1, (t.done || 0) / t.total) : 0;
+    const mp = t.metapath_summaries;
+    return el("tr", {},
+      el("td", {}, t.label), el("td", {}, stateBadge(t.state)),
+      el("td", {style: "min-width:140px"}, el("div", {cls: "bar" + (t.state === "completed" ? " ok" : t.state === "failed" ? " bad" : "")}, el("i", {style: `width:${(p * 100).toFixed(1)}%`}))),
+      el("td", {cls: "mono small"}, `${(t.done || 0).toLocaleString()} / ${(t.total || 0).toLocaleString()}`),
+      el("td", {}, sparkline(t.rate_series, 120, 24)),
+      el("td", {cls: "r mono"}, pct(t.success_rate)), el("td", {cls: "r mono"}, pct(t.node_coverage)),
+      el("td", {cls: "r mono"}, t.hit_cap ?? "—"), el("td", {cls: "r mono"}, t.overflow ?? "—"),
+      el("td", {cls: "r mono"}, t.prompt_tokens_mean ?? "—"), el("td", {cls: "r mono"}, t.generated_tokens_mean ?? "—"),
+      el("td", {cls: "r mono"}, t.state === "completed" ? "—" : dur(t.eta_s)),
+      el("td", {cls: "r mono"}, mp ? `${mp.done.toLocaleString()} (≤ ${mp.upper_bound.toLocaleString()})` : "—"));
+  });
+  put("fagen", head, rows.length ? rows : el("tr", {}, el("td", {cls: "empty", colspan: 13}, "No subgraph text generated yet.")));
+  const cells = [el("div", {cls: "hd"}, "Arm"), [0, 1, 2, 3, 4].map(s => el("div", {cls: "hd"}, "seed " + s))];
+  for (const a of q.arms || []) {
+    cells.push(el("div", {cls: "cell", style: "justify-content:center"}, el("b", {}, a.label), el("span", {cls: "small"}, a.what)));
+    for (const s of [0, 1, 2, 3, 4]) {
+      const j = jobs.find(x => x.arm === a.arm && x.seed === s) || {state: "waiting"};
+      const body = [];
+      if (j.state === "done" && j.test) body.push(el("div", {cls: "m"}, el("span", {}, "F1"), el("span", {}, f(j.test.macro_f1)), el("span", {}, "AUROC"), el("span", {}, f(j.test.auroc)), el("span", {}, "AUPRC"), el("span", {}, f(j.test.auprc))));
+      if (j.state === "done" && j.finetune) body.push(el("span", {cls: "small"}, j.finetune.applied ? `+FLAG* kept (epoch ${j.finetune.best_epoch})` : "+FLAG* not kept"));
+      if (j.state === "running") body.push(el("span", {}, `${j.phase || "training"} · epoch ${j.epochs_done ?? 0}/${j.max_epochs ?? 10}`), el("span", {cls: "small"}, `for ${dur(j.elapsed_s)}`));
+      if (j.state === "failed") body.push(el("a", {href: withToken("api/log?job=" + j.job), target: "_blank", rel: "noopener"}, "open log"));
+      cells.push(el("div", {cls: "cell " + j.state}, el("div", {cls: "st"}, el("span", {}, j.state === "waiting" ? "queued" : j.state)), body));
+    }
+  }
+  put("famatrix", cells);
+  const res = fa.results || {}, band = res.noise_band ?? 0.5;
+  const rhead = el("tr", {}, el("th", {}, "Arm"), el("th", {}, "Seeds"), MET.map(([, l]) => el("th", {}, l)), MET.map(([, l]) => el("th", {}, "Δ " + l + " vs F0")), MET.map(([, l]) => el("th", {}, "Better " + l)));
+  const rbody = (res.arms || []).map(a => {
+    const ps = Object.values(a.per_seed || {});
+    return el("tr", {}, el("td", {}, a.label), el("td", {cls: "mono"}, ps.length),
+      MET.map(([k]) => { const st = stats(ps.map(p => p.metrics[k])); return el("td", {}, st ? `${f(st.mean)} ± ${f(st.std)}` : "—"); }),
+      MET.map(([k]) => { const ds = ps.map(p => p.delta && p.delta[k]).filter(isNum); return el("td", {}, ds.length ? signedDelta(ds.reduce((x, y) => x + y, 0) / ds.length, band) : "—"); }),
+      MET.map(([k]) => { const ds = ps.map(p => p.delta && p.delta[k]).filter(isNum); return el("td", {cls: "mono"}, ds.length ? `${ds.filter(d => d > 0).length}/${ds.length}` : "—"); }));
+  });
+  put("fares", rhead, rbody);
+  $("falog").textContent = [...(g.log || []), ...(q.log || [])].join("\n") || (fa.pilot_log || []).join("\n") || "(no FLAG-architecture logs yet)";
+}
+
 // ---------- 4 diagnostics ----------
 function renderDiag(d, g) {
   const box = $("diag");
@@ -472,7 +554,7 @@ function renderGpu(gp) {
 // ---------- loop ----------
 function render(s) {
   const t0 = performance.now();
-  for (const [name, fn] of [["header", () => renderHeader(s)], ["generation", () => renderGeneration(s.generation)], ["queue", () => renderQueue(s.queue)],
+  for (const [name, fn] of [["fa", () => renderFA(s.fa)], ["header", () => renderHeader(s)], ["generation", () => renderGeneration(s.generation)], ["queue", () => renderQueue(s.queue)],
                             ["results", () => changed("res", s.results) && renderResults(s.results)], ["diag", () => renderDiag(s.diag, s.generation)], ["gpu", () => renderGpu(s.gpu)]]) {
     try { fn(); } catch (e) { console.error(name, e); }
   }

@@ -1,0 +1,5 @@
+# FLAG-architecture study (2026-10-23), F0: the main DGP configuration re-run on this instance's stack as the reference.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+experiment: fa_F0
+variant: F0 baseline

@@ -1,0 +1,28 @@
+# F2 (FLAG "+FLAG*"): F1, then FLAG's extra phase: 3 x 10 epochs, Adam lr 1e-4, CE(disc-only) + 0.1 KL-uniform(resid-only)
+# + 0.1 orthogonality, summed over 10 examples per step, kept only if validation macro-F1 improves
+# (training/flag_finetune.py; FLAG-Reproduce trainer.finetune_extra and FinetuneConfig defaults).
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+experiment: fa_F2
+variant: F2 FLAG-arch disc + residual phase
+templates: {final: final_prompt_disc}
+flag_arch:
+  enabled: true
+  prompt_set: fa
+  kinds: [discriminative, residual]
+  max_new_tokens: 550
+  truncate_chars: 1200
+  batch_size: 8
+  max_input_tokens: 32768
+  finetune:
+    enabled: true
+    outer_epochs: 3
+    inner_epochs: 10
+    lr: 1.0e-4
+    weight_decay: 0.0
+    alpha: 0.1
+    beta: 0.1
+    accumulation_steps: 10
+    orthogonality: squared_dot   # FLAG paper Eq. 9 default; magnitude checked in the pilot
+    micro_batch: 2
+    eval_batch_size: 8

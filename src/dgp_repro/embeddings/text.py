@@ -37,13 +37,18 @@ class HashingEmbedder:
 class DebertaEmbedder:
     def __init__(self, model_id: str = "microsoft/deberta-v3-base", device: str = "cpu", batch_size: int = 64,
                  max_length: int = 512, revision: str | None = None):
-        import torch
-        from transformers import AutoModel, AutoTokenizer
-
         self.name = model_id
         self.device = device
         self.batch_size = batch_size
         self.max_length = max_length
+        self.revision = revision
+        self.tokenizer = self.model = None    # loaded on first embed(): cached embeddings never need the weights
+
+    def _load(self) -> None:
+        import torch
+        from transformers import AutoModel, AutoTokenizer
+
+        model_id, revision, device = self.name, self.revision, self.device
         self.tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
         # Always float32. transformers >= 5 otherwise loads the checkpoint's stored dtype, which is float16 for
         # deberta-v3-base: ~10x slower on CPU and prone to overflow in DeBERTa's disentangled attention on GPU,
@@ -54,6 +59,8 @@ class DebertaEmbedder:
     def embed(self, texts: list[str], log_every: int = 20) -> np.ndarray:
         """Mean-pooled embeddings in input order. Texts are batched by length to minimise padding;
         padding is masked out of the mean, so the result does not depend on the batching."""
+        if self.model is None:
+            self._load()
         torch = self._torch
         order = np.argsort([len(t) for t in texts], kind="stable")
         out = np.zeros((len(texts), self.model.config.hidden_size), dtype=np.float32)

@@ -41,7 +41,7 @@ from dgp_repro.utils.cache import ArtifactCache, TextStore
 
 TokenCounter = Callable[[str], int]
 PATH_SUMM_OFF_SEPARATOR = " | "
-STAGES = ("mdk", "node_summaries", "prompts")
+STAGES = ("mdk", "fa_text", "node_summaries", "prompts")
 
 
 @dataclass
@@ -51,6 +51,7 @@ class PromptSet:
     trim_stats: list[dict]
     metadata: dict = field(default_factory=dict)
     extras: dict = field(default_factory=dict)      # node -> {"target_disc": ..., "target_residual": ...}
+    aux: dict = field(default_factory=dict)         # FLAG-architecture study: branch-only prompts (see flag_arch)
 
 
 def target_text_specs(cfg: dict) -> dict:
@@ -173,12 +174,22 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
     if until == "mdk":
         return PromptSet(prompts={}, token_rows=[], trim_stats=trim_stats, metadata={"stopped_after": "mdk"})
 
+    # ---- 1b. FLAG-architecture study (extension): D / R text generated per trimmed subgraph -----------
+    fa_cfg = cfg.get("flag_arch") or {}
+    fa: dict = {}
+    if fa_cfg.get("enabled"):
+        fa = _flag_arch_text(graph, targets, trims, fa_cfg, summarizer, trim_cache.key, targets_hash, cache_root, log)
+    if until == "fa_text":                        # aux carries the subgraph texts and trims for the pilot script
+        return PromptSet(prompts={}, token_rows=[], trim_stats=trim_stats,
+                         metadata={"stopped_after": "fa_text", "fa_coverage": fa.get("coverage")},
+                         aux={"fa": fa, "trims": trims, "mdk_key": trim_cache.key if uses_neighbors else None})
+
     # ---- 2. node-level summaries s_u (Eq. 5) --------------------------------------------------
     node_template_name, meta_template_name = template_names(task_aware.get("enabled", False),
                                                             task_aware.get("apply_to_metapath", False))
     node_template_name = (cfg.get("templates") or {}).get("node", node_template_name)   # extension override
     per_node_text: dict[int, str] = {}
-    if comp["text_summary"]:
+    if comp["text_summary"] and not fa:          # FLAG architecture: the subgraph lines replace node summaries
         used = sorted({int(u) for t in trims.values() for nbrs in t["neighbors"].values() for u in nbrs})
         if comp["node_summary"]:
             store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
@@ -194,7 +205,14 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
 
     # ---- 3. metapath-level summaries S_P(v) (Eq. 10) ------------------------------------------
     path_text: dict[tuple[int, str], str] = {}
-    if comp["text_summary"]:
+    fa_path_text: dict[str, dict] = {}
+    if comp["text_summary"] and fa:
+        requests = [(int(v), name, [int(u) for u in t["neighbors"][int(v)]]) for name, t in trims.items() for v in targets]
+        for kind in fa["kinds"]:
+            fa_path_text[kind] = _flag_arch_path_text(graph, fa, kind, requests, summarizer, meta_template_name,
+                                                      B_meta, trim_cache.key, cache_root, log)
+        path_text = fa_path_text["discriminative"]
+    elif comp["text_summary"]:
         requests = [(int(v), name, [int(u) for u in t["neighbors"][int(v)]]) for name, t in trims.items() for v in targets]
         if comp["path_summary"]:
             store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
@@ -227,6 +245,9 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
             generated.update({u: source[u] for u in empty})
             log(f"target {kind}: {len(empty)} empty outputs replaced by raw text")
         target_extra[kind] = generated
+    for kind in fa.get("kinds", []):              # the target's own line from its subgraph prompt (raw text if failed)
+        key = "disc" if kind == "discriminative" else "residual"
+        target_extra[key] = {int(v): fa[kind][int(v)].text_for(int(v), graph.texts) for v in targets}
 
     # ---- 4. prompts (Eq. 11-12) and token accounting -------------------------------------------
     question = cfg["dataset"].get("task", {}).get("question", "Is this fraud?")
@@ -246,7 +267,10 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
             n_trim += len(nbrs)
             raw_neighbor += t["raw_tokens"][v]
             trimmed_raw += int(token_counts[nbrs].sum()) if len(nbrs) else 0
-            if comp["text_summary"] and len(nbrs):
+            if comp["text_summary"] and len(nbrs) and fa:
+                node_sum_tokens += token_counter("\n".join(fa["discriminative"][v].text_for(int(u), graph.texts)
+                                                           for u in nbrs))
+            elif comp["text_summary"] and len(nbrs):
                 node_sum_tokens += token_counter(join_neighbor_texts([int(u) for u in nbrs], per_node_text))
             blocks.append(MetapathBlock(
                 name=name, num_neighbors=len(nbrs),
@@ -272,4 +296,71 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
                 "prompt_version": prompt_version(), "token_counter": token_counter_name,
                 "summarizer": summarizer.name if summarizer else None,
                 "embedder": embedder.name if embedder is not None else None}
-    return PromptSet(prompts=prompts, token_rows=rows, trim_stats=trim_stats, metadata=metadata, extras=extras_out)
+    aux = {}
+    if fa:
+        metadata["fa_coverage"] = fa["coverage"]
+        aux = _flag_arch_branch_prompts(graph, targets, trims, fa, fa_path_text, question, precision)
+    return PromptSet(prompts=prompts, token_rows=rows, trim_stats=trim_stats, metadata=metadata, extras=extras_out,
+                     aux=aux)
+
+
+# ---------------------------------------------------------------- FLAG-architecture study (extension)
+def _flag_arch_text(graph, targets, trims, fa_cfg, summarizer, mdk_key, targets_hash, cache_root, log) -> dict:
+    """D (and R) lines for every target subgraph, FLAG style (summarization/flag_subgraph.py)."""
+    from dgp_repro.summarization.flag_subgraph import FlagPrompts, coverage, store_metadata, subgraph_texts
+
+    prompts = FlagPrompts.load(fa_cfg.get("prompt_set", "fa"))
+    kinds = list(fa_cfg.get("kinds", ["discriminative"]))
+    out = {"kinds": kinds, "coverage": {}, "cache_keys": {}}
+    # `only_targets` (pilot only): generate for a subset, in the same cache as the full run so answers are reused
+    gen_targets = [int(v) for v in fa_cfg.get("only_targets") or targets]
+    for kind in kinds:
+        meta = store_metadata(graph.name, summarizer.name, prompts, kind, fa_cfg.get("max_new_tokens", 550),
+                              fa_cfg.get("truncate_chars", 1200), mdk_key, targets_hash, fa_cfg.get("prompt_set", "fa"))
+        cache = ArtifactCache("fa_subgraph_text", meta, cache_root)
+        store = TextStore(cache.path("answers.jsonl"))
+        out[kind] = subgraph_texts(graph.texts, gen_targets, trims, summarizer, prompts, kind, store,
+                                   max_new_tokens=fa_cfg.get("max_new_tokens", 550),
+                                   truncate=fa_cfg.get("truncate_chars", 1200),
+                                   batch_size=fa_cfg.get("batch_size", 8),
+                                   max_input_tokens=fa_cfg.get("max_input_tokens", 32768), log=log)
+        out["coverage"][kind] = coverage(out[kind])
+        out["cache_keys"][kind] = cache.key
+        log(f"FA {kind}: {out['coverage'][kind]}")
+    return out
+
+
+def _flag_arch_path_text(graph, fa, kind, requests, summarizer, meta_template_name, B_meta, mdk_key, cache_root,
+                         log) -> dict:
+    """Metapath summaries S_P(v) of the neighbours' lines from target v's own subgraph prompt."""
+    from dgp_repro.summarization.pipeline import NEIGHBOR_SEPARATOR, _batched_fill, metapath_key
+
+    store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
+                  "node_text": f"fa_subgraph_text/{fa['cache_keys'][kind]}", "template": meta_template_name,
+                  "B_meta": B_meta, "mdk_cache": mdk_key}
+    store = TextStore(ArtifactCache("metapath_summaries", store_meta, cache_root).path("summaries.jsonl"))
+    items = [(metapath_key(v, name, nbrs), NEIGHBOR_SEPARATOR.join(fa[kind][v].text_for(u, graph.texts) for u in nbrs))
+             for v, name, nbrs in requests if nbrs]
+    log(f"FA {kind} metapath summaries: {len(items)} requests, {len(store)} cached")
+    _batched_fill(store, items, summarizer, load_template(meta_template_name), B_meta, 32, None)
+    return {(v, name): store[metapath_key(v, name, nbrs)] for v, name, nbrs in requests if nbrs}
+
+
+def _flag_arch_branch_prompts(graph, targets, trims, fa, fa_path_text, question, precision) -> dict:
+    """Branch-only prompts for FLAG's +FLAG* phase: the shared model reads ONLY one kind of text, as FLAG's backbone
+    reads only x_disc or x_common there (FLAG-Reproduce/src/flagbench/training/trainer.py:finetune_extra).
+    A target is usable only if both its D and R subgraphs parsed (FLAG drops failed subgraphs from that phase)."""
+    out = {"usable": [], "disc_only": {}, "resid_only": {}}
+    if "residual" not in fa["kinds"]:
+        return out
+    template = load_final_template("final_prompt")
+    for v in targets.tolist():
+        if not (fa["discriminative"][v].ok and fa["residual"][v].ok):
+            continue
+        out["usable"].append(int(v))
+        for kind, key in (("discriminative", "disc_only"), ("residual", "resid_only")):
+            blocks = [MetapathBlock(name=name, num_neighbors=len(t["neighbors"][v]),
+                                    text=fa_path_text[kind].get((v, name)), numeric=None) for name, t in trims.items()]
+            out[key][int(v)] = build_prompt(fa[kind][v].text_for(int(v), graph.texts), blocks, graph.numeric_names,
+                                            question, template=template, precision=precision)
+    return out

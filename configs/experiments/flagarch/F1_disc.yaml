@@ -1,0 +1,17 @@
+# F1 (FLAG "+FLAG"): discriminative text generated FLAG-style, once per trimmed target subgraph (target + its MDK
+# Top-M neighbours), one line per node (summarization/flag_subgraph.py, prompts/dgp/PROVENANCE_FA.md).
+# Neighbours' lines (from the target's own prompt) replace node summaries and feed the metapath summariser;
+# the target keeps its raw text and gets its own line as `Key signals:`. Training: plain CE, as FLAG's +FLAG.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+experiment: fa_F1
+variant: F1 FLAG-arch disc
+templates: {final: final_prompt_disc}
+flag_arch:
+  enabled: true
+  prompt_set: fa
+  kinds: [discriminative]
+  max_new_tokens: 550      # FLAG chat.py
+  truncate_chars: 1200     # FLAG chat.py [:1200]
+  batch_size: 8
+  max_input_tokens: 32768

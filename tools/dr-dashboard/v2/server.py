@@ -4,7 +4,8 @@
     python tools/dr-dashboard/v2/server.py 18781                      # live data, binds 127.0.0.1 only
     python tools/dr-dashboard/v2/server.py 18782 --root <mock-root>   # same page on a mock data tree
 
-Reads, never writes, the study's files: generation caches, logs/disc_resid/*, results/disc_resid/*, results/raw/dr_*.
+Reads, never writes, the studies' files: generation caches, logs/disc_resid/*, results/disc_resid/*, results/raw/dr_*,
+and for the FLAG-architecture study datasets/cache/fa_subgraph_text/*, logs/flag_arch/*, results/flag_arch/*, results/raw/fa_*.
 Writes only its own files next to this script: history.json (1 h of sampled counts / GPU readings, so a restart keeps
 the sparklines) and cache/text_insights.json (computed once by text_insights.py when generation is complete).
 Every section is computed independently; a missing or half-written file yields null for that field, never an error.
@@ -389,6 +390,195 @@ def results_csv():
     return buf.getvalue()
 
 
+# ---------------------------------------------------------------- FLAG-architecture study (D & R per trimmed subgraph)
+FA_ARMS = [  # key, experiment, label, what changes, has the +FLAG* phase
+    ("F0", "fa_F0", "F0 baseline", "main DGP configuration, re-run on this instance's stack", False),
+    ("F1", "fa_F1", "F1 FLAG-arch D", "D written per trimmed subgraph; neighbours' lines feed the metapath summaries; "
+                                      "target's line as Key signals", False),
+    ("F2", "fa_F2", "F2 + FLAG* phase", "F1, then 3 x 10 epochs CE(D-only) + 0.1 KL(R-only) + 0.1 orthogonality, "
+                                        "kept only if validation macro-F1 improves", True),
+]
+FA_KINDS = [("discriminative", "Discriminative (D)"), ("residual", "Residual (R)")]
+FA_CAP = 550
+FA_PHASE_EPOCHS = 30
+
+
+def fa_stores():
+    """kind -> (cache dir, metadata) for the FLAG subgraph-text caches."""
+    out = {}
+    for meta in glob.glob(P("datasets", "cache", "fa_subgraph_text", "*", "metadata.json")):
+        m = read_json(meta)
+        if m and m.get("kind") in dict(FA_KINDS):
+            out[m["kind"]] = (os.path.dirname(meta), m)
+    return out
+
+
+def fa_scan(path):
+    """Subgraph answers: done, parsed ok, nodes, covered nodes, cap hits, overflows, token means, last ok lines."""
+    out = {"done": 0, "ok": 0, "nodes": 0, "nodes_ok": 0, "hit_cap": 0, "overflow": 0, "ptok": [], "gtok": [], "samples": []}
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    row = json.loads(line)
+                except ValueError:
+                    continue                      # half-written last line
+                n = len(row.get("nodes") or [])
+                out["done"] += 1
+                out["nodes"] += n
+                out["hit_cap"] += bool(row.get("hit_cap"))
+                out["overflow"] += bool(row.get("overflow"))
+                if isinstance(row.get("prompt_tokens"), (int, float)):
+                    out["ptok"].append(row["prompt_tokens"])
+                if isinstance(row.get("generated_tokens"), (int, float)):
+                    out["gtok"].append(row["generated_tokens"])
+                if row.get("ok"):
+                    out["ok"] += 1
+                    out["nodes_ok"] += n
+                    first = next((x for x in str(row.get("text", "")).split("\n") if x.strip()), "")
+                    out["samples"].append(first)
+                    if len(out["samples"]) > 4:
+                        out["samples"].pop(0)
+    except OSError:
+        pass
+    return out
+
+
+def fa_generation(now):
+    gen_log = read_lines(P("logs", "flag_arch", "gen_all.log"))
+    finished = any("GEN_DONE" in ln for ln in gen_log)
+    gen_failed = any("GEN_FAILED" in ln for ln in gen_log)
+    alive = process_alive("fa_queue.sh") and not finished
+    stores = fa_stores()
+    tasks = []
+    for kind, label in FA_KINDS:
+        d, meta = stores.get(kind, (None, None))
+        s = fa_scan(os.path.join(d, "answers.jsonl")) if d else fa_scan("")
+        f = os.path.join(d, "answers.jsonl") if d else None
+        last = mtime(f) if f else None
+        t = {"key": "fa:" + kind, "kind": kind, "label": label, "total": N_TARGETS, "done": s["done"], "ok": s["ok"],
+             "success_rate": s["ok"] / s["done"] if s["done"] else None,
+             "node_coverage": s["nodes_ok"] / s["nodes"] if s["nodes"] else None,
+             "hit_cap": s["hit_cap"], "overflow": s["overflow"],
+             "prompt_tokens_mean": round(sum(s["ptok"]) / len(s["ptok"])) if s["ptok"] else None,
+             "generated_tokens_mean": round(sum(s["gtok"]) / len(s["gtok"])) if s["gtok"] else None,
+             "samples": [x[:220] for x in s["samples"]], "started_at": iso_to_epoch((meta or {}).get("created", "")),
+             "last_write_age": now - last if last else None}
+        t["state"] = ("completed" if s["done"] >= N_TARGETS else "running" if alive and s["done"] and t["last_write_age"] is not None
+                      and t["last_write_age"] < 1800 else "failed" if gen_failed else "partial" if s["done"] else "queued")
+        series = HIST["gen"].setdefault(t["key"], [])
+        push(series, [round(now), s["done"]], now)
+        t["rate_series"] = rate_series(series)
+        t["rate_now"] = t["rate_series"][-1][1] if t["rate_series"] else None
+        rate = t["rate_now"] or (s["done"] / ((last - t["started_at"]) / 60) if last and t["started_at"] and last > t["started_at"] else None)
+        t["eta_s"] = (t["total"] - s["done"]) / rate * 60 if rate and s["done"] < t["total"] else (0 if s["done"] >= t["total"] else None)
+        # metapath summaries of this kind's lines (written after all subgraphs of the kind are done)
+        mp = None
+        if meta:
+            for m_path in glob.glob(P("datasets", "cache", "metapath_summaries", "*", "metadata.json")):
+                mm = read_json(m_path)
+                if mm and mm.get("node_text") == f"fa_subgraph_text/{meta.get('cache_key')}":
+                    mp = {"done": len(read_lines(os.path.join(os.path.dirname(m_path), "summaries.jsonl"))),
+                          "upper_bound": N_TARGETS * 12}
+        t["metapath_summaries"] = mp
+        tasks.append(t)
+    state = "completed" if finished else ("failed" if gen_failed else "running" if alive else
+                                          ("partial" if any(t["done"] for t in tasks) else "not started"))
+    return {"state": state, "tasks": tasks, "log": gen_log[-12:]}
+
+
+def fa_history(exp, seed):
+    d = run_dir(exp, seed)
+    rows = []
+    for x in read_lines(os.path.join(d, "training_log.jsonl")) if d else []:
+        try:
+            rows.append(json.loads(x))
+        except ValueError:
+            pass
+    return rows
+
+
+def fa_queue(now):
+    qlog = read_lines(P("logs", "flag_arch", "queue.log"))
+    started, failed = {}, set()
+    for ln in qlog:
+        m = re.match(r"\[(\S+?)\] (start|done|FAILED)\s+(\S+)", ln)
+        if m:
+            ts, ev, job = m.groups()
+            if ev == "start":
+                started[job] = iso_to_epoch(ts)
+                failed.discard(job)
+            elif ev == "FAILED":
+                failed.add(job)
+    alive = process_alive("fa_queue.sh")
+    done_all = any("QUEUE_DONE" in ln for ln in qlog)
+    latest = max(started, key=lambda j: started[j] or 0) if started else None
+    jobs = []
+    for seed in SEEDS:
+        for key, exp, label, _, phase in FA_ARMS:
+            job = f"{exp}_s{seed}"
+            row = {"job": job, "arm": key, "seed": seed, "phase_arm": phase, "state": "waiting",
+                   "log": f"logs/flag_arch/train_{job}.log"}
+            done_file = P("results", "flag_arch", "done", job)
+            if os.path.exists(done_file):
+                row["state"] = "done"
+                try:
+                    row["seconds"] = int(open(done_file).read().strip() or 0)
+                except (OSError, ValueError):
+                    row["seconds"] = None
+                m = run_metrics(exp, seed)
+                if m and isinstance(m.get("test"), dict):
+                    row["test"] = {k: m["test"].get(k) for k in METRICS}
+                man = read_json(os.path.join(run_dir(exp, seed) or "", "run_manifest.json")) or {}
+                ft = man.get("flag_finetune")
+                if ft:
+                    row["finetune"] = {k: ft.get(k) for k in ("applied", "best_epoch", "usable_train_targets")}
+            elif job in failed:
+                row["state"] = "failed"
+                row["log_tail"] = tail_lines(P(row["log"]), 6)
+            elif job in started and job == latest and alive and not done_all:
+                row["state"] = "running"
+                row["elapsed_s"] = now - started[job] if started[job] else None
+                hist = fa_history(exp, seed)
+                normal = [h for h in hist if h.get("phase") != "flag_finetune"]
+                ft = [h for h in hist if h.get("phase") == "flag_finetune"]
+                row["phase"] = "+FLAG* phase" if ft else "training"
+                row["epochs_done"] = len(ft) if ft else len(normal)
+                row["max_epochs"] = FA_PHASE_EPOCHS if ft else MAX_EPOCHS
+                last = (ft or normal or [None])[-1]
+                if last:
+                    row["last"] = {k: last.get(k) for k in ("epoch", "train_loss", "val_loss", "val_auroc", "val_macro_f1",
+                                                            "train_ce", "train_kl", "train_orth")}
+            elif job in started:
+                row["state"] = "stopped"
+            jobs.append(row)
+    state = "completed" if done_all else ("running" if alive else ("stopped" if started else "not started"))
+    return {"state": state, "jobs": jobs, "log": qlog[-10:],
+            "arms": [{"arm": k, "label": l, "what": w, "phase": p} for k, _, l, w, p in FA_ARMS]}
+
+
+def fa_results():
+    base = {s: run_metrics("fa_F0", s) for s in SEEDS}
+    arms = []
+    for key, exp, label, what, _ in FA_ARMS:
+        per = {}
+        for s in SEEDS:
+            t = (run_metrics(exp, s) or {}).get("test")
+            if not isinstance(t, dict) or any(not isinstance(t.get(k), (int, float)) for k in METRICS):
+                continue
+            rt = (base.get(s) or {}).get("test")
+            per[str(s)] = {"metrics": {k: t[k] for k in METRICS},
+                           "delta": {k: t[k] - rt[k] for k in METRICS} if key != "F0" and isinstance(rt, dict) else None}
+        arms.append({"arm": key, "label": label, "what": what, "per_seed": per})
+    return {"arms": arms, "reference": REFERENCE, "noise_band": 0.5}
+
+
+def fa_state(now):
+    pilot = read_json(P("results", "flag_arch", "pilot", "summary.json"))
+    return {"pilot": pilot, "generation": safe(lambda: fa_generation(now)), "queue": safe(lambda: fa_queue(now)),
+            "results": safe(fa_results), "pilot_log": tail_lines(P("logs", "flag_arch", "pilot.log"), 8)}
+
+
 # ---------------------------------------------------------------- diagnostics + insights
 _insights_lock = threading.Lock()
 
@@ -504,7 +694,8 @@ def state():
         v = {"server_time": now, "now": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now)),
              "mock": bool(ARGS.root), "overview": safe(lambda: overview(gen, q, ev, now)),
              "events": ev[-15:][::-1], "generation": gen, "queue": q, "results": safe(results),
-             "diag": safe(lambda: diagnostics(gen)), "gpu": safe(lambda: gpus(now)), "files": safe(files)}
+             "diag": safe(lambda: diagnostics(gen)), "gpu": safe(lambda: gpus(now)), "files": safe(files),
+             "fa": safe(lambda: fa_state(now))}
         save_history()
         _cache.update(t=now, v=v)
         return v
@@ -536,11 +727,12 @@ class H(BaseHTTPRequestHandler):
             self.send(200, results_csv().encode(), "text/csv; charset=utf-8",
                       {"Content-Disposition": "attachment; filename=disc_resid_results.csv"})
         elif path == "/api/log":
-            m = re.search(r"(?:^|&)job=(dr_R[0-9]b?_s[0-4])(?:&|$)", query)   # whitelist: training logs only
+            m = re.search(r"(?:^|&)job=(dr_R[0-9]b?_s[0-4]|fa_F[0-2]_s[0-4])(?:&|$)", query)   # whitelist: training logs only
             if not m:
                 self.send(400, b"bad job", "text/plain")
             else:
-                lines = tail_lines(P("logs", "disc_resid", f"train_{m.group(1)}.log"), 60)
+                folder = "flag_arch" if m.group(1).startswith("fa_") else "disc_resid"
+                lines = tail_lines(P("logs", folder, f"train_{m.group(1)}.log"), 60)
                 self.send(200, ("\n".join(lines) or "(log is empty or missing)").encode(), "text/plain; charset=utf-8")
         elif path.startswith("/files/") and path[7:] in SERVE:
             p = P(*SERVE[path[7:]])

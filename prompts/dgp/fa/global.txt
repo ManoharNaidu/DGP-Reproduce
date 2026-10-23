@@ -1,0 +1,1 @@
+You are provided with a list of Amazon Instant Video reviews. Each review is classified as either unhelpful or helpful based on how other shoppers rate its usefulness.

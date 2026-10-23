@@ -127,6 +127,17 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
                        .replace("{question}", question) for v in ids["train"]]
     result = train(model, text["train"], labels["train"], text["val"], labels["val"], label_tokens,
                    cfg["training"], seed, log_path=run_dir / "training_log.jsonl", aux_prompts=aux_prompts)
+    fa_finetune = None
+    ft_cfg = (cfg.get("flag_arch") or {}).get("finetune") or {}
+    if ft_cfg.get("enabled"):                     # FLAG-architecture study: FLAG's +FLAG* phase after normal training
+        from dgp_repro.training.flag_finetune import flag_finetune
+        usable_set = set(prompt_set.aux.get("usable", []))
+        usable = [int(v) for v in ids["train"] if int(v) in usable_set]
+        fa_finetune = flag_finetune(model, [prompt_set.aux["disc_only"][v] for v in usable],
+                                    [prompt_set.aux["resid_only"][v] for v in usable], graph.labels[usable].astype(int),
+                                    text["val"], labels["val"], label_tokens,
+                                    {k: v for k, v in ft_cfg.items() if k != "enabled"}, seed,
+                                    log_path=run_dir / "training_log.jsonl")
     batch = cfg["training"].get("eval_batch_size", 8)
     probs = {name: predict(model, text[name], label_tokens, batch) for name in ("val", "test")}
     metrics = {"seed": seed, "best_epoch": result.best_epoch,
@@ -145,6 +156,7 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
         "best_epoch": result.best_epoch, "label_tokens": label_tokens.report, "peak_memory": peak_memory_gb(),
         "prompt_metadata": prompt_set.metadata, "dataset_summary": graph.summary(),
         "split_sizes": split.sizes(), "split_seed": split.seed,
+        **({"flag_finetune": {k: v for k, v in fa_finetune.items() if k != "history"}} if fa_finetune else {}),
     })
     if hasattr(model, "save_adapter") and cfg.get("save_checkpoints", True):
         model.save_adapter(REPO_ROOT / "checkpoints" / run_id)
