@@ -140,7 +140,7 @@ svg { display: block; }
 <header>
   <div class="hwrap">
     <div class="topbar">
-      <h1>Disc/Resid Studies <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo · current: FLAG-architecture study (first section); header figures below refer to the earlier dr study</span></h1>
+      <h1>Disc/Resid Studies <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo · current: FLAG-architecture study (first section; the header follows it while it has data)</span></h1>
       <span id="mockbadge"></span>
       <span class="spacer"></span>
       <span class="small muted" id="refresh">connecting…</span>
@@ -280,7 +280,79 @@ let LAST = null, LAST_OK = null, LAST_ERR = null, sectionKeys = {};
 const changed = (name, obj) => { const k = JSON.stringify(obj); if (sectionKeys[name] === k) return false; sectionKeys[name] = k; return true; };
 
 // ---------- header ----------
+// While the FLAG-architecture study has any data, the header follows it (the dr study is finished and keeps its own sections).
+const faActive = fa => !!fa && (((fa.generation || {}).tasks || []).some(t => t.done > 0) || ((fa.queue || {}).state || "not started") !== "not started");
+function faPlan(fa) {
+  // hours per stage: pilot measurements when present, else unknown (null); training from finished runs, else 1.1 h per run
+  const pl = (fa && fa.pilot) || {}, est = pl.estimate || {}, k = pl.kinds || {};
+  const per = {};
+  for (const kind of ["discriminative", "residual"]) {
+    per["gen:" + kind] = isNum((est.generation_h || {})[kind]) ? est.generation_h[kind] : null;
+    per["mp:" + kind] = isNum((est.metapath_summaries_h || {})[kind]) ? est.metapath_summaries_h[kind] : null;
+    per["sps:" + kind] = isNum((k[kind] || {}).seconds_per_subgraph) ? k[kind].seconds_per_subgraph : null;
+    const mp = (k[kind] || {}).metapath_summaries || {};
+    per["mprate:" + kind] = isNum(mp.seconds_per_summary) ? mp.seconds_per_summary : null;
+    per["mptotal:" + kind] = isNum(mp.requests) && isNum(pl.n) && pl.n ? Math.round(mp.requests / pl.n * 10023) : null;
+  }
+  per.phase_h = isNum(est.F2_plus_flag_star_phase_h_per_seed) ? est.F2_plus_flag_star_phase_h_per_seed : null;
+  return per;
+}
+function faProgress(fa) {
+  const g = fa.generation || {}, q = fa.queue || {}, plan = faPlan(fa), jobs = q.jobs || [];
+  let total = 0, done = 0, eta = 0, etaKnown = true, now = null;
+  for (const t of g.tasks || []) {
+    const h = plan["gen:" + t.kind];
+    const frac = t.total ? Math.min(1, t.done / t.total) : 0;
+    if (isNum(h)) { total += h; done += h * frac; } else etaKnown = false;
+    if (frac < 1) {
+      const sps = isNum(t.rate_now) && t.rate_now > 0 ? 60 / t.rate_now : plan["sps:" + t.kind];
+      if (isNum(sps)) eta += (t.total - t.done) * sps; else etaKnown = false;
+      if (!now && (t.state === "running" || g.state === "running")) now = `generating ${t.label}`;
+    }
+    const mpTot = plan["mptotal:" + t.kind], mpDone = (t.metapath_summaries || {}).done || 0, mh = plan["mp:" + t.kind];
+    if (isNum(mh) && isNum(mpTot)) {
+      total += mh; done += mh * Math.min(1, mpDone / mpTot);
+      const left = Math.max(0, mpTot - mpDone);
+      if (left && isNum(plan["mprate:" + t.kind])) eta += left * plan["mprate:" + t.kind];
+      if (!now && frac >= 1 && mpDone < mpTot && g.state === "running") now = `metapath summaries · ${t.label}`;
+    } else etaKnown = false;
+  }
+  const secs = jobs.filter(j => j.state === "done" && j.seconds).map(j => j.seconds);
+  const plain = secs.length ? secs.reduce((a, b) => a + b, 0) / secs.length : 1.1 * 3600;
+  for (const j of jobs) {
+    const per = plain + (j.phase_arm && isNum(plan.phase_h) ? plan.phase_h * 3600 : 0);
+    total += per / 3600;
+    if (j.state === "done") done += per / 3600;
+    else { const el_ = j.state === "running" ? Math.min(per * 0.95, j.elapsed_s || 0) : 0; done += el_ / 3600; eta += per - el_; }
+    if (j.state === "running") now = `${j.arm} · s${j.seed} · ${j.phase || "training"} epoch ${j.epochs_done ?? 0}/${j.max_epochs ?? 10}`;
+  }
+  return {progress: total ? done / total : null, eta: etaKnown ? eta : null, now, plainMeasured: secs.length > 0};
+}
+function renderHeaderFA(s) {
+  const fa = s.fa, g = fa.generation || {}, q = fa.queue || {}, jobs = q.jobs || [], P = faProgress(fa), plan = faPlan(fa);
+  const T = Object.fromEntries((g.tasks || []).map(t => [t.kind, t]));
+  const D = T.discriminative || {}, R = T.residual || {};
+  const genDone = (D.done || 0) + (R.done || 0), genTot = (D.total || 0) + (R.total || 0);
+  const mpDone = ((D.metapath_summaries || {}).done || 0) + ((R.metapath_summaries || {}).done || 0);
+  const mpTot = (plan["mptotal:discriminative"] || 0) + (plan["mptotal:residual"] || 0);
+  const jd = jobs.filter(j => j.state === "done").length, jf = jobs.filter(j => j.state === "failed").length;
+  const kpi = (k, badgeNode, v, sub) => el("div", {cls: "kpi"}, el("div", {cls: "k"}, el("span", {}, k), badgeNode), el("div", {cls: "v"}, v), el("div", {cls: "s"}, sub));
+  put("kpis",
+    kpi("FA generation", stateBadge(g.state), genTot ? pct(genDone / genTot) : "—", `D ${(D.done || 0).toLocaleString()} · R ${(R.done || 0).toLocaleString()} of ${(D.total || 10023).toLocaleString()} each · parsed D ${pct(D.success_rate, 0)} R ${pct(R.success_rate, 0)}`),
+    kpi("Metapath summaries", badge("plain", "D + R"), mpTot ? pct(mpDone / mpTot) : "—", `${mpDone.toLocaleString()} / ${mpTot ? mpTot.toLocaleString() : "unknown"} (expected from the pilot)`),
+    kpi("FA training", stateBadge(q.state), `${jd} / ${jobs.length || 15}`, `runs done${jf ? ` · ${jf} failed` : ""} · F0, F1, F2 × 5 seeds`),
+    kpi("Running now", P.now ? badge("run", "active") : badge("plain", "idle"), P.now ? P.now.split(" · ")[0] : "—", P.now || "nothing running"),
+    kpi("ETA total", badge("plain", P.plainMeasured ? "measured" : "pilot est."), dur(P.eta), "generation + summaries at the live / pilot rate, training per run"),
+    kpi("Last refresh", badge(s.mock ? "warn" : "ok", s.mock ? "mock data" : "live"), el("span", {id: "agev"}, "0s ago"), s.now || "—"));
+  const p = isNum(P.progress) ? P.progress : 0;
+  $("overallbar").firstElementChild.style.width = (p * 100).toFixed(2) + "%";
+  $("overallpct").textContent = `FLAG-architecture study ${pct(P.progress)} (weighted by estimated hours)`;
+  put("mockbadge", s.mock ? badge("warn", "MOCK DATA") : null);
+  const ev = [...(g.log || []), ...(q.log || [])].filter(ln => /^\[\d{4}-/.test(ln)).slice(-10).reverse();
+  if (changed("ticker", ev)) put("ticker", ev.map(ln => { const m = ln.match(/^\[(.*?)\]\s*(.*)$/); return el("span", {}, el("b", {}, "[" + (m ? m[1] : "") + "]"), " " + (m ? m[2] : ln)); }));
+}
 function renderHeader(s) {
+  if (faActive(s.fa)) return renderHeaderFA(s);
   const o = s.overview || {}, g = s.generation || {}, q = s.queue || {};
   const tasks = g.tasks || [], jobs = q.jobs || [];
   const genDone = tasks.reduce((a, t) => a + Math.min(t.done || 0, t.total || 0), 0), genTot = tasks.reduce((a, t) => a + (t.total || 0), 0);
