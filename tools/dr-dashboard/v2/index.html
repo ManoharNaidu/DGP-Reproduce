@@ -189,7 +189,7 @@ table.data tr.gold td:first-child { border-left: 2px solid var(--gold); } table.
       <div class="fasub">Pilot (200 random targets; measured before the full run)</div><div class="fapilot" id="fapilot"></div>
       <div class="fasub">Generation · one FLAG prompt per target subgraph (target + MDK Top-4 per metapath), one line per node required</div>
       <div class="scroll"><table class="gtable" id="fagen"></table></div>
-      <div class="fasub">Training · F0 baseline, F1 FLAG-arch D, F2 F1 + FLAG's +FLAG* phase · 5 seeds <button class="btn" type="button" id="cfgdiff-fa" style="margin-left:8px">View Config Diff</button></div>
+      <div class="fasub">Training · F0 baseline, F1 FLAG-arch D · 5 seeds · F2 (R text + +FLAG* loss / fine-tuning) out of scope <button class="btn" type="button" id="cfgdiff-fa" style="margin-left:8px">View Config Diff</button></div>
       <div class="scroll"><div class="matrix fam" id="famatrix"></div></div>
       <div class="fasub">Results · test set · mean ± std over finished seeds, box = the seeds · Δ paired by seed against F0 · grey = |Δ| &lt; 0.5 · <span id="fawin"></span></div>
       <div class="scroll"><table class="data" id="fares"></table></div>
@@ -329,7 +329,7 @@ const unk = v => v == null || v === "unknown";
 const showVal = v => v === undefined ? "(absent)" : typeof v === "string" ? v : JSON.stringify(v);
 
 // ---------- config diff (hyperparameters from each arm's run_manifest.json) ----------
-const DIFF_DEFAULT = {dr: ["R1b", "R2b"], fa: ["F1", "F2"]};
+const DIFF_DEFAULT = {dr: ["R1b", "R2b"], fa: ["F0", "F1"]};
 function openConfigDiff(study, opener) {
   openModal(`Config diff · ${study === "fa" ? "FLAG-architecture study" : "disc/resid study"}`, opener, async (head, body) => {
     put(body, el("div", {cls: "empty"}, "Loading manifest…"));
@@ -365,7 +365,7 @@ function openConfigDiff(study, opener) {
 function openSamples(opener) {
   openModal("Prompt samples", opener, (head, body) => {
     const study = faActive(LAST && LAST.fa) ? "fa" : "dr";
-    const opts = {dr: ["R0", "R1", "R1b", "R2", "R2b"], fa: ["F0", "F1", "F2"]};
+    const opts = {dr: ["R0", "R1", "R1b", "R2", "R2b"], fa: ["F0", "F1"]};
     const selS = el("select", {"aria-label": "study", onchange: () => { fillArms(); load(); }}, ["dr", "fa"].map(k => { const o = el("option", {value: k}, k === "fa" ? "FLAG-architecture" : "disc/resid"); if (k === study) o.selected = true; return o; }));
     const selA = el("select", {"aria-label": "arm", onchange: () => load()});
     const again = el("button", {cls: "btn", type: "button", onclick: () => load()}, "Resample");
@@ -492,16 +492,16 @@ function faProgress(fa) {
 function renderHeaderFA(s) {
   const fa = s.fa, g = fa.generation || {}, q = fa.queue || {}, jobs = q.jobs || [], P = faProgress(fa), plan = faPlan(fa);
   const T = Object.fromEntries((g.tasks || []).map(t => [t.kind, t]));
-  const D = T.discriminative || {}, R = T.residual || {};
-  const genDone = (D.done || 0) + (R.done || 0), genTot = (D.total || 0) + (R.total || 0);
-  const mpDone = ((D.metapath_summaries || {}).done || 0) + ((R.metapath_summaries || {}).done || 0);
-  const mpTot = (plan["mptotal:discriminative"] || 0) + (plan["mptotal:residual"] || 0);
+  const D = T.discriminative || {};
+  const genDone = D.done || 0, genTot = D.total || 0;
+  const mpDone = (D.metapath_summaries || {}).done || 0;
+  const mpTot = plan["mptotal:discriminative"] || 0;
   const jd = jobs.filter(j => j.state === "done").length, jf = jobs.filter(j => j.state === "failed").length;
   const kpi = (k, badgeNode, v, sub) => el("div", {cls: "kpi"}, el("div", {cls: "k"}, el("span", {}, k), badgeNode), el("div", {cls: "v"}, v), el("div", {cls: "s"}, sub));
   put("kpis",
-    kpi("FA generation", stateBadge(g.state), genTot ? pct(genDone / genTot) : "—", `D ${(D.done || 0).toLocaleString()} · R ${(R.done || 0).toLocaleString()} of ${(D.total || 10023).toLocaleString()} each · parsed D ${pct(D.success_rate, 0)} R ${pct(R.success_rate, 0)}`),
-    kpi("Metapath summaries", badge("plain", "D + R"), mpTot ? pct(mpDone / mpTot) : "—", `${mpDone.toLocaleString()} / ${mpTot ? mpTot.toLocaleString() : "unknown"} (expected from the pilot)`),
-    kpi("FA training", stateBadge(q.state), `${jd} / ${jobs.length || 15}`, `runs done${jf ? ` · ${jf} failed` : ""} · F0, F1, F2 × 5 seeds`),
+    kpi("FA generation", stateBadge(g.state), genTot ? pct(genDone / genTot) : "—", `D ${(D.done || 0).toLocaleString()} of ${(D.total || 10023).toLocaleString()} subgraphs · parsed ${pct(D.success_rate, 0)}`),
+    kpi("Metapath summaries", badge("plain", "D"), mpTot ? pct(mpDone / mpTot) : "—", `${mpDone.toLocaleString()} / ${mpTot ? mpTot.toLocaleString() : "unknown"} (expected from the pilot)`),
+    kpi("FA training", stateBadge(q.state), `${jd} / ${jobs.length || 10}`, `runs done${jf ? ` · ${jf} failed` : ""} · F0, F1 × 5 seeds`),
     kpi("Running now", P.now ? badge("run", "active") : badge("plain", "idle"), P.now ? P.now.split(" · ")[0] : "—", P.now || "nothing running"),
     kpi("ETA total", badge("plain", P.plainMeasured ? "measured" : "pilot est."), dur(P.eta), "generation + summaries at the live / pilot rate, training per run"),
     kpi("Last refresh", badge(s.mock ? "warn" : "ok", s.mock ? "mock data" : "live"), el("span", {id: "agev"}, "0s ago"), s.now || "—"));
@@ -671,19 +671,16 @@ function renderFA(fa) {
   const g = fa.generation || {}, q = fa.queue || {}, pl = fa.pilot;
   const jobs = q.jobs || [], jd = jobs.filter(j => j.state === "done").length;
   put("fabadge", stateBadge(q.state && q.state !== "not started" ? q.state : g.state || "not started"));
-  $("fameta").textContent = `generation ${g.state || "—"} · training ${jd} / ${jobs.length || 15} runs · branch flag-arch`;
+  $("fameta").textContent = `generation ${g.state || "—"} · training ${jd} / ${jobs.length || 10} runs · branch flag-arch`;
   const kpi = (k, v, sub) => el("div", {cls: "kpi"}, el("div", {cls: "k"}, el("span", {}, k)), el("div", {cls: "v"}, v), el("div", {cls: "s"}, sub));
   if (pl && pl.kinds) {
-    const D = pl.kinds.discriminative || {}, Rk = pl.kinds.residual || {}, cc = (pl.classifier_check || {}).per_example_mean || {}, est = pl.estimate || {};
-    const sum = o => o ? Object.values(o).reduce((a, b) => a + (b || 0), 0) : null;
+    const D = pl.kinds.discriminative || {}, est = pl.estimate || {};
+    const genH = (est.generation_h || {}).discriminative, mpH = (est.metapath_summaries_h || {}).discriminative;
     put("fapilot",
       kpi("D subgraphs parsed", pct(D.subgraph_success_rate), `node coverage ${pct(D.node_coverage)} · ${D.hit_cap ?? "—"} hit the 550 cap · ${D.overflow ?? 0} overflow`),
-      kpi("R subgraphs parsed", pct(Rk.subgraph_success_rate), `node coverage ${pct(Rk.node_coverage)} · ${Rk.hit_cap ?? "—"} hit cap`),
       kpi("Subgraph prompt", isNum((D.prompt_tokens || {}).mean) ? Math.round(D.prompt_tokens.mean) + " tok" : "—", `p95 ${f((D.prompt_tokens || {}).p95, 0)} · ${f((D.nodes_per_subgraph || {}).mean, 1)} nodes avg`),
-      kpi("Usable for +FLAG*", `${pl.usable_both_kinds ?? "—"} / ${pl.n ?? "—"}`, "targets whose D and R both parsed"),
-      kpi("Loss terms at init", isNum(cc.squared_dot) ? cc.squared_dot.toExponential(2) : "—", `squared dot · CE ${f(cc.ce, 3)} · KL ${f(cc.kl, 4)} · cos² ${f(cc.squared_cosine, 3)}`),
-      kpi("Estimated full run", isNum(sum(est.generation_h)) ? `${f(sum(est.generation_h) + (sum(est.metapath_summaries_h) || 0), 1)} h prep` : "—",
-          `+FLAG* phase ${f(est.F2_plus_flag_star_phase_h_per_seed, 1)} h per seed (F2 only)`));
+      kpi("Estimated D prep", isNum(genH) ? `${f(genH + (isNum(mpH) ? mpH : 0), 1)} h` : "—",
+          `D generation ${f(genH, 1)} h + metapath summaries ${f(mpH, 1)} h (pilot rates)`));
   } else {
     put("fapilot", el("div", {cls: "empty"}, (fa.pilot_log && fa.pilot_log.length) ? "Pilot running…" : "Pilot not run yet (scripts/fa_pilot.py)."));
   }

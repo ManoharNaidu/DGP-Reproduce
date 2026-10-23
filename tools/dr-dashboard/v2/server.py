@@ -402,10 +402,8 @@ FA_ARMS = [  # key, experiment, label, what changes, has the +FLAG* phase
     ("F0", "fa_F0", "F0 baseline", "main DGP configuration, re-run on this instance's stack", False),
     ("F1", "fa_F1", "F1 FLAG-arch D", "D written per trimmed subgraph; neighbours' lines feed the metapath summaries; "
                                       "target's line as Key signals", False),
-    ("F2", "fa_F2", "F2 + FLAG* phase", "F1, then 3 x 10 epochs CE(D-only) + 0.1 KL(R-only) + 0.1 orthogonality, "
-                                        "kept only if validation macro-F1 improves", True),
-]
-FA_KINDS = [("discriminative", "Discriminative (D)"), ("residual", "Residual (R)")]
+]   # F2 (R text + FLAG's +FLAG* loss / fine-tuning phase) is out of scope for this experiment (user, 2026-10-23)
+FA_KINDS = [("discriminative", "Discriminative (D)")]
 FA_CAP = 550
 FA_PHASE_EPOCHS = 30
 
