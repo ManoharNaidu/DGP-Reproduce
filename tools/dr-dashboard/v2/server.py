@@ -9,6 +9,10 @@ and for the FLAG-architecture study datasets/cache/fa_subgraph_text/*, logs/flag
 Writes only its own files next to this script: history.json (1 h of sampled counts / GPU readings, so a restart keeps
 the sparklines) and cache/text_insights.json (computed once by text_insights.py when generation is complete).
 Every section is computed independently; a missing or half-written file yields null for that field, never an error.
+
+Read-only endpoints besides /api/state: /api/results.csv, /api/manifest?study=dr|fa[&download=1] (experiment manifest
+built from run manifests, metrics and batch records), /api/samples?study=dr|fa&arm=<arm>&n=1..5 (random prompts with
+split, train/val label and graph features), /api/log?job=<job>. `server.py --manifest fa` prints the manifest.
 """
 import argparse, csv, glob, io, json, os, re, subprocess, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -300,6 +304,7 @@ def queue(now):
             elif job in failed:
                 row["state"] = "failed"
                 row["log_tail"] = tail_lines(P(row["log"]), 6)
+                row["error"] = safe(lambda: error_snippet(P(row["log"])))
             elif job in started and job == latest and q_alive and not queue_done:
                 row["state"] = "running"
                 row["started_at"] = started[job]
@@ -346,7 +351,7 @@ def queue(now):
                                                                        ("stopped" if started else "not started")))
     events = qlog[-10:]
     return {"state": state, "jobs": jobs, "arms": arms, "eta_s": remaining if not queue_done else 0, "est": est,
-            "log": events, "failed": [{"job": j["job"], "log": j["log"], "tail": j.get("log_tail", [])}
+            "log": events, "failed": [{"job": j["job"], "log": j["log"], "tail": j.get("log_tail", []), "error": j.get("error")}
                                       for j in jobs if j["state"] == "failed"]}
 
 
@@ -365,12 +370,14 @@ def results():
             ref = (base if key != "R0" else orig).get(s)
             rt = (ref or {}).get("test") if ref else None
             per[str(s)] = {"metrics": {k: t[k] for k in METRICS}, "best_epoch": m.get("best_epoch"),
+                           "val": {k: (m.get("val") or {}).get(k) for k in METRICS},
                            "delta": {k: t[k] - rt[k] for k in METRICS} if isinstance(rt, dict) and all(
                                isinstance(rt.get(k), (int, float)) for k in METRICS) else None}
         arms.append({"arm": key, "label": label, "what": what, "ref": "original Sept. run" if key == "R0" else "R0",
                      "per_seed": per})
     orig_seeds = {str(s): {k: v["test"][k] for k in METRICS} for s, v in orig.items() if v and "test" in v}
-    return {"arms": arms, "reference": REFERENCE, "original_per_seed": orig_seeds, "noise_band": 0.5}
+    return {"arms": arms, "reference": REFERENCE, "original_per_seed": orig_seeds, "noise_band": 0.5,
+            "winner": pick_winner(arms)}
 
 
 def results_csv():
@@ -484,7 +491,11 @@ def fa_generation(now):
         tasks.append(t)
     state = "completed" if finished else ("failed" if gen_failed else "running" if alive else
                                           ("partial" if any(t["done"] for t in tasks) else "not started"))
-    return {"state": state, "tasks": tasks, "log": gen_log[-12:]}
+    err = None
+    if gen_failed:
+        m = re.search(r"GEN_FAILED (\S+)", next(ln for ln in reversed(gen_log) if "GEN_FAILED" in ln))
+        err = safe(lambda: error_snippet(P("logs", "flag_arch", f"gen_{m.group(1)}.log"))) if m else None
+    return {"state": state, "tasks": tasks, "log": gen_log[-12:], "error": err}
 
 
 def fa_history(exp, seed):
@@ -536,6 +547,7 @@ def fa_queue(now):
             elif job in failed:
                 row["state"] = "failed"
                 row["log_tail"] = tail_lines(P(row["log"]), 6)
+                row["error"] = safe(lambda: error_snippet(P(row["log"])))
             elif job in started and job == latest and alive and not done_all:
                 row["state"] = "running"
                 row["elapsed_s"] = now - started[job] if started[job] else None
@@ -563,14 +575,15 @@ def fa_results():
     for key, exp, label, what, _ in FA_ARMS:
         per = {}
         for s in SEEDS:
-            t = (run_metrics(exp, s) or {}).get("test")
+            mm = run_metrics(exp, s) or {}
+            t = mm.get("test")
             if not isinstance(t, dict) or any(not isinstance(t.get(k), (int, float)) for k in METRICS):
                 continue
             rt = (base.get(s) or {}).get("test")
-            per[str(s)] = {"metrics": {k: t[k] for k in METRICS},
+            per[str(s)] = {"metrics": {k: t[k] for k in METRICS}, "val": {k: (mm.get("val") or {}).get(k) for k in METRICS},
                            "delta": {k: t[k] - rt[k] for k in METRICS} if key != "F0" and isinstance(rt, dict) else None}
         arms.append({"arm": key, "label": label, "what": what, "per_seed": per})
-    return {"arms": arms, "reference": REFERENCE, "noise_band": 0.5}
+    return {"arms": arms, "reference": REFERENCE, "noise_band": 0.5, "winner": pick_winner(arms)}
 
 
 def fa_state(now):
@@ -695,10 +708,288 @@ def state():
              "mock": bool(ARGS.root), "overview": safe(lambda: overview(gen, q, ev, now)),
              "events": ev[-15:][::-1], "generation": gen, "queue": q, "results": safe(results),
              "diag": safe(lambda: diagnostics(gen)), "gpu": safe(lambda: gpus(now)), "files": safe(files),
-             "fa": safe(lambda: fa_state(now))}
+             "fa": safe(lambda: fa_state(now)),
+             "provenance": {k: safe(lambda k=k: provenance_header(k)) for k in STUDIES}}
         save_history()
         _cache.update(t=now, v=v)
         return v
+
+
+# ---------------------------------------------------------------- traceability: provenance, manifest, samples, errors
+# Everything here is read from files written at launch / run time (run_manifest.json, metrics.json, batch records,
+# cache metadata); nothing is reconstructed at display time. A value that was never recorded is the string "unknown".
+UNKNOWN = "unknown"
+STUDIES = {  # key -> title, arms, results/logs folder, launcher, baseline arm
+    "dr": {"title": "Disc/resid study · D & R per review", "arms": ARMS, "folder": "disc_resid",
+           "launcher": "scripts/dr_queue.sh", "baseline": "R0"},
+    "fa": {"title": "FLAG-architecture study · D & R per trimmed subgraph", "arms": FA_ARMS, "folder": "flag_arch",
+           "launcher": "scripts/fa_queue.sh", "baseline": "F0"},
+}
+WINNER = {"metric": "auroc", "split": "val",
+          "rule": "highest mean validation AUROC over the arm's finished seeds (DGP's model-selection metric; "
+                  "test metrics are never used to pick the winner)"}
+LABEL_NAMES = {1: "unhelpful (fraud)", 0: "helpful (benign)"}    # configs/datasets/amazonvideo.yaml: label.threshold
+SAMPLE_TEXT_CAP = 1500
+ERR_RE = re.compile(r"Traceback|Error\b|Exception\b|out of memory|OutOfMemory|CUDA error|Killed|JSONDecodeError|"
+                    r"could not parse|parse error", re.I)
+
+
+def run_provenance(exp, seed):
+    d = run_dir(exp, seed)
+    m = read_json(os.path.join(d, "run_manifest.json")) if d else None
+    if not isinstance(m, dict):
+        return None
+    g = str(m.get("git_commit") or "")
+    sha = g[:-len("-dirty")] if g.endswith("-dirty") else g
+    ok = bool(re.fullmatch(r"[0-9a-f]{40}", sha))
+    cfg = m.get("config") if isinstance(m.get("config"), dict) else {}
+    pm = m.get("prompt_metadata") if isinstance(m.get("prompt_metadata"), dict) else {}
+    return {"run_id": m.get("run_id") or os.path.basename(d), "manifest": os.path.relpath(os.path.join(d, "run_manifest.json"), R),
+            "written": m.get("written") or UNKNOWN, "git_commit": sha if ok else UNKNOWN,
+            "git_dirty": g.endswith("-dirty") if ok else UNKNOWN, "git_branch": m.get("git_branch") or UNKNOWN,
+            "prompt_version": pm.get("prompt_version") or UNKNOWN, "templates": cfg.get("templates") or UNKNOWN,
+            "runtime_seconds": m.get("runtime_seconds"), "config": cfg}
+
+
+def flatten(d, prefix=""):
+    out = {}
+    for k, v in (d or {}).items():
+        key = f"{prefix}.{k}" if prefix else str(k)
+        if isinstance(v, dict) and v:
+            out.update(flatten(v, key))
+        else:
+            out[key] = v
+    return out
+
+
+def batch_records(folder):
+    recs = []
+    for path in sorted(glob.glob(P("results", folder, "batch_*.json"))):
+        b = read_json(path)
+        if isinstance(b, dict):
+            recs.append({**b, "file": os.path.relpath(path, R)})
+    return recs
+
+
+def mean_std(vals):
+    v = [x for x in vals if isinstance(x, (int, float))]
+    if not v:
+        return None
+    m = sum(v) / len(v)
+    return {"n": len(v), "mean": m, "std": (sum((x - m) ** 2 for x in v) / len(v)) ** 0.5, "min": min(v), "max": max(v)}
+
+
+def pick_winner(arms):
+    """arms: [{"arm", "per_seed": {seed: {"val": {...}}}}] -> {"arm", "mean", "n", rule...} or None."""
+    best = None
+    for a in arms:
+        st = mean_std([(v.get(WINNER["split"]) or {}).get(WINNER["metric"]) for v in (a.get("per_seed") or {}).values()])
+        if st and (best is None or st["mean"] > best["mean"]):
+            best = {"arm": a["arm"], "mean": st["mean"], "n": st["n"]}
+    return {**best, **WINNER} if best else None
+
+
+def study_manifest(key):
+    st = STUDIES[key]
+    batches = batch_records(st["folder"])
+    arms, written, commits = [], [], {}
+    for akey, exp, label, what, _ in st["arms"]:
+        per, prov0 = {}, None
+        for s in SEEDS:
+            pv = run_provenance(exp, s)
+            m = run_metrics(exp, s)
+            if pv and pv["written"] != UNKNOWN:
+                written.append(pv["written"])
+            if pv:
+                c = commits.setdefault(f'{pv["git_commit"]}|{pv["git_dirty"]}',
+                                       {"commit": pv["git_commit"], "dirty": pv["git_dirty"], "runs": []})
+                c["runs"].append(pv["run_id"])
+            if not isinstance(m, dict) or not isinstance(m.get("test"), dict):
+                continue
+            per[str(s)] = {"val": {k: (m.get("val") or {}).get(k) for k in METRICS},
+                           "test": {k: m["test"].get(k) for k in METRICS}, "best_epoch": m.get("best_epoch"),
+                           "run_id": pv["run_id"] if pv else UNKNOWN, "written": pv["written"] if pv else UNKNOWN,
+                           "git_commit": pv["git_commit"] if pv else UNKNOWN, "git_dirty": pv["git_dirty"] if pv else UNKNOWN}
+            prov0 = prov0 or pv
+        prov0 = prov0 or next((p for p in (run_provenance(exp, s) for s in SEEDS) if p), None)
+        arms.append({
+            "arm": akey, "experiment": exp, "label": label, "description": what,
+            "seeds_finished": sorted(int(s) for s in per),
+            "hyperparameters": flatten(prov0["config"]) if prov0 and prov0["config"] else UNKNOWN,
+            "hyperparameters_source": prov0["manifest"] if prov0 else UNKNOWN,
+            "prompt_version": prov0["prompt_version"] if prov0 else UNKNOWN,
+            "templates": prov0["templates"] if prov0 else UNKNOWN,
+            "per_seed": per,
+            "summary": {f"{sp}_{k}": mean_std([v[sp].get(k) for v in per.values()]) for sp in ("val", "test") for k in METRICS}})
+    stamps = sorted(written) + sorted(b.get("recorded_at") for b in batches if b.get("recorded_at"))
+    return {
+        "schema": "dgp-experiment-manifest-v1",
+        "experiment": st["title"], "study": key, "dataset": "amazonvideo",
+        "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "date_range": {"first": min(stamps) if stamps else UNKNOWN, "last": max(stamps) if stamps else UNKNOWN,
+                       "timezone": "run manifests: container local time, no zone recorded; batch records: UTC"},
+        "git": {"commits": list(commits.values()) or UNKNOWN,
+                "branches": sorted({b.get("git_branch") for b in batches if b.get("git_branch")}) or UNKNOWN,
+                "note": "commit and dirty flag recorded by each run at launch (run_manifest.json); "
+                        "branch only in batch records"},
+        "run_hypothesis": [b["run_hypothesis"] for b in batches if b.get("run_hypothesis")] or UNKNOWN,
+        "cli_commands": [b["command"] for b in batches if b.get("command")] or UNKNOWN,
+        "launcher_script": st["launcher"],
+        "batches": batches or UNKNOWN,
+        "text_generation": text_generation_meta(key),
+        "metrics": {"split_reported": "test (val shown for selection)", "std": "population std (ddof=0)", "scale": "percent"},
+        "winner": pick_winner(arms),
+        "arms": arms,
+    }
+
+
+def text_generation_meta(key):
+    out = []
+    if key == "fa":
+        for kind, (d, meta) in fa_stores().items():
+            if meta:
+                out.append({"kind": kind, "cache": os.path.relpath(d, R), **{k: meta.get(k, UNKNOWN) for k in (
+                    "prompt_set", "prompt_hashes", "summarizer", "max_new_tokens", "truncate_chars", "chat_template",
+                    "unit", "git_commit", "created")}, "prompt_version": meta.get("prompt_version", UNKNOWN)})
+    else:
+        for template, tkey, label in TEXTS:
+            d, meta = cache_store(template)
+            if meta:
+                out.append({"kind": tkey, "label": label, "cache": os.path.relpath(d, R), "template": template,
+                            **{k: meta.get(k, UNKNOWN) for k in ("template_hash", "summarizer", "max_new_tokens", "budget",
+                                                                 "truncate_chars", "git_commit", "created")},
+                            "prompt_version": meta.get("prompt_version", UNKNOWN)})
+    return out or UNKNOWN
+
+
+def provenance_header(key):
+    """Small per-study summary for the page header (latest batch record + commits the runs recorded)."""
+    st = STUDIES[key]
+    b = (batch_records(st["folder"]) or [None])[-1] or {}
+    runs = [p for p in (run_provenance(exp, s) for _, exp, *_ in st["arms"] for s in SEEDS) if p]
+    stamps = sorted(p["written"] for p in runs if p["written"] != UNKNOWN)
+    shas = sorted({(p["git_commit"], p["git_dirty"]) for p in runs}, key=str)
+    return {"study": key, "title": st["title"],
+            "git_commit": b.get("git_commit") or (shas[-1][0] if len(shas) == 1 else UNKNOWN),
+            "git_branch": b.get("git_branch") or UNKNOWN,
+            "git_dirty": b["git_dirty"] if "git_dirty" in b else (shas[-1][1] if len(shas) == 1 else UNKNOWN),
+            "run_commits": [{"commit": c, "dirty": d} for c, d in shas],
+            "run_hypothesis": b.get("run_hypothesis") or UNKNOWN, "batch_recorded_at": b.get("recorded_at") or UNKNOWN,
+            "batch_file": b.get("file") or UNKNOWN,
+            "first_run": stamps[0] if stamps else UNKNOWN, "last_run": stamps[-1] if stamps else UNKNOWN}
+
+
+def error_snippet(path, max_lines=14, max_chars=1600):
+    """Last error block of a log: from the last Traceback (if in the tail) to the end, else the last matching line +-2."""
+    lines = tail_lines(path, 200)
+    hits = [i for i, ln in enumerate(lines) if ERR_RE.search(ln)]
+    if not hits:
+        return None
+    tb = [i for i in hits if "Traceback" in lines[i]]
+    block = lines[tb[-1]:] if tb else lines[max(0, hits[-1] - 2): hits[-1] + 3]
+    block = block[-max_lines:]
+    text = "\n".join(block)[-max_chars:]
+    low = text.lower()
+    kind = ("OOM" if "out of memory" in low or "outofmemory" in low else
+            "parse error" if "jsondecodeerror" in low or "parse" in low else
+            "killed" if "killed" in low else "error")
+    last = next((ln for ln in reversed(block) if ERR_RE.search(ln) and "Traceback" not in ln), block[-1])
+    return {"kind": kind, "summary": last.strip()[:240], "text": text, "log": os.path.relpath(path, R)}
+
+
+_split_cache = {"m": None, "v": None}
+
+
+def node_split():
+    path = P("datasets", "processed", "amazonvideo", "split.json")
+    mt = mtime(path)
+    if _split_cache["m"] != mt:
+        sp = read_json(path) or {}
+        _split_cache.update(m=mt, v={int(n): k for k in ("train", "val", "test") for n in (sp.get(k) or [])})
+    return _split_cache["v"] or {}
+
+
+def node_arrays():
+    try:
+        import numpy as np
+        base = P("datasets", "processed", "amazonvideo")
+        labels = np.load(os.path.join(base, "labels.npy"), mmap_mode="r")
+        g = read_json(os.path.join(base, "graph.json")) or {}
+        npath = os.path.join(base, "numeric.npy")
+        num = np.load(npath, mmap_mode="r") if os.path.exists(npath) else None
+        return labels, num, g.get("numeric_names") or []
+    except Exception:
+        return None, None, []
+
+
+def token_usage_rows(exp, nodes):
+    path = P("results", "token_usage", f"token_usage_{exp}.csv")
+    want, out = {str(n) for n in nodes}, {}
+    try:
+        with open(path, newline="", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                if row.get("node") in want:
+                    out[int(row["node"])] = row
+                    if len(out) == len(want):
+                        break
+    except OSError:
+        pass
+    return out, os.path.relpath(path, R)
+
+
+def prompt_samples(study, arm, n=5, rng=None):
+    import random
+    rng = rng or random.Random()
+    st = STUDIES.get(study)
+    exp = next((e for k, e, *_ in (st or {}).get("arms", []) if k == arm), None)
+    if not exp:
+        return {"error": "unknown study or arm"}
+    files = [p for p in glob.glob(P("datasets", "cache", "prompts", f"{exp}_*.jsonl"))
+             if re.fullmatch(re.escape(exp) + r"_[0-9a-f]+\.jsonl", os.path.basename(p))]
+    if not files:
+        return {"study": study, "arm": arm, "experiment": exp, "source": UNKNOWN, "samples": [],
+                "note": "no prompt file for this arm yet (written by scripts/generate_summaries.py)"}
+    path = max(files, key=lambda p: mtime(p) or 0)
+    size, picked = os.path.getsize(path), {}
+    with open(path, "rb") as fh:                    # random byte offsets: never reads the whole file
+        for _ in range(n * 6):
+            if len(picked) >= n or size == 0:
+                break
+            fh.seek(rng.randrange(size))
+            fh.readline()                            # skip the partial line we landed in
+            ln = fh.readline()
+            if not ln:                               # landed in the last line: wrap to the first
+                fh.seek(0)
+                ln = fh.readline()
+            try:
+                rec = json.loads(ln)
+            except (ValueError, UnicodeDecodeError):
+                continue
+            if isinstance(rec, dict) and isinstance(rec.get("node"), int) and rec["node"] not in picked:
+                picked[rec["node"]] = rec
+    split = node_split()
+    labels, num, num_names = node_arrays()
+    tu, tu_path = token_usage_rows(exp, picked)
+    out = []
+    for node, rec in picked.items():
+        text = str(rec.get("prompt", ""))
+        sp = split.get(node, UNKNOWN)
+        lab = UNKNOWN
+        if sp in ("train", "val") and labels is not None and node < len(labels):
+            lab = {"value": int(labels[node]), "name": LABEL_NAMES.get(int(labels[node]), UNKNOWN)}
+        elif sp == "test":
+            lab = "hidden (test split)"
+        feats = {}
+        if num is not None and node < len(num):
+            feats.update({name: float(num[node][i]) for i, name in enumerate(num_names)})
+        row = tu.get(node) or {}
+        for k in ("num_neighbors_full", "num_neighbors_trimmed", "num_metapaths", "final_prompt_tokens", "target_truncated"):
+            feats[k] = row.get(k, UNKNOWN)
+        out.append({"node": node, "split": sp, "label": lab, "features": feats, "prompt_chars": len(text),
+                    "truncated": len(text) > SAMPLE_TEXT_CAP, "prompt": text[:SAMPLE_TEXT_CAP]})
+    return {"study": study, "arm": arm, "experiment": exp, "source": os.path.relpath(path, R), "features_source": tu_path,
+            "labels": "train/val labels from datasets/processed/amazonvideo/labels.npy; test labels never shown",
+            "sampling": "random byte offsets (longer records slightly more likely)", "samples": out}
 
 
 # ---------------------------------------------------------------- HTTP
@@ -726,6 +1017,20 @@ class H(BaseHTTPRequestHandler):
         elif path == "/api/results.csv":
             self.send(200, results_csv().encode(), "text/csv; charset=utf-8",
                       {"Content-Disposition": "attachment; filename=disc_resid_results.csv"})
+        elif path == "/api/manifest":
+            q = dict(kv.split("=", 1) for kv in query.split("&") if "=" in kv)
+            study = q.get("study", "fa")
+            if study not in STUDIES:
+                self.send(400, b"bad study", "text/plain")
+            else:
+                extra = ({"Content-Disposition": f"attachment; filename=experiment_manifest_{study}.json"}
+                         if q.get("download") == "1" else None)
+                self.send(200, json.dumps(study_manifest(study), indent=2, default=str).encode(), "application/json", extra)
+        elif path == "/api/samples":
+            q = dict(kv.split("=", 1) for kv in query.split("&") if "=" in kv)
+            n = int(q["n"]) if q.get("n", "").isdigit() else 5
+            res = prompt_samples(q.get("study", ""), q.get("arm", ""), max(1, min(5, n)))
+            self.send(400 if "error" in res else 200, json.dumps(res, default=str).encode(), "application/json")
         elif path == "/api/log":
             m = re.search(r"(?:^|&)job=(dr_R[0-9]b?_s[0-4]|fa_F[0-2]_s[0-4])(?:&|$)", query)   # whitelist: training logs only
             if not m:
@@ -753,10 +1058,14 @@ def main():
     ap.add_argument("port", nargs="?", type=int, default=18781)
     ap.add_argument("--root", help="data root to read instead of the project (mock testing)")
     ap.add_argument("--no-insights", action="store_true", help="never launch text_insights.py")
+    ap.add_argument("--manifest", choices=sorted(STUDIES), help="print that study's experiment manifest JSON and exit")
     ARGS = ap.parse_args()
     R = os.path.abspath(ARGS.root) if ARGS.root else os.path.abspath(os.path.join(HERE, "..", "..", ".."))
     if os.path.basename(HERE) != "v2":        # installed as the live dashboard (tools/dr-dashboard/)
         R = os.path.abspath(ARGS.root) if ARGS.root else os.path.abspath(os.path.join(HERE, "..", ".."))
+    if ARGS.manifest:
+        print(json.dumps(study_manifest(ARGS.manifest), indent=2, default=str))
+        return
     state_dir = os.path.join(R, ".dashboard_state") if ARGS.root else HERE
     os.makedirs(os.path.join(state_dir, "cache"), exist_ok=True)
     HIST_FILE = os.path.join(state_dir, "history.json")
