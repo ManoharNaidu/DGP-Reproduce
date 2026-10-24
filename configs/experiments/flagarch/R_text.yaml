@@ -1,0 +1,15 @@
+# R text only: FLAG's residual line per node, generated FLAG-style once per trimmed target subgraph (same prompt layout,
+# cap, truncation and parser as F1's D text). Generated for the record; no arm consumes it - the residual loss /
+# fine-tuning phase (+FLAG*, F2) is out of scope for this experiment (user, 2026-10-23). Run with --until fa_text.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+experiment: fa_R
+variant: R text only (no training)
+flag_arch:
+  enabled: true
+  prompt_set: fa
+  kinds: [residual]
+  max_new_tokens: 550      # FLAG chat.py; keep equal to F1_disc.yaml
+  truncate_chars: 1200     # FLAG chat.py [:1200]
+  batch_size: 8
+  max_input_tokens: 32768
