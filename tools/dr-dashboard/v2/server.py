@@ -403,7 +403,7 @@ FA_ARMS = [  # key, experiment, label, what changes, has the +FLAG* phase
     ("F1", "fa_F1", "F1 FLAG-arch D", "D written per trimmed subgraph; neighbours' lines feed the metapath summaries; "
                                       "target's line as Key signals", False),
 ]   # F2 (R text + FLAG's +FLAG* loss / fine-tuning phase) is out of scope for this experiment (user, 2026-10-23)
-FA_KINDS = [("discriminative", "Discriminative (D)")]
+FA_KINDS = [("discriminative", "Discriminative (D)"), ("residual", "Residual (R) · text only")]   # R: scripts/fa_r_after_queue.sh
 FA_CAP = 550
 FA_PHASE_EPOCHS = 30
 
@@ -454,6 +454,9 @@ def fa_generation(now):
     finished = any("GEN_DONE" in ln for ln in gen_log)
     gen_failed = any("GEN_FAILED" in ln for ln in gen_log)
     alive = process_alive("fa_queue.sh") and not finished
+    r_log = read_lines(P("logs", "flag_arch", "r_text.log"))       # R text: its own job, after the F0/F1 queue
+    r_end = any("R_TEXT_DONE" in ln or "R_TEXT_FAILED" in ln for ln in r_log)
+    r_alive = process_alive("fa_r_after_queue.sh") and any("generate fa_R" in ln for ln in r_log) and not r_end
     stores = fa_stores()
     tasks = []
     for kind, label in FA_KINDS:
@@ -469,8 +472,9 @@ def fa_generation(now):
              "generated_tokens_mean": round(sum(s["gtok"]) / len(s["gtok"])) if s["gtok"] else None,
              "samples": [x[:220] for x in s["samples"]], "started_at": iso_to_epoch((meta or {}).get("created", "")),
              "last_write_age": now - last if last else None}
-        t["state"] = ("completed" if s["done"] >= N_TARGETS else "running" if alive and s["done"] and t["last_write_age"] is not None
-                      and t["last_write_age"] < 1800 else "failed" if gen_failed else "partial" if s["done"] else "queued")
+        alive_k, failed_k = (r_alive, any("R_TEXT_FAILED" in ln for ln in r_log)) if kind == "residual" else (alive, gen_failed)
+        t["state"] = ("completed" if s["done"] >= N_TARGETS else "running" if alive_k and s["done"] and t["last_write_age"] is not None
+                      and t["last_write_age"] < 1800 else "failed" if failed_k else "partial" if s["done"] else "queued")
         series = HIST["gen"].setdefault(t["key"], [])
         push(series, [round(now), s["done"]], now)
         t["rate_series"] = rate_series(series)
