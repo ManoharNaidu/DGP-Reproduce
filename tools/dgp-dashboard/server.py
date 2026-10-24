@@ -13,7 +13,7 @@ read-only functions only). A value that was never recorded is null (shown as "鈥
 Endpoints: / 路 /palette.css 路 /health 路 /api/state 路 /api/results.csv 路 /api/run?id=<run dir> 路 /api/log?name=<log>
 路 /files/<report>.
 """
-import csv, glob, importlib.util, io, json, math, os, re, subprocess, sys, time, types
+import csv, glob, hmac, importlib.util, io, json, math, os, re, subprocess, sys, time, types
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 D = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.join(R, "scripts"))
 cache = {"t": 0, "v": None}
 METRICS = ("macro_f1", "auroc", "auprc")
 STALL_S = 1800                    # a running job whose log has not moved for 30 min is shown as stalled
+TOKEN = os.environ.get("DGP_DASH_TOKEN") or None   # when set (public tunnel): every request needs ?token=, the cookie or a Bearer header
 
 ARMS = {  # experiment name -> (label, what changes)   (v0.2 names, kept for /api/state "results")
     "dgp_amazonvideo_seed0": ("A baseline", "DGP, K=2 (existing 5-seed run)"),
@@ -743,13 +744,30 @@ class H(BaseHTTPRequestHandler):
         b = body if isinstance(body, bytes) else (body if isinstance(body, str) else json.dumps(body, default=str)).encode()
         self.send_response(code); self.send_header("Content-Type", ct); self.send_header("Content-Length", str(len(b)))
         self.send_header("Cache-Control", "no-store")
+        if getattr(self, "cookie", None):
+            self.send_header("Set-Cookie", self.cookie); self.cookie = None
         for k, v in (extra or {}).items():
             self.send_header(k, v)
         self.end_headers(); self.wfile.write(b)
 
+    def authorised(self, q):
+        if not TOKEN:
+            return True, None
+        cookie = dict(c.strip().split("=", 1) for c in (self.headers.get("Cookie") or "").split(";") if "=" in c)
+        bearer = (self.headers.get("Authorization") or "").removeprefix("Bearer ").strip()
+        for cand, from_query in ((q.get("token", ""), True), (cookie.get("dgp_token", ""), False), (bearer, False)):
+            if cand and hmac.compare_digest(cand, TOKEN):
+                return True, from_query
+        return False, None
+
     def do_GET(self):
         path, _, query = self.path.partition("?")
         q = dict(kv.split("=", 1) for kv in query.split("&") if "=" in kv)
+        ok, from_query = self.authorised(q)
+        if not ok:
+            self.send(401, "Token required: open the link with ?token=<dashboard token>.", "text/plain; charset=utf-8"); return
+        if from_query:                                   # remember the token so the page's own requests carry it
+            self.cookie = f"dgp_token={TOKEN}; Path=/; HttpOnly; SameSite=Strict; Max-Age=2592000"
         if path == "/": self.send(200, open(os.path.join(D, "index.html"), "rb").read(), "text/html; charset=utf-8")
         elif path == "/palette.css": self.send(200, css(), "text/css")
         elif path == "/health": self.send(200, {"ok": True, "version": open(os.path.join(D, "VERSION")).read().strip() if os.path.exists(os.path.join(D, "VERSION")) else "dev"})
