@@ -131,6 +131,7 @@ pre.log { margin: 8px 0 0; padding: 10px; background: var(--bg); border: 1px sol
   <span class="brand">DGP Research</span>
   <nav class="nav" aria-label="Sections"><a href="#overview">Overview</a><a href="#experiments">Experiments</a><a href="#results">Results</a><a href="#insights">Insights</a><a href="#infra">Infrastructure</a></nav>
   <span class="spacer"></span>
+  <div class="seg" role="group" aria-label="Which studies to show" id="scope"></div>
   <span class="live" id="live" aria-live="polite"><span class="dot"></span><span>Loading…</span></span>
   <a class="btn" id="csv" href="/api/results.csv">Download CSV</a>
   <button class="btn" type="button" id="theme" aria-label="Toggle light / dark theme">Light</button>
@@ -200,7 +201,15 @@ const MET = [["macro_f1", "Macro-F1"], ["auroc", "AUROC"], ["auprc", "AUPRC"]];
 const MNAME = Object.fromEntries(MET);
 const store = { get(k, d) { try { const v = localStorage.getItem("dgpdash." + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
                 set(k, v) { try { localStorage.setItem("dgpdash." + k, JSON.stringify(v)); } catch (e) {} } };
-const UI = { metric: store.get("metric", "auroc") };
+const UI = { metric: store.get("metric", "auroc"), scope: store.get("scope", "current") };
+// "current" = only the live study (the run in progress); "all" adds the finished historical studies
+const visible = d => (d.studies || []).filter(s => UI.scope === "all" || s.kind === "live");
+function renderScope() {
+  put("scope", [["current", "Current run"], ["all", "All studies"]].map(([k, l]) => el("button", {type: "button", "aria-pressed": String(UI.scope === k),
+    onclick: () => { UI.scope = k; store.set("scope", k); renderScope(); if (DATA) render(DATA); }}, l)));
+}
+const scopeNote = () => UI.scope === "current" ? el("div", {cls: "small muted", style: "margin-bottom:10px"},
+  "Showing the current run only (FLAG-architecture study). Switch to “All studies” for the finished main reproduction and extension experiments.") : null;
 let DATA = null, LAST_OK = 0, LAST_ERR = null;
 
 // ---------- tooltip (data-tip on any element) ----------
@@ -261,7 +270,15 @@ function renderOverview(d) {
     el("div", {cls: "note small muted"}, train.per_run_s ? `${dur(train.per_run_s)} per run (measured)` : "≈ 1.1 h per run (estimate until a run finishes)"));
   const evalBody = el("div", {cls: "items"}, el("div", {cls: "note small muted"}, evals.note));
   const ev = (o.events || [])[0];
-  put("ov",
+  const cur = (o.batches || []).filter(b => !b.superseded_by), old = (o.batches || []).filter(b => b.superseded_by);
+  const runCard = el("div", {cls: "card", style: "margin-bottom:12px"},
+    el("div", {cls: "label"}, "Current run"),
+    el("div", {style: "margin-top:4px"}, cur.length ? cur.map((b, i) => el("div", {cls: "small", style: i ? "margin-top:3px" : null},
+      el("span", {cls: "num fg2"}, hm(b.recorded_at)), "  ", el("b", {}, b.configs.join(", ") || "—"), el("span", {cls: "muted"}, `  · ${b.command}${b.git_commit ? " · commit " + b.git_commit : ""}`)))
+      : el("span", {cls: "muted"}, "No launch record (results/flag_arch/batch_*.json).")),
+    old.length ? el("div", {cls: "small muted", style: "margin-top:6px"}, `Replaced earlier launch${old.length > 1 ? "es" : ""}: ` +
+      old.map(b => `${hm(b.recorded_at)} (${b.configs.join(", ")}), stopped and relaunched ${hm(b.superseded_by)}`).join("; ") + ". Its events are hidden here.") : null);
+  put("ov", runCard,
     el("div", {cls: "card hero"},
       el("div", {}, el("div", {cls: "label"}, "Overall progress"),
         el("div", {cls: "big num", tip: o.overall_basis}, pct(o.overall, 1)),
@@ -301,10 +318,10 @@ function seedTip(arm, s, v) {
 }
 function renderExperiments(d) {
   put("legend", SEED_STATES.map(([k, g, t]) => el("span", {}, el("span", {cls: "sd " + k}, g), t)));
-  const S = d.studies || [];
+  const S = visible(d);
   if (!S.length) { put("ex", el("div", {cls: "card empty"}, "No study data.")); return; }
   const groups = [...new Set(S.map(s => s.group))];
-  put("ex", groups.map(gname => [el("div", {cls: "group-h"}, gname), S.filter(s => s.group === gname).map(s => {
+  put("ex", scopeNote(), groups.map(gname => [el("div", {cls: "group-h"}, gname), S.filter(s => s.group === gname).map(s => {
     const rows = s.arms.map(a => {
       const mins = Object.values(a.seeds).map(v => v.run && v.run.minutes).filter(isNum).sort((x, y) => x - y);
       const runningSeed = Object.values(a.seeds).find(v => v.state === "running" || v.state === "stalled");
@@ -431,9 +448,16 @@ function interpretation(studies, k) {
 }
 function renderResults(d) {
   renderMetricSeg();
-  const S = d.studies || [], k = UI.metric, paper = d.paper;
+  const S = visible(d), k = UI.metric, paper = d.paper;
   if (!S.length) { put("rs", el("div", {cls: "card empty"}, "No results.")); return; }
-  put("rs",
+  if (UI.scope === "current" && S.every(s => s.arms.every(a => a.n === 0))) {
+    const o = d.overview || {};
+    put("rs", scopeNote(), el("div", {cls: "card"}, el("div", {cls: "mid"}, "No finished runs in the current study yet"),
+      el("div", {cls: "small muted", style: "margin-top:6px"}, `F0 and F1 train after generation is complete; results appear here as each seed finishes. ` +
+        `Estimated time to the end of the study: ${dur(o.eta_s)}. Switch to “All studies” to compare the finished experiments.`)));
+    return;
+  }
+  put("rs", scopeNote(),
     el("div", {cls: "grid g2"},
       el("div", {cls: "card"}, el("div", {cls: "label"}, `Change vs baseline · ${MNAME[k]} · bar = mean Δ, line = sd of Δ, dots = seeds`), deltaChart(S, k)),
       el("div", {cls: "card"}, el("div", {cls: "label"}, `${MNAME[k]} · mean ± sd · grey tick = study baseline · dashed = published paper`), absChart(S, k, paper))),
@@ -447,6 +471,8 @@ function renderResults(d) {
 // ---------- D. insights + diagnostics ----------
 function renderInsights(d) {
   const I = d.insights, D = d.diagnostics, k = UI.metric;
+  if (UI.scope === "current") { $("in-sub").textContent = "Current run · generated-text diagnostics";
+    put("in", scopeNote(), diagnosticsCards(D, true)); return; }
   if (!I) { put("in", el("div", {cls: "card empty"}, "Insights unavailable.")); return; }
   const B = I.by_metric[k];
   $("in-sub").textContent = `${MNAME[k]} · ${I.comparisons} arm comparisons across the finished studies`;
@@ -471,7 +497,7 @@ function renderInsights(d) {
     el("div", {cls: "links", style: "margin-top:10px"}, (D && D.reports || []).map(r => el("a", {href: "/files/" + r.name, target: "_blank", rel: "noopener", tip: `${r.path}\nwritten ${hm(r.written)}`}, r.name))));
   put("in", cards, findings, diagnosticsCards(D));
 }
-function diagnosticsCards(D) {
+function diagnosticsCards(D, currentOnly) {
   if (!D) return el("div", {cls: "card empty", style: "margin-top:12px"}, "Diagnostics unavailable.");
   const fa = (D.fa_text && D.fa_text.tasks) || [];
   const faCard = el("div", {cls: "card"}, el("div", {cls: "label"}, "FLAG-architecture text · live"),
@@ -501,6 +527,9 @@ function diagnosticsCards(D) {
       (D.stores || []).map(t => { const p = t.expected ? Math.min(1, t.lines / t.expected) : null;
         return el("tr", {}, el("td", {cls: "muted"}, groups[t.study] || t.study), el("td", {}, t.label), el("td", {cls: "num"}, int(t.lines)), el("td", {cls: "num"}, t.expected ? int(t.expected) : el("span", {tip: "varies with the neighbour sets; no fixed total"}, "—")),
           el("td", {style: "min-width:90px"}, p == null ? "—" : el("div", {cls: "bar thin" + (p >= 1 ? " ok" : ""), tip: pct(p, 1)}, el("i", {style: `width:${(p * 100).toFixed(1)}%`}))), el("td", {cls: "num muted"}, hm(t.written))); }))));
+  if (currentOnly) return [el("div", {cls: "grid g2"}, faCard,
+      el("div", {cls: "card"}, el("div", {cls: "label"}, "Caches of the current run"), el("table", {cls: "t"}, el("tr", {}, ["Cache", "Lines", "Last write"].map(h => el("th", {}, h))),
+        (D.stores || []).filter(t => t.study === "fa").map(t => el("tr", {}, el("td", {}, t.label), el("td", {cls: "num"}, t.expected ? `${int(t.lines)} / ${int(t.expected)}` : int(t.lines)), el("td", {cls: "num muted"}, hm(t.written)))))))];
   return [el("div", {cls: "grid g3", style: "margin-top:12px"}, faCard, drCard, nbCard), cov];
 }
 
@@ -590,7 +619,7 @@ async function poll() {
   } catch (e) { LAST_ERR = e.message || String(e); }
   renderLive();
 }
-renderMetricSeg();
+renderMetricSeg(); renderScope();
 poll(); setInterval(poll, 10000); setInterval(renderLive, 5000);
 </script>
 </body>

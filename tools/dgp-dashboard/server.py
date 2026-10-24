@@ -495,13 +495,29 @@ def studies(now):
 
 
 # ---------------------------------------------------------------- overview (live study), insights, diagnostics, infra
-def latest_events(n=8):
+def fa_batches():
+    """Launch records of the live study; a later launch of the same command supersedes the earlier one."""
+    out = []
+    for path in sorted(glob.glob(P("results", "flag_arch", "batch_*.json"))):
+        b = read_json(path)
+        if isinstance(b, dict):
+            out.append({"file": os.path.relpath(path, R), "recorded_at": b.get("recorded_at"), "command": b.get("command"),
+                        "configs": [os.path.basename(c).replace(".yaml", "") for c in b.get("configs") or []],
+                        "git_commit": (b.get("git_commit") or "")[:7] or None})
+    for i, b in enumerate(out):
+        later = [x for x in out[i + 1:] if x["command"] == b["command"]]
+        b["superseded_by"] = later[0]["recorded_at"] if later else None
+    return out
+
+
+def latest_events(n=8, since=None):
     ev = []
     for name in ("fa_gen_all", "fa_queue", "fa_r_text"):
         for ln in tail(P(*LOGS[name]), 30):
             m = re.match(r"\[(\d{4}-\d\d-\d\dT[\d:]+)Z?\]\s*(.*)", ln)
             if m:
                 ev.append({"t": m.group(1) + "Z", "text": m.group(2), "source": "/".join(LOGS[name])})
+    ev = [e for e in ev if not since or e["t"] >= since]          # only the current launch, not earlier runs
     return sorted(ev, key=lambda e: e["t"])[-n:][::-1]
 
 
@@ -574,8 +590,11 @@ def fa_overview(now, studies_):
             live = x["eta_s"] if x["state"] == "running" and x["eta_s"] else None    # a live rate only while it runs
             rem.append(live if live else (1 - x["fraction"]) * x["hours_est"] * 3600)
     rem.append(max(0.0, total_runs * per_h - train_done_h) * 3600)
+    batches = fa_batches()
+    current = [b for b in batches if not b["superseded_by"]]
+    since = min((b["recorded_at"] for b in current if b["recorded_at"]), default=None)
     return {
-        "study": "fa", "name": fa_st["name"], "kind": "live",
+        "study": "fa", "name": fa_st["name"], "kind": "live", "batches": batches, "current_since": since,
         "overall": (gen_done_h + train_done_h) / total_h if total_h else None,
         "overall_basis": "hours-weighted: pilot estimates for generation, " + ("measured" if per_run_s else "1.1 h (estimate)") + " per training run",
         "stages": [
@@ -589,7 +608,7 @@ def fa_overview(now, studies_):
         ],
         "runs": {"done": len(done_runs), "total": total_runs, "active": len(running)},
         "eta_s": sum(rem) if rem else None, "eta_basis": "live generation rate where measured, else pilot rates",
-        "events": latest_events(), "pilot": {"n": pl.get("n"), "kinds": {k: {x: v.get(x) for x in ("subgraph_success_rate", "node_coverage", "hit_cap")}
+        "events": latest_events(since=since), "pilot": {"n": pl.get("n"), "kinds": {k: {x: v.get(x) for x in ("subgraph_success_rate", "node_coverage", "hit_cap")}
                                                                           for k, v in kinds.items()}} if pl else None,
         "gen_log": gen_log[-12:], "queue_log": tail(P(*LOGS["fa_queue"]), 12), "r_log": tail(P(*LOGS["fa_r_text"]), 6),
     }

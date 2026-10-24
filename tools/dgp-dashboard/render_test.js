@@ -19,6 +19,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const w = dom.window, d = w.document, $ = id => d.getElementById(id), txt = n => (n ? n.textContent : "").replace(/\s+/g, " ").trim();
   const check = (name, ok, detail) => { console.log(`${ok ? "ok  " : "FAIL"} ${name}${detail ? " · " + String(detail).slice(0, 220) : ""}`); if (!ok) fails.push(name); };
   const state = await (await fetch(new URL("api/state", base))).json();
+  // default view: the current run only
+  check("default view is the current run", /Current run/.test(txt($("ov"))) && /FLAG-architecture study/.test(txt($("ex"))) && !/Main DGP reproduction/.test(txt($("ex"))), txt($("ex")).slice(0, 120));
+  check("superseded launch named, not mixed in", !(state.overview.batches || []).some(b => b.superseded_by) || /Replaced earlier launch/.test(txt($("ov"))));
+  check("current-run events only", (state.overview.events || []).every(e => !state.overview.current_since || e.t >= state.overview.current_since));
+  const all = [...d.querySelectorAll("#scope button")].find(b => b.textContent === "All studies");
+  all.dispatchEvent(new w.MouseEvent("click", {bubbles: true})); await sleep(300);
   for (const [id, need] of [["ov", /Overall progress/], ["ex", /Main DGP reproduction/], ["rs", /Change vs baseline/], ["in", /Strongest result/], ["if", /Download results CSV/]])
     check(`section ${id} rendered`, need.test(txt($(id))), txt($(id)).slice(0, 160));
   for (const id of ["ov", "ex", "rs", "in", "if"]) check(`section ${id} has no NaN/undefined`, !/\bNaN\b|undefined/.test(txt($(id))));
