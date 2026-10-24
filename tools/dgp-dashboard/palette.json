@@ -1,24 +1,34 @@
 {
- "light": {
-  "bg": "#ffffff",
-  "fg": "#1a1a1a",
-  "muted": "#595959",
-  "accent": "#1f5fbf",
-  "ok": "#1b7a3a",
-  "warn": "#8a5a00",
-  "bad": "#b3261e",
-  "line": "#d4d4d4",
-  "wash": "#eef3fb"
- },
  "dark": {
-  "bg": "#16181c",
-  "fg": "#ececec",
-  "muted": "#a3a3a3",
-  "accent": "#7ab0ff",
-  "ok": "#5ccf82",
-  "warn": "#e0b04a",
-  "bad": "#ff8a80",
-  "line": "#33373d",
-  "wash": "#1c2230"
+  "bg": "#121314",
+  "card": "#1a1b1e",
+  "card2": "#222327",
+  "line": "#2d2f34",
+  "line2": "#3a3d43",
+  "fg": "#ececed",
+  "fg2": "#c4c6cb",
+  "muted": "#979aa1",
+  "accent": "#9fb1d6",
+  "ok": "#5fbf8f",
+  "warn": "#d6a24a",
+  "bad": "#ec7078",
+  "bar": "#3b3e45",
+  "bar2": "#70747e"
+ },
+ "light": {
+  "bg": "#f6f6f7",
+  "card": "#ffffff",
+  "card2": "#f0f0f2",
+  "line": "#e1e2e5",
+  "line2": "#cfd1d6",
+  "fg": "#18191b",
+  "fg2": "#3b3e44",
+  "muted": "#5d6067",
+  "accent": "#3b5688",
+  "ok": "#1d7348",
+  "warn": "#835400",
+  "bad": "#b1261f",
+  "bar": "#d9dbdf",
+  "bar2": "#868a94"
  }
 }
