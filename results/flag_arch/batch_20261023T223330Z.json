@@ -1,0 +1,18 @@
+{
+  "schema": "batch-record-v1",
+  "study": "flag_arch",
+  "recorded_at": "2026-10-23T22:33:30Z",
+  "git_commit": "bf20c8db6e10b1ce71c202603435666acce6480d",
+  "git_branch": "flag-arch",
+  "git_dirty": true,
+  "git_dirty_files": [
+    "M tools/dr-dashboard/v2/history.json",
+    "?? results/flag_arch/"
+  ],
+  "command": "nohup scripts/fa_queue.sh > logs/flag_arch/queue.log 2>&1 &",
+  "configs": [
+    "configs/experiments/flagarch/F1_disc.yaml",
+    "configs/experiments/flagarch/F0_baseline.yaml"
+  ],
+  "run_hypothesis": "User's aim (2026-10-23): re-run adding disc in DGP following FLAG's architecture - generate D after trimming and selecting the top-N nodes, one prompt per sampled subgraph, as FLAG does after sampling (+FLAG). Residual loss / fine-tuning (+FLAG*, F2) and R text out of scope for this experiment."
+}

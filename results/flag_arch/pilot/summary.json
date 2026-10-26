@@ -1,0 +1,124 @@
+{
+  "n": 200,
+  "sample_seed": 0,
+  "config": "configs/experiments/flagarch/F2_disc_resid_finetune.yaml",
+  "started": "2026-10-23T14:20:49+0000",
+  "kinds": {
+    "discriminative": {
+      "generation_seconds": 1321.5,
+      "subgraphs": 200,
+      "succeeded": 6,
+      "subgraph_success_rate": 0.03,
+      "nodes": 6628,
+      "node_coverage": 0.023687386843693422,
+      "cache_key": "88e5343469111730",
+      "nodes_per_subgraph": {
+        "mean": 33.14,
+        "p95": 37.0,
+        "max": 37
+      },
+      "prompt_tokens": {
+        "mean": 4076.11,
+        "p95": 8117.599999999998,
+        "max": 9776
+      },
+      "generated_tokens_mean": 549.01,
+      "hit_cap": 196,
+      "overflow": 0,
+      "seconds_per_subgraph": 6.6075,
+      "success_by_subgraph_size": {
+        "11-25": {
+          "n": 5,
+          "ok": 2
+        },
+        "26-40": {
+          "n": 195,
+          "ok": 4
+        }
+      },
+      "metapath_summaries": {
+        "requests": 2394,
+        "seconds": 1018.9,
+        "seconds_per_summary": 0.42561682164918013
+      }
+    },
+    "residual": {
+      "generation_seconds": 1323.4,
+      "subgraphs": 200,
+      "succeeded": 42,
+      "subgraph_success_rate": 0.21,
+      "nodes": 6628,
+      "node_coverage": 0.1947797223898612,
+      "cache_key": "8e0cce06c303897b",
+      "nodes_per_subgraph": {
+        "mean": 33.14,
+        "p95": 37.0,
+        "max": 37
+      },
+      "prompt_tokens": {
+        "mean": 4107.11,
+        "p95": 8148.599999999998,
+        "max": 9807
+      },
+      "generated_tokens_mean": 544.02,
+      "hit_cap": 172,
+      "overflow": 0,
+      "seconds_per_subgraph": 6.617000000000001,
+      "success_by_subgraph_size": {
+        "11-25": {
+          "n": 5,
+          "ok": 4
+        },
+        "26-40": {
+          "n": 195,
+          "ok": 38
+        }
+      },
+      "metapath_summaries": {
+        "requests": 2394,
+        "seconds": 1001.7,
+        "seconds_per_summary": 0.4184097654140284
+      }
+    }
+  },
+  "prompt_tokens": {
+    "main_F1": {
+      "mean": 906.275,
+      "max": 6261
+    },
+    "disc_only": {
+      "mean": 329.4,
+      "max": 368
+    },
+    "resid_only": {
+      "mean": 346.0,
+      "max": 392
+    }
+  },
+  "usable_both_kinds": 5,
+  "classifier_check": {
+    "examples": 5,
+    "per_example_mean": {
+      "ce": 2.074831505616506,
+      "kl": 5.671445528666179,
+      "squared_dot": 557065898.6666666,
+      "squared_cosine": 0.9594450195630392,
+      "h_norm_d": 156.24163818359375,
+      "h_norm_r": 154.2261708577474
+    },
+    "fwd_bwd_seconds_per_example_D_plus_R": 0.42623897393544513,
+    "fwd_seconds_per_example_main": 0.16490164399147034
+  },
+  "estimate": {
+    "generation_h": {
+      "discriminative": 18.39638125,
+      "residual": 18.422830833333336
+    },
+    "metapath_summaries_h": {
+      "discriminative": 14.184308366270859,
+      "residual": 13.944122586826483
+    },
+    "F2_plus_flag_star_phase_h_per_seed": 1.9004112185289463
+  },
+  "finished": "2026-10-23T15:38:47+0000"
+}

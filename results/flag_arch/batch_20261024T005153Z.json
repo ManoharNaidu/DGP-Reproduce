@@ -1,0 +1,17 @@
+{
+  "schema": "batch-record-v1",
+  "study": "flag_arch",
+  "recorded_at": "2026-10-24T00:51:53Z",
+  "git_commit": "c716f63fefc5eec34592e79661da208a84c2979c",
+  "git_branch": "flag-arch",
+  "git_dirty": true,
+  "git_dirty_files": [
+    "M tools/dr-dashboard/v2/history.json",
+    "?? results/flag_arch/"
+  ],
+  "command": "nohup scripts/fa_r_after_queue.sh > logs/flag_arch/r_text.log 2>&1 &",
+  "configs": [
+    "configs/experiments/flagarch/R_text.yaml"
+  ],
+  "run_hypothesis": "R text (FLAG's residual line per node, per trimmed target subgraph) generated for the record on the user's request (2026-10-24); no arm consumes it - residual loss / fine-tuning stays out of scope."
+}
