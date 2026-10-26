@@ -1,6 +1,7 @@
 """Disc/resid study: how each arm deviates from the reference run (CPU, reads finished runs only).
 
-    python scripts/dr_analysis.py
+    python scripts/dr_analysis.py                        # writes results/disc_resid/deviation.{json,md}
+    python scripts/dr_analysis.py --stem deviation_final # same analysis, other file name (keeps earlier snapshots)
 
 Reference = R0 (the original DGP configuration re-run on this stack); R0 is also compared with the original
 September run (results/raw/dgp_amazonvideo_seed0_seed{s}_f12e6c750d). Per arm, using only seeds finished for both:
@@ -11,9 +12,10 @@ September run (results/raw/dgp_amazonvideo_seed0_seed{s}_f12e6c750d). Per arm, u
   * prediction agreement: Spearman correlation of p_fraud, agreement of hard labels at each run's own threshold,
     McNemar exact p on correctness, and flips (wrong -> right, right -> wrong);
   * cost: mean final prompt tokens, training time, peak GPU memory.
-Writes results/disc_resid/deviation.{json,md}.
+Writes results/disc_resid/<stem>.{json,md} (default stem: deviation).
 """
 
+import argparse
 import csv
 import glob
 import json
@@ -112,6 +114,9 @@ def fmt(x, nd=2):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--stem", default="deviation", help="output file name without extension")
+    stem = ap.parse_args().stem
     R = {k: runs(v) for k, v in ARMS.items()}
     orig = runs(ORIGINAL)
     out = {"vs_R0": {k: compare(R[k], R["R0"]) for k in ARMS if k != "R0"},
@@ -121,7 +126,7 @@ def main():
            "seeds_done": {k: sorted(v) for k, v in R.items()}}
     dst = ROOT / "results" / "disc_resid"
     dst.mkdir(parents=True, exist_ok=True)
-    (dst / "deviation.json").write_text(json.dumps(out, indent=2, default=float))
+    (dst / f"{stem}.json").write_text(json.dumps(out, indent=2, default=float))
 
     L = ["# Disc/resid study: deviation from the reference run", "",
          "Test set, AmazonVideo. Mean ± std over seeds (ddof=0). Δ = paired per-seed difference to the reference; "
@@ -159,7 +164,7 @@ def main():
     for k, c in out["cost"].items():
         L.append(f"| {k} | {fmt(c['final_prompt_tokens_mean'], 1)} / {fmt(c['final_prompt_tokens_max'], 0)} | "
                  f"{fmt(c['train_hours_mean'])} | {fmt(c['peak_gpu_gb'], 1)} |")
-    (dst / "deviation.md").write_text("\n".join(L) + "\n")
+    (dst / f"{stem}.md").write_text("\n".join(L) + "\n")
     print("\n".join(L))
 
 
