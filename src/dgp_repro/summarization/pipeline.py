@@ -13,6 +13,7 @@ the task-agnostic template contains no fraud/spam/helpfulness wording.
 from __future__ import annotations
 
 import hashlib
+import os
 from typing import Callable
 
 from dgp_repro.summarization.base import Summarizer, fill_summary_template
@@ -21,10 +22,27 @@ from dgp_repro.utils.cache import TextStore
 NEIGHBOR_SEPARATOR = "\n"
 
 
+def generation_shard() -> tuple[int, int] | None:
+    """(index, count) from DGP_GEN_SHARD="i/n", or None. A shard generates only the keys whose hash falls in its
+    slice; several shard processes fill the same store in parallel. Shards never build prompts."""
+    spec = os.environ.get("DGP_GEN_SHARD")
+    if not spec:
+        return None
+    index, count = (int(x) for x in spec.split("/"))
+    if not 0 <= index < count:
+        raise ValueError(f"bad DGP_GEN_SHARD {spec!r}")
+    return index, count
+
+
+def in_shard(key: str, shard: tuple[int, int] | None) -> bool:
+    return shard is None or int(hashlib.sha1(key.encode()).hexdigest()[:8], 16) % shard[1] == shard[0]
+
+
 def _batched_fill(store: TextStore, items: list[tuple[str, str]], summarizer: Summarizer, template: str,
                   budget: int, batch_size: int, progress: Callable[[int, int], None] | None) -> None:
     """Summarize (key, text) items missing from the store, appending results as they finish."""
-    todo = [(k, t) for k, t in dict(items).items() if k not in store]
+    shard = generation_shard()
+    todo = [(k, t) for k, t in dict(items).items() if k not in store and in_shard(k, shard)]
     for start in range(0, len(todo), batch_size):
         batch = todo[start:start + batch_size]
         prompts = [fill_summary_template(template, text, budget) for _, text in batch]
@@ -40,6 +58,8 @@ def node_summaries(texts: list[str], node_ids: list[int], summarizer: Summarizer
                    progress: Callable[[int, int], None] | None = None) -> dict[int, str]:
     items = [(str(u), texts[u]) for u in sorted(set(node_ids))]
     _batched_fill(store, items, summarizer, template, budget, batch_size, progress)
+    if generation_shard():                       # a shard sees only its own slice plus what was already cached
+        return {u: store[str(u)] for u in set(node_ids) if str(u) in store}
     return {u: store[str(u)] for u in set(node_ids)}
 
 
@@ -60,4 +80,7 @@ def metapath_summaries(requests: list[tuple[int, str, list[int]]], per_node_text
     items = [(metapath_key(v, name, nbrs), join_neighbor_texts(nbrs, per_node_text))
              for v, name, nbrs in requests if nbrs]
     _batched_fill(store, items, summarizer, template, budget, batch_size, progress)
+    if generation_shard():
+        return {(v, name): store[metapath_key(v, name, nbrs)] for v, name, nbrs in requests
+                if nbrs and metapath_key(v, name, nbrs) in store}
     return {(v, name): store[metapath_key(v, name, nbrs)] for v, name, nbrs in requests if nbrs}

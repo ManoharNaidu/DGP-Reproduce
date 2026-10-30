@@ -1,0 +1,7 @@
+# Exp 3 (structured zero-shot prompt, Gemma-2-9B), arm GS1b: Exp 1 arm G1b (disc · no-verdict) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses G1b's Gemma text caches unchanged.
+defaults:
+  - configs/experiments/gemma_swap/G1b.yaml
+experiment: zs_GS1b
+variant: GS1b Gemma · zero-shot prompt · disc · no-verdict
+templates: {final: zs_final_disc}

@@ -1,0 +1,389 @@
+{"event": "queue_start", "jobs": 131, "done": 0, "gpus": [0, 1, 2, 3], "shards": 8, "t": "2026-10-29T12:59:05Z"}
+{"event": "experiment_start", "exp": 1, "t": "2026-10-29T12:59:05Z"}
+{"job": "e1_mdk", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T12:59:05Z"}
+{"job": "e1_mdk", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 359, "group": "gen", "t": "2026-10-29T13:05:04Z"}
+{"job": "e1_check_mdk", "exp": 1, "event": "start", "gpu": null, "group": "check", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_1", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_2", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_0", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_3", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_4", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_5", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_6", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_7", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_check_mdk", "exp": 1, "event": "end", "rc": 0, "gpu": null, "seconds": 0, "group": "check", "t": "2026-10-29T13:05:05Z"}
+{"job": "e1_node_5", "exp": 1, "event": "end", "rc": 1, "gpu": 1, "seconds": 71, "group": "gen", "t": "2026-10-29T13:06:16Z"}
+{"job": "e1_tt2_0", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_5", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_6", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_meta_7", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_check_text", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_prompts_G0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_prompts_G1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_prompts_G1b", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_prompts_G2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_prompts_G2b", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G0_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1b_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2b_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G0_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1b_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2b_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G0_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1b_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2b_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G0_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1b_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2b_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G0_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G1b_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_train_G2b_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_analysis", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:06:25Z"}
+{"job": "e1_node_4", "exp": 1, "event": "end", "rc": 1, "gpu": 0, "seconds": 95, "group": "gen", "t": "2026-10-29T13:06:40Z"}
+{"job": "e1_node_7", "exp": 1, "event": "end", "rc": 1, "gpu": 3, "seconds": 99, "group": "gen", "t": "2026-10-29T13:06:43Z"}
+{"job": "e1_tt2_1", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:06:45Z"}
+{"job": "e1_tt2_2", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:06:45Z"}
+{"job": "e1_node_6", "exp": 1, "event": "end", "rc": 1, "gpu": 2, "seconds": 130, "group": "gen", "t": "2026-10-29T13:07:15Z"}
+{"job": "e1_tt2_3", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:07:15Z"}
+{"job": "e1_tt2_3", "exp": 1, "event": "end", "rc": 1, "gpu": 2, "seconds": 12, "group": "gen", "t": "2026-10-29T13:07:27Z"}
+{"job": "e1_tt2_4", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:07:35Z"}
+{"event": "queue_start", "jobs": 131, "done": 2, "gpus": [0, 1, 2, 3], "shards": 8, "t": "2026-10-29T13:08:20Z"}
+{"event": "experiment_start", "exp": 1, "t": "2026-10-29T13:08:20Z"}
+{"job": "e1_node_0", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:08:20Z"}
+{"job": "e1_node_1", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:08:20Z"}
+{"job": "e1_node_2", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:08:20Z"}
+{"job": "e1_node_3", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:08:20Z"}
+{"event": "operator_note", "note": "13:06-13:07 UTC: generation shards OOM with two Gemma eager-attention workers per GPU (one worker peaked at 66.6 GB on a ~4k-token review batch); queue and workers stopped by the operator and relaunched 13:08:20 with one generator per GPU (GEN_WEIGHT=2) and expandable_segments. Caches are resumable; no output was lost.", "t": "2026-10-29T13:09:13Z"}
+{"job": "e1_node_0", "exp": 1, "event": "end", "rc": 1, "gpu": 0, "seconds": 479, "group": "gen", "t": "2026-10-29T13:16:19Z"}
+{"job": "e1_node_4", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_5", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_6", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_meta_7", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_check_text", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_prompts_G0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_prompts_G1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_prompts_G1b", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_prompts_G2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_prompts_G2b", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G0_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1b_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2b_s0", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G0_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1b_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2b_s1", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G0_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1b_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2b_s2", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G0_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1b_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2b_s3", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G0_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G1b_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_train_G2b_s4", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"job": "e1_analysis", "exp": 1, "event": "skipped_dep_failed", "t": "2026-10-29T13:16:20Z"}
+{"event": "operator_note", "note": "13:16 UTC: a single Gemma node-summary worker still ran out of memory (one batch of 16 long reviews asked for 15 GiB). Queue stopped; summarizer now closes a batch before prompts x longest^2 exceeds 16 x 2048^2 (summarizer.max_batch_tokens_sq, Gemma configs only); relaunched. Text already in the caches is kept.", "t": "2026-10-29T13:17:55Z"}
+{"event": "queue_start", "jobs": 131, "done": 2, "gpus": [0, 1, 2, 3], "shards": 8, "t": "2026-10-29T13:17:55Z"}
+{"event": "experiment_start", "exp": 1, "t": "2026-10-29T13:17:55Z"}
+{"job": "e1_node_0", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:17:55Z"}
+{"job": "e1_node_1", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:17:55Z"}
+{"job": "e1_node_3", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:17:55Z"}
+{"job": "e1_node_2", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:17:55Z"}
+{"job": "e1_node_2", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 222, "group": "gen", "t": "2026-10-29T13:21:37Z"}
+{"job": "e1_node_4", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:21:45Z"}
+{"job": "e1_node_3", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 252, "group": "gen", "t": "2026-10-29T13:22:08Z"}
+{"job": "e1_node_1", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 256, "group": "gen", "t": "2026-10-29T13:22:11Z"}
+{"job": "e1_node_6", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:22:15Z"}
+{"job": "e1_node_5", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:22:15Z"}
+{"job": "e1_node_0", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 324, "group": "gen", "t": "2026-10-29T13:23:19Z"}
+{"job": "e1_node_7", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:23:25Z"}
+{"job": "e1_node_6", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 766, "group": "gen", "t": "2026-10-29T13:35:01Z"}
+{"job": "e1_tt2_0", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:35:05Z"}
+{"job": "e1_node_4", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 823, "group": "gen", "t": "2026-10-29T13:35:28Z"}
+{"job": "e1_tt2_1", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:35:35Z"}
+{"job": "e1_node_5", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 854, "group": "gen", "t": "2026-10-29T13:36:29Z"}
+{"job": "e1_tt2_2", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:36:35Z"}
+{"job": "e1_node_7", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 839, "group": "gen", "t": "2026-10-29T13:37:25Z"}
+{"job": "e1_tt2_3", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:37:25Z"}
+{"job": "e1_tt2_0", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 360, "group": "gen", "t": "2026-10-29T13:41:05Z"}
+{"job": "e1_tt2_4", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:41:05Z"}
+{"job": "e1_tt2_1", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 384, "group": "gen", "t": "2026-10-29T13:41:59Z"}
+{"job": "e1_tt2_5", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:42:05Z"}
+{"job": "e1_tt2_2", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 375, "group": "gen", "t": "2026-10-29T13:42:50Z"}
+{"job": "e1_tt2_6", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:42:55Z"}
+{"job": "e1_tt2_3", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 383, "group": "gen", "t": "2026-10-29T13:43:49Z"}
+{"job": "e1_tt2_7", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:43:55Z"}
+{"job": "e1_tt2_4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 425, "group": "gen", "t": "2026-10-29T13:48:10Z"}
+{"job": "e1_tt1b_0", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:48:16Z"}
+{"job": "e1_tt2_5", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 376, "group": "gen", "t": "2026-10-29T13:48:21Z"}
+{"job": "e1_tt1b_1", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:48:26Z"}
+{"job": "e1_tt2_6", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 415, "group": "gen", "t": "2026-10-29T13:49:50Z"}
+{"job": "e1_tt1b_2", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:49:56Z"}
+{"job": "e1_tt2_7", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 387, "group": "gen", "t": "2026-10-29T13:50:23Z"}
+{"job": "e1_tt1b_3", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:50:26Z"}
+{"job": "e1_tt1b_0", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 219, "group": "gen", "t": "2026-10-29T13:51:54Z"}
+{"job": "e1_tt1b_4", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:51:56Z"}
+{"job": "e1_tt1b_1", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 232, "group": "gen", "t": "2026-10-29T13:52:17Z"}
+{"job": "e1_tt1b_5", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:52:26Z"}
+{"job": "e1_tt1b_2", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 226, "group": "gen", "t": "2026-10-29T13:53:41Z"}
+{"job": "e1_tt1b_6", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:53:46Z"}
+{"job": "e1_tt1b_3", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 226, "group": "gen", "t": "2026-10-29T13:54:11Z"}
+{"job": "e1_tt1b_7", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:54:16Z"}
+{"job": "e1_tt1b_4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 228, "group": "gen", "t": "2026-10-29T13:55:43Z"}
+{"job": "e1_meta_0", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T13:55:46Z"}
+{"job": "e1_tt1b_5", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 213, "group": "gen", "t": "2026-10-29T13:55:59Z"}
+{"job": "e1_meta_1", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T13:56:06Z"}
+{"job": "e1_tt1b_6", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 228, "group": "gen", "t": "2026-10-29T13:57:33Z"}
+{"job": "e1_meta_2", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T13:57:36Z"}
+{"job": "e1_tt1b_7", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 224, "group": "gen", "t": "2026-10-29T13:58:00Z"}
+{"job": "e1_meta_3", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T13:58:06Z"}
+{"job": "e1_meta_0", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 1716, "group": "gen", "t": "2026-10-29T14:24:21Z"}
+{"job": "e1_meta_4", "exp": 1, "event": "start", "gpu": 3, "group": "gen", "t": "2026-10-29T14:24:26Z"}
+{"job": "e1_meta_1", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 1813, "group": "gen", "t": "2026-10-29T14:26:18Z"}
+{"job": "e1_meta_5", "exp": 1, "event": "start", "gpu": 2, "group": "gen", "t": "2026-10-29T14:26:26Z"}
+{"job": "e1_meta_3", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 1728, "group": "gen", "t": "2026-10-29T14:26:54Z"}
+{"job": "e1_meta_6", "exp": 1, "event": "start", "gpu": 0, "group": "gen", "t": "2026-10-29T14:26:56Z"}
+{"job": "e1_meta_2", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 1792, "group": "gen", "t": "2026-10-29T14:27:28Z"}
+{"job": "e1_meta_7", "exp": 1, "event": "start", "gpu": 1, "group": "gen", "t": "2026-10-29T14:27:36Z"}
+{"job": "e1_meta_4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 1849, "group": "gen", "t": "2026-10-29T14:55:15Z"}
+{"job": "e1_meta_5", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 1764, "group": "gen", "t": "2026-10-29T14:55:50Z"}
+{"job": "e1_meta_6", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 1787, "group": "gen", "t": "2026-10-29T14:56:43Z"}
+{"job": "e1_meta_7", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 1822, "group": "gen", "t": "2026-10-29T14:57:58Z"}
+{"job": "e1_check_text", "exp": 1, "event": "start", "gpu": null, "group": "check", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_prompts_G0", "exp": 1, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_prompts_G1", "exp": 1, "event": "start", "gpu": 1, "group": "prompts", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_prompts_G1b", "exp": 1, "event": "start", "gpu": 2, "group": "prompts", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_prompts_G2b", "exp": 1, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_prompts_G2", "exp": 1, "event": "start", "gpu": 3, "group": "prompts", "t": "2026-10-29T14:58:07Z"}
+{"job": "e1_check_text", "exp": 1, "event": "end", "rc": 0, "gpu": null, "seconds": 3, "group": "check", "t": "2026-10-29T14:58:09Z"}
+{"event": "operator_note", "note": "Provenance: roughly the first 5,800 Gemma neighbour summaries (written before the 13:16 UTC restart) were generated with fixed batches of 16 prompts; all later Gemma text uses the length-capped batches (max_batch_tokens_sq = 16 x 2048^2). Prompts, model, decoding settings and the stored outputs format are unchanged; only batch composition (and therefore padding) differs.", "t": "2026-10-29T14:58:42Z"}
+{"job": "e1_prompts_G1b", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 50, "group": "prompts", "t": "2026-10-29T14:58:57Z"}
+{"job": "e1_prompts_G1", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 51, "group": "prompts", "t": "2026-10-29T14:58:57Z"}
+{"job": "e1_prompts_G2b", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 51, "group": "prompts", "t": "2026-10-29T14:58:58Z"}
+{"job": "e1_prompts_G0", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 52, "group": "prompts", "t": "2026-10-29T14:58:59Z"}
+{"job": "e1_prompts_G2", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 52, "group": "prompts", "t": "2026-10-29T14:58:59Z"}
+{"job": "e1_train_G0_s0", "exp": 1, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-29T14:59:07Z"}
+{"job": "e1_train_G1_s0", "exp": 1, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-29T14:59:07Z"}
+{"job": "e1_train_G2_s0", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T14:59:07Z"}
+{"job": "e1_train_G1b_s0", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T14:59:07Z"}
+{"job": "e1_train_G0_s0", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 4110, "group": "train", "t": "2026-10-29T16:07:36Z"}
+{"job": "e1_train_G0_s0", "event": "gemma_gate", "peak_gb": 25.1, "weight": 1, "measured_s": 4110, "projection_h": 17.6, "stop": false, "t": "2026-10-29T16:07:36Z"}
+{"job": "e1_train_G0_s1", "exp": 1, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-29T16:07:38Z"}
+{"job": "e1_train_G2b_s0", "exp": 1, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-29T16:07:38Z"}
+{"job": "e1_train_G1b_s0", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 4257, "group": "train", "t": "2026-10-29T16:10:04Z"}
+{"job": "e1_train_G1_s1", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T16:10:08Z"}
+{"job": "e1_train_G1b_s1", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T16:10:08Z"}
+{"job": "e1_train_G1_s0", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 4281, "group": "train", "t": "2026-10-29T16:10:28Z"}
+{"job": "e1_train_G2_s1", "exp": 1, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-29T16:10:38Z"}
+{"job": "e1_train_G2b_s1", "exp": 1, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-29T16:10:38Z"}
+{"job": "e1_train_G2_s0", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 4837, "group": "train", "t": "2026-10-29T16:19:43Z"}
+{"job": "e1_train_G0_s2", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T16:19:48Z"}
+{"job": "e1_train_G1_s2", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T16:19:48Z"}
+{"job": "e1_train_G0_s2", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 7496, "group": "train", "t": "2026-10-29T18:24:44Z"}
+{"job": "e1_train_G1b_s2", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T18:24:49Z"}
+{"job": "e1_train_G1_s2", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 7752, "group": "train", "t": "2026-10-29T18:29:00Z"}
+{"job": "e1_train_G2_s2", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T18:29:09Z"}
+{"job": "e1_train_G1b_s1", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 9577, "group": "train", "t": "2026-10-29T18:49:45Z"}
+{"job": "e1_train_G2b_s2", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T18:49:50Z"}
+{"job": "e1_train_G1_s1", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 9609, "group": "train", "t": "2026-10-29T18:50:17Z"}
+{"job": "e1_train_G0_s3", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T18:50:20Z"}
+{"job": "e1_train_G0_s1", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 14227, "group": "train", "t": "2026-10-29T20:04:45Z"}
+{"job": "e1_train_G1_s3", "exp": 1, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-29T20:04:51Z"}
+{"job": "e1_train_G2b_s0", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 15332, "group": "train", "t": "2026-10-29T20:23:10Z"}
+{"job": "e1_train_G1b_s3", "exp": 1, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-29T20:23:11Z"}
+{"job": "e1_train_G2b_s1", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 15559, "group": "train", "t": "2026-10-29T20:29:56Z"}
+{"job": "e1_train_G2_s3", "exp": 1, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-29T20:30:01Z"}
+{"job": "e1_train_G2_s1", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 15571, "group": "train", "t": "2026-10-29T20:30:08Z"}
+{"job": "e1_train_G2b_s3", "exp": 1, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-29T20:30:11Z"}
+{"job": "e1_train_G1b_s2", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 7583, "group": "train", "t": "2026-10-29T20:31:13Z"}
+{"job": "e1_train_G0_s4", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T20:31:21Z"}
+{"job": "e1_train_G2_s2", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 8164, "group": "train", "t": "2026-10-29T20:45:13Z"}
+{"job": "e1_train_G1_s4", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T20:45:21Z"}
+{"job": "e1_train_G2b_s2", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 8857, "group": "train", "t": "2026-10-29T21:17:27Z"}
+{"job": "e1_train_G1b_s4", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T21:17:32Z"}
+{"job": "e1_train_G0_s3", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 9450, "group": "train", "t": "2026-10-29T21:27:50Z"}
+{"job": "e1_train_G2_s4", "exp": 1, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-29T21:27:52Z"}
+{"job": "e1_train_G0_s4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 9852, "group": "train", "t": "2026-10-29T23:15:33Z"}
+{"job": "e1_train_G2b_s4", "exp": 1, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-29T23:15:33Z"}
+{"job": "e1_train_G1_s3", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 12132, "group": "train", "t": "2026-10-29T23:27:02Z"}
+{"job": "e1_train_G1b_s3", "exp": 1, "event": "end", "rc": 0, "gpu": 0, "seconds": 11372, "group": "train", "t": "2026-10-29T23:32:43Z"}
+{"job": "e1_train_G1b_s4", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 9411, "group": "train", "t": "2026-10-29T23:54:23Z"}
+{"job": "e1_train_G2_s3", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 12565, "group": "train", "t": "2026-10-29T23:59:26Z"}
+{"job": "e1_train_G2b_s3", "exp": 1, "event": "end", "rc": 0, "gpu": 1, "seconds": 12558, "group": "train", "t": "2026-10-29T23:59:29Z"}
+{"job": "e1_train_G2_s4", "exp": 1, "event": "end", "rc": 0, "gpu": 2, "seconds": 9416, "group": "train", "t": "2026-10-30T00:04:48Z"}
+{"job": "e1_train_G1_s4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 12149, "group": "train", "t": "2026-10-30T00:07:50Z"}
+{"job": "e1_train_G2b_s4", "exp": 1, "event": "end", "rc": 0, "gpu": 3, "seconds": 6499, "group": "train", "t": "2026-10-30T01:03:52Z"}
+{"job": "e1_analysis", "exp": 1, "event": "start", "gpu": null, "group": "analysis", "t": "2026-10-30T01:03:55Z"}
+{"job": "e1_analysis", "exp": 1, "event": "end", "rc": 0, "gpu": null, "seconds": 781, "group": "analysis", "t": "2026-10-30T01:16:56Z"}
+{"event": "experiment_done", "exp": 1, "t": "2026-10-30T01:17:05Z"}
+{"event": "experiment_start", "exp": 2, "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S0", "exp": 2, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S1", "exp": 2, "event": "start", "gpu": 1, "group": "prompts", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S1b", "exp": 2, "event": "start", "gpu": 2, "group": "prompts", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S2", "exp": 2, "event": "start", "gpu": 3, "group": "prompts", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_train_par_R0_s0", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S2b", "exp": 2, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-30T01:17:05Z"}
+{"job": "e2_prompts_S0", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 75, "group": "prompts", "t": "2026-10-30T01:18:19Z"}
+{"job": "e2_prompts_S1", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 75, "group": "prompts", "t": "2026-10-30T01:18:20Z"}
+{"job": "e2_prompts_S2", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 75, "group": "prompts", "t": "2026-10-30T01:18:20Z"}
+{"job": "e2_prompts_S1b", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 76, "group": "prompts", "t": "2026-10-30T01:18:21Z"}
+{"job": "e2_prompts_S2b", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 76, "group": "prompts", "t": "2026-10-30T01:18:21Z"}
+{"event": "operator_note", "note": "01:18 UTC: queue stopped by the operator after the Exp 2 prompt builds finished; the parity run e2_train_par_R0_s0 (started 01:17:05) was killed after ~1 min and is rerun. Restarted with QWEN_TRAIN_WEIGHT=2 and GEMMA_WEIGHT=2 (one training run per GPU): in Exp 1, two Gemma runs sharing a GPU took 2.1-4.3 h per pair vs 68-81 min for one run alone, and the dr study trained Qwen one run at a time.", "t": "2026-10-30T01:18:40Z"}
+{"job": "e1_train_G0_s0", "event": "gemma_gate", "peak_gb": 25.1, "weight": 2, "measured_s": 4110, "projection_h": 14.3, "stop": false, "t": "2026-10-30T01:18:40Z"}
+{"event": "queue_start", "jobs": 131, "done": 71, "gpus": [0, 1, 2, 3], "shards": 8, "t": "2026-10-30T01:18:40Z"}
+{"event": "experiment_start", "exp": 1, "t": "2026-10-30T01:18:40Z"}
+{"event": "experiment_done", "exp": 1, "t": "2026-10-30T01:18:40Z"}
+{"event": "experiment_start", "exp": 2, "t": "2026-10-30T01:18:40Z"}
+{"job": "e2_check_layout", "exp": 2, "event": "start", "gpu": null, "group": "check", "t": "2026-10-30T01:18:40Z"}
+{"job": "e2_train_par_R0_s0", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T01:18:40Z"}
+{"job": "e2_check_layout", "exp": 2, "event": "end", "rc": 0, "gpu": null, "seconds": 3, "group": "check", "t": "2026-10-30T01:18:43Z"}
+{"job": "e2_train_S0_s0", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T01:18:50Z"}
+{"job": "e2_train_S1_s0", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T01:18:50Z"}
+{"job": "e2_train_S1b_s0", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T01:18:50Z"}
+{"job": "e2_train_par_R0_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 4109, "group": "train", "t": "2026-10-30T02:27:09Z"}
+{"job": "e2_train_S2_s0", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T02:27:11Z"}
+{"job": "e2_train_S0_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 4705, "group": "train", "t": "2026-10-30T02:37:16Z"}
+{"job": "e2_train_S2b_s0", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T02:37:21Z"}
+{"job": "e2_train_S1b_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 4860, "group": "train", "t": "2026-10-30T02:39:50Z"}
+{"job": "e2_train_S0_s1", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T02:39:51Z"}
+{"job": "e2_train_S1_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 5791, "group": "train", "t": "2026-10-30T02:55:21Z"}
+{"job": "e2_train_S1_s1", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T02:55:22Z"}
+{"job": "e2_train_S2_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 5339, "group": "train", "t": "2026-10-30T03:56:10Z"}
+{"job": "e2_train_S1b_s1", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T03:56:12Z"}
+{"job": "e2_train_S0_s1", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 4699, "group": "train", "t": "2026-10-30T03:58:11Z"}
+{"job": "e2_train_S2_s1", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T03:58:12Z"}
+{"job": "e2_train_S2b_s0", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 5316, "group": "train", "t": "2026-10-30T04:05:57Z"}
+{"job": "e2_train_S2b_s1", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T04:06:03Z"}
+{"job": "e2_train_S1_s1", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 4876, "group": "train", "t": "2026-10-30T04:16:38Z"}
+{"job": "e2_train_S0_s2", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T04:16:43Z"}
+{"job": "e2_train_S0_s2", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 3817, "group": "train", "t": "2026-10-30T05:20:20Z"}
+{"job": "e2_train_S1_s2", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T05:20:24Z"}
+{"job": "e2_train_S2_s1", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 5330, "group": "train", "t": "2026-10-30T05:27:03Z"}
+{"job": "e2_train_S1b_s2", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T05:27:04Z"}
+{"job": "e2_train_S1b_s1", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 6685, "group": "train", "t": "2026-10-30T05:47:37Z"}
+{"job": "e2_train_S2_s2", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T05:47:44Z"}
+{"job": "e2_train_S2b_s1", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 7369, "group": "train", "t": "2026-10-30T06:08:51Z"}
+{"job": "e2_train_S2b_s2", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T06:08:54Z"}
+{"job": "e2_train_S1_s2", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 3959, "group": "train", "t": "2026-10-30T06:26:22Z"}
+{"job": "e2_train_S0_s3", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T06:26:24Z"}
+{"job": "e2_train_S1b_s2", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 3954, "group": "train", "t": "2026-10-30T06:32:58Z"}
+{"job": "e2_train_S1_s3", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T06:33:05Z"}
+{"job": "e2_train_S2_s2", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 4354, "group": "train", "t": "2026-10-30T07:00:18Z"}
+{"job": "e2_train_S1b_s3", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T07:00:25Z"}
+{"job": "e2_train_S2b_s2", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 4313, "group": "train", "t": "2026-10-30T07:20:47Z"}
+{"job": "e2_train_S2_s3", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T07:20:55Z"}
+{"job": "e2_train_S0_s3", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 3816, "group": "train", "t": "2026-10-30T07:30:01Z"}
+{"job": "e2_train_S2b_s3", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T07:30:05Z"}
+{"job": "e2_train_S1b_s3", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 3954, "group": "train", "t": "2026-10-30T08:06:19Z"}
+{"job": "e2_train_S0_s4", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T08:06:26Z"}
+{"job": "e2_train_S1_s3", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 5802, "group": "train", "t": "2026-10-30T08:09:47Z"}
+{"job": "e2_train_S1_s4", "exp": 2, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T08:09:56Z"}
+{"job": "e2_train_S2_s3", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 4301, "group": "train", "t": "2026-10-30T08:32:36Z"}
+{"job": "e2_train_S1b_s4", "exp": 2, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T08:32:46Z"}
+{"job": "e2_train_S2b_s3", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 4296, "group": "train", "t": "2026-10-30T08:41:42Z"}
+{"job": "e2_train_S2_s4", "exp": 2, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T08:41:46Z"}
+{"job": "e2_train_S0_s4", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 4711, "group": "train", "t": "2026-10-30T09:24:57Z"}
+{"job": "e2_train_S2b_s4", "exp": 2, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T09:24:57Z"}
+{"job": "e2_train_S1_s4", "exp": 2, "event": "end", "rc": 0, "gpu": 3, "seconds": 4889, "group": "train", "t": "2026-10-30T09:31:25Z"}
+{"job": "e2_train_S1b_s4", "exp": 2, "event": "end", "rc": 0, "gpu": 1, "seconds": 4866, "group": "train", "t": "2026-10-30T09:53:52Z"}
+{"job": "e2_train_S2_s4", "exp": 2, "event": "end", "rc": 0, "gpu": 2, "seconds": 5365, "group": "train", "t": "2026-10-30T10:11:11Z"}
+{"job": "e2_train_S2b_s4", "exp": 2, "event": "end", "rc": 0, "gpu": 0, "seconds": 5320, "group": "train", "t": "2026-10-30T10:53:37Z"}
+{"job": "e2_analysis", "exp": 2, "event": "start", "gpu": null, "group": "analysis", "t": "2026-10-30T10:53:38Z"}
+{"job": "e2_analysis", "exp": 2, "event": "end", "rc": 0, "gpu": null, "seconds": 814, "group": "analysis", "t": "2026-10-30T11:07:12Z"}
+{"event": "experiment_done", "exp": 2, "t": "2026-10-30T11:07:18Z"}
+{"event": "experiment_start", "exp": 3, "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS0", "exp": 3, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS1", "exp": 3, "event": "start", "gpu": 1, "group": "prompts", "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS1b", "exp": 3, "event": "start", "gpu": 2, "group": "prompts", "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS2", "exp": 3, "event": "start", "gpu": 3, "group": "prompts", "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS2b", "exp": 3, "event": "start", "gpu": 0, "group": "prompts", "t": "2026-10-30T11:07:18Z"}
+{"job": "e3_prompts_GS0", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 52, "group": "prompts", "t": "2026-10-30T11:08:11Z"}
+{"job": "e3_prompts_GS1b", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 52, "group": "prompts", "t": "2026-10-30T11:08:11Z"}
+{"job": "e3_prompts_GS2b", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 53, "group": "prompts", "t": "2026-10-30T11:08:11Z"}
+{"job": "e3_prompts_GS2", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 53, "group": "prompts", "t": "2026-10-30T11:08:11Z"}
+{"job": "e3_prompts_GS1", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 54, "group": "prompts", "t": "2026-10-30T11:08:12Z"}
+{"job": "e3_check_layout", "exp": 3, "event": "start", "gpu": null, "group": "check", "t": "2026-10-30T11:08:18Z"}
+{"job": "e3_check_layout", "exp": 3, "event": "end", "rc": 0, "gpu": null, "seconds": 2, "group": "check", "t": "2026-10-30T11:08:20Z"}
+{"job": "e3_train_GS0_s0", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T11:08:28Z"}
+{"job": "e3_train_GS1_s0", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T11:08:28Z"}
+{"job": "e3_train_GS1b_s0", "exp": 3, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T11:08:28Z"}
+{"job": "e3_train_GS2_s0", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T11:08:28Z"}
+{"job": "e3_train_GS1_s0", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 5245, "group": "train", "t": "2026-10-30T12:35:53Z"}
+{"job": "e3_train_GS2b_s0", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T12:35:59Z"}
+{"job": "e3_train_GS2_s0", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 5866, "group": "train", "t": "2026-10-30T12:46:15Z"}
+{"job": "e3_train_GS0_s1", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T12:46:19Z"}
+{"job": "e3_train_GS0_s0", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 5978, "group": "train", "t": "2026-10-30T12:48:06Z"}
+{"job": "e3_train_GS1_s1", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T12:48:09Z"}
+{"job": "e3_train_GS1b_s0", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 6236, "group": "train", "t": "2026-10-30T12:52:24Z"}
+{"job": "e3_train_GS1b_s1", "exp": 3, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T12:52:29Z"}
+{"job": "e3_train_GS2b_s0", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 5808, "group": "train", "t": "2026-10-30T14:12:47Z"}
+{"job": "e3_train_GS2_s1", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T14:12:51Z"}
+{"job": "e3_train_GS1b_s1", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 5249, "group": "train", "t": "2026-10-30T14:19:59Z"}
+{"job": "e3_train_GS2b_s1", "exp": 3, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T14:20:01Z"}
+{"job": "e3_train_GS0_s1", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 6874, "group": "train", "t": "2026-10-30T14:40:53Z"}
+{"job": "e3_train_GS0_s2", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T14:41:01Z"}
+{"job": "e3_train_GS1_s1", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 7203, "group": "train", "t": "2026-10-30T14:48:12Z"}
+{"job": "e3_train_GS1_s2", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T14:48:21Z"}
+{"job": "e3_train_GS0_s2", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 4071, "group": "train", "t": "2026-10-30T15:48:52Z"}
+{"job": "e3_train_GS1b_s2", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T15:49:02Z"}
+{"job": "e3_train_GS2_s1", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 5827, "group": "train", "t": "2026-10-30T15:49:57Z"}
+{"job": "e3_train_GS2_s2", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T15:50:02Z"}
+{"job": "e3_train_GS1_s2", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 6245, "group": "train", "t": "2026-10-30T16:32:25Z"}
+{"job": "e3_train_GS2b_s2", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T16:32:32Z"}
+{"job": "e3_train_GS2b_s1", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 8076, "group": "train", "t": "2026-10-30T16:34:37Z"}
+{"job": "e3_train_GS0_s3", "exp": 3, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T16:34:42Z"}
+{"job": "e3_train_GS2_s2", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 4738, "group": "train", "t": "2026-10-30T17:09:00Z"}
+{"job": "e3_train_GS1_s3", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T17:09:03Z"}
+{"job": "e3_train_GS1b_s2", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 6213, "group": "train", "t": "2026-10-30T17:32:35Z"}
+{"job": "e3_train_GS1b_s3", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T17:32:43Z"}
+{"job": "e3_train_GS2b_s2", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 4674, "group": "train", "t": "2026-10-30T17:50:26Z"}
+{"job": "e3_train_GS2_s3", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T17:50:33Z"}
+{"job": "e3_train_GS0_s3", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 6904, "group": "train", "t": "2026-10-30T18:29:46Z"}
+{"job": "e3_train_GS2b_s3", "exp": 3, "event": "start", "gpu": 2, "group": "train", "t": "2026-10-30T18:29:54Z"}
+{"job": "e3_train_GS1_s3", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 6234, "group": "train", "t": "2026-10-30T18:52:56Z"}
+{"job": "e3_train_GS0_s4", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T18:53:04Z"}
+{"job": "e3_train_GS1b_s3", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 7203, "group": "train", "t": "2026-10-30T19:32:47Z"}
+{"job": "e3_train_GS1_s4", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T19:32:55Z"}
+{"job": "e3_train_GS2_s3", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 8130, "group": "train", "t": "2026-10-30T20:06:04Z"}
+{"job": "e3_train_GS1b_s4", "exp": 3, "event": "start", "gpu": 0, "group": "train", "t": "2026-10-30T20:06:05Z"}
+{"job": "e3_train_GS0_s4", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 5024, "group": "train", "t": "2026-10-30T20:16:49Z"}
+{"job": "e3_train_GS2_s4", "exp": 3, "event": "start", "gpu": 1, "group": "train", "t": "2026-10-30T20:16:55Z"}
+{"job": "e3_train_GS1_s4", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 5249, "group": "train", "t": "2026-10-30T21:00:24Z"}
+{"job": "e3_train_GS2b_s4", "exp": 3, "event": "start", "gpu": 3, "group": "train", "t": "2026-10-30T21:00:26Z"}
+{"job": "e3_train_GS2b_s3", "exp": 3, "event": "end", "rc": 0, "gpu": 2, "seconds": 9177, "group": "train", "t": "2026-10-30T21:02:51Z"}
+{"job": "e3_train_GS1b_s4", "exp": 3, "event": "end", "rc": 0, "gpu": 0, "seconds": 5241, "group": "train", "t": "2026-10-30T21:33:26Z"}
+{"job": "e3_train_GS2_s4", "exp": 3, "event": "end", "rc": 0, "gpu": 1, "seconds": 5865, "group": "train", "t": "2026-10-30T21:54:40Z"}
+{"job": "e3_train_GS2b_s4", "exp": 3, "event": "end", "rc": 0, "gpu": 3, "seconds": 5814, "group": "train", "t": "2026-10-30T22:37:20Z"}
+{"job": "e3_analysis", "exp": 3, "event": "start", "gpu": null, "group": "analysis", "t": "2026-10-30T22:37:27Z"}
+{"job": "e3_analysis", "exp": 3, "event": "end", "rc": 0, "gpu": null, "seconds": 1218, "group": "analysis", "t": "2026-10-30T22:57:45Z"}
+{"event": "experiment_done", "exp": 3, "t": "2026-10-30T22:57:48Z"}
+{"event": "QUEUE_DONE", "t": "2026-10-30T22:57:48Z"}

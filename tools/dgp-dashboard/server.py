@@ -4,7 +4,7 @@
     python tools/dgp-dashboard/server.py 8780            # binds 127.0.0.1 only
 
 Three studies, kept separate and labelled: the main DGP reproduction (historical), the completed extension
-experiments (Task 2 arms, Task 3 K sweep, disc/resid study; historical) and the FLAG-architecture study (live).
+experiments (Task 2 arms, Task 3 K sweep, disc/resid study; historical) and the FLAG-architecture study (historical) and the Gemma-swap / zero-shot study (live, 2026-10-29).
 Reads, never writes: results/raw/*/{metrics,run_manifest}.json, results/ext/*, results/disc_resid/*,
 results/flag_arch/*, logs/flag_arch/*, datasets/cache/*/metadata.json, analysis/out/*, research/paper_specification.md,
 nvidia-smi. The FLAG-architecture and disc/resid job states come from tools/dr-dashboard/v2/server.py (imported,
@@ -40,6 +40,8 @@ BASE = "dgp_amazonvideo_seed0"
 EXPECTED = {"target": 10023, "node:node_discriminative": 35747, "metapath:node_discriminative": 119829,
             "metapath:node_summary": 29978}
 
+GS_ARMS = [("0", "baseline"), ("1", "disc · FLAG prompt"), ("1b", "disc · no-verdict"), ("2", "disc + residual loss"),
+           ("2b", "no-verdict + residual loss")]
 # study -> arms (key, experiment, label, what changes, job prefix in the ext queue or None)
 STUDIES = [
     {"key": "main", "group": "Main DGP reproduction", "name": "DGP reproduction · AmazonVideo", "kind": "historical",
@@ -65,11 +67,23 @@ STUDIES = [
               ("R1b", "dr_R1b", "R1b disc · no-verdict", "+ discriminative line; prompt forbids stating the class", None),
               ("R2", "dr_R2", "R2 disc + residual loss", "R1 + FLAG residual branch", None),
               ("R2b", "dr_R2b", "R2b no-verdict + residual", "R1b + FLAG residual branch", None)]},
-    {"key": "fa", "group": "FLAG-architecture study", "name": "FLAG-architecture study · D per trimmed subgraph", "kind": "live",
+    {"key": "fa", "group": "FLAG-architecture study", "name": "FLAG-architecture study · D per trimmed subgraph", "kind": "historical",
      "baseline": "F0", "note": "F0 = baseline re-run; F1 = FLAG's D written once per trimmed target subgraph (+FLAG); "
                                "residual loss / fine-tuning out of scope",
      "arms": [("F0", "fa_F0", "F0 baseline", "main DGP configuration, re-run", None),
               ("F1", "fa_F1", "F1 FLAG-arch D", "D per trimmed subgraph feeds the metapath summaries; target line as Key signals", None)]},
+    # Gemma-swap / structured zero-shot study (2026-10-29, scripts/gs_queue.py). Within-study baseline = arm 0; the
+    # cross-study comparisons (G vs R, S vs R, GS vs G, GS vs S) are on the dr-dashboard and in results/gemma_swap/exp*.md.
+    {"key": "gs1", "group": "Gemma swap / zero-shot study", "name": "Exp 1 · Gemma-2-9B writes the text and classifies (original prompt)",
+     "kind": "live", "baseline": "G0", "note": "the 5 dr arms with Gemma in both roles; arms vs G0 here, vs the Qwen dr arms on the dr-dashboard",
+     "arms": [(f"G{a}", f"gs_G{a}", f"G{a} {w}", f"dr arm R{a} with Gemma-2-9B", None) for a, w in GS_ARMS]},
+    {"key": "gs2", "group": "Gemma swap / zero-shot study", "name": "Exp 2 · Qwen3-8B with the structured zero-shot prompt",
+     "kind": "live", "baseline": "S0", "note": "dr arms with the zero-shot classification prompt; P = R0 seed 0 re-run on this stack",
+     "arms": [(f"S{a}", f"zs_S{a}", f"S{a} {w}", f"dr arm R{a}, zero-shot prompt", None) for a, w in GS_ARMS]
+             + [("P", "par_R0", "P R0 parity", "dr arm R0 unchanged, seed 0, current software stack", None)]},
+    {"key": "gs3", "group": "Gemma swap / zero-shot study", "name": "Exp 3 · Gemma-2-9B with the structured zero-shot prompt",
+     "kind": "live", "baseline": "GS0", "note": "Exp 1 arms with the zero-shot classification prompt; arms vs GS0",
+     "arms": [(f"GS{a}", f"zs_GS{a}", f"GS{a} {w}", f"Exp 1 arm G{a}, zero-shot prompt", None) for a, w in GS_ARMS]},
 ]
 FILES = {  # /files/<name> -> path (read-only reports and evidence)
     "deviation.md": ("results", "disc_resid", "deviation.md"),
@@ -399,7 +413,7 @@ def run_record(exp, seed):
 
 def job_states(now):
     """Per study: {(arm, seed): job row} normalised to queued / running / stalled / completed / failed / interrupted."""
-    out = {"ext": {}, "dr": {}, "fa": {}}
+    out = {"ext": {}, "dr": {}, "fa": {}, "gs1": {}, "gs2": {}, "gs3": {}}
     for j in jobs_state():
         m = re.match(r"train_(.+)_s(\d)$", j["name"])
         if m or j["name"] == "train_parity":
@@ -420,6 +434,13 @@ def job_states(now):
                     if row["log_age_s"] is not None and row["log_age_s"] > STALL_S:
                         row["state"] = "stalled"
                 out[study][(j["arm"], j["seed"])] = row
+        gs = safe(lambda: m.gs_state(now), {}) or {}
+        for j in gs.get("training") or []:
+            st = {"done": "completed", "pending": "queued", "skipped": "failed"}.get(j["state"], j["state"])
+            row = {"state": st, "seconds": j.get("seconds"), "elapsed_s": j.get("elapsed_s"), "error": j.get("error"),
+                   "phase": "training", "epochs_done": j.get("epochs_done"), "max_epochs": j.get("max_epochs"),
+                   "last": j.get("last"), "log": f"logs/gemma_swap/{j['job']}.log"}
+            out[f"gs{j['exp_no']}"][("P" if j["arm"] == "par_R0" else j["arm"], j["seed"])] = row
     return out
 
 
@@ -453,12 +474,12 @@ def studies(now):
                 r = recs.get((exp, s)) or run_record(exp, s)
                 recs[(exp, s)] = r
                 jkey = ("parity", 0) if prefix == "train_parity" else ((prefix[6:-1] if prefix else akey), s)
-                job = jobsrc.get(jkey) if (prefix or st["key"] in ("dr", "fa")) else None
+                job = jobsrc.get(jkey) if (prefix or st["key"] in ("dr", "fa", "gs1", "gs2", "gs3")) else None
                 has = bool(r and r.get("test"))
                 state = (job or {}).get("state") or ("completed" if has else None)
                 if state == "completed" and not has:
                     state = "completed (no metrics)"
-                if prefix == "train_parity" and s > 0:
+                if (prefix == "train_parity" or exp == "par_R0") and s > 0:
                     state = "not planned"
                 seeds[str(s)] = {"state": state or "unavailable", "run": r if has else None, "job": job}
             per = {s: v["run"]["test"] for s, v in seeds.items() if v["run"]}
@@ -614,6 +635,65 @@ def fa_overview(now, studies_):
     }
 
 
+def gs_overview(now, studies_):
+    """Overview of the live Gemma-swap / zero-shot study, in fa_overview's shape (data from the dr-dashboard module)."""
+    m = dr()
+    gs = safe(lambda: m.gs_state(now), {}) if m else {}
+    if not isinstance(gs, dict) or not gs.get("started"):
+        return {"error": "the Gemma-swap queue has not started", "study": "gs"}
+    items = []
+    for t in gs.get("generation") or []:
+        items.append({"key": t["key"], "label": "Gemma · " + t["label"], "done": t["done"], "total": t["total"],
+                      "fraction": min(1.0, t["done"] / t["total"]) if t["total"] else None, "hours_est": None,
+                      "state": t["state"], "eta_s": t.get("eta_s"),
+                      "note": f"{t['shards_running']}/{t['shards']} shards running" if t.get("shards_running") else ""})
+    for e in gs.get("experiments") or []:
+        for stp in e["steps"]:
+            if stp["group"] in ("prompts", "check", "analysis"):
+                items.append({"key": f"e{e['exp']}_{stp['group']}", "label": f"Exp {e['exp']} · {stp['label']}", "done": stp["done"],
+                              "total": stp["total"], "fraction": stp["done"] / stp["total"] if stp["total"] else None,
+                              "hours_est": None, "state": "completed" if stp["done"] == stp["total"] else
+                              ("failed" if stp["failed"] else "running" if stp["running"] else "queued"), "note": "", "eta_s": None})
+    tr = gs.get("training") or []
+    done = [j for j in tr if j["state"] == "done"]
+    running = [{"arm": j["arm"], "seed": j["seed"], "state": "running", "phase": "training", "epochs_done": j.get("epochs_done"),
+                "max_epochs": j.get("max_epochs"), "elapsed_s": j.get("elapsed_s"), "log_age_s": None} for j in tr if j["state"] == "running"]
+    secs = [j["seconds"] for j in done if j.get("seconds")]
+    per_run_s = sum(secs) / len(secs) if secs else None
+    left = [j for j in tr if j["state"] in ("pending", "running")]
+    slots = max(1, sum((gs.get("free_slots") or {}).values()) + len(running)) if gs.get("free_slots") else 4
+    eta = len(left) * (per_run_s or 1.6 * 3600) / max(4, min(8, slots)) if left else 0
+    gen_done = sum(1 for x in items if x["fraction"] is not None and x["fraction"] >= 1)
+    batches = []
+    for path in sorted(glob.glob(P("results", "gemma_swap", "batch_*.json"))):
+        b = read_json(path)
+        if isinstance(b, dict):
+            batches.append({"file": os.path.relpath(path, R), "recorded_at": b.get("recorded_at"), "command": b.get("command"),
+                            "configs": ["Exp 1-3 (15 arm configs + parity)"], "git_commit": (b.get("git_commit") or "")[:7] or None,
+                            "superseded_by": None})
+    events = [{"t": e.get("t"), "text": " · ".join(str(x) for x in (e.get("event"), e.get("job"), f"gpu {e['gpu']}" if e.get("gpu") is not None else None,
+                                                                 f"rc {e['rc']}" if e.get("rc") else None) if x)} for e in gs.get("events") or []]
+    return {
+        "study": "gs", "name": "Gemma swap / structured zero-shot study · 3 experiments", "kind": "live", "batches": batches,
+        "current_since": batches[0]["recorded_at"] if batches else None,
+        "overall": sum(e["done"] for e in gs["experiments"]) / max(1, sum(e["jobs"] for e in gs["experiments"])),
+        "overall_basis": "jobs done / all jobs of the 3 experiments (generation shards, checks, prompts, training runs, reports)",
+        "stages": [
+            {"key": "generation", "label": "Text, checks, prompts", "items": items,
+             "fraction": gen_done / len(items) if items else None,
+             "state": "completed" if items and gen_done == len(items) else "running"},
+            {"key": "training", "label": "Training", "done": len(done), "total": len(tr), "running": running,
+             "fraction": len(done) / len(tr) if tr else None, "per_run_s": per_run_s},
+            {"key": "evaluation", "label": "Evaluation", "done": len(done), "total": len(tr),
+             "fraction": len(done) / len(tr) if tr else None,
+             "note": "each run writes test metrics when it finishes; paired reports per experiment at results/gemma_swap/exp*.md"},
+        ],
+        "runs": {"done": len(done), "total": len(tr), "active": len(running)},
+        "eta_s": eta, "eta_basis": ("measured " if per_run_s else "estimated 1.6 h ") + "per training run, 4-8 runs in parallel",
+        "events": events[:8], "pilot": None, "gen_log": [], "queue_log": [], "r_log": [],
+    }
+
+
 def dur_s(s):
     s = int(s); h, m = divmod(s // 60, 60)
     return f"{h // 24}d {h % 24}h" if h >= 24 else f"{h}h {m:02d}m" if h else f"{m}m"
@@ -726,7 +806,8 @@ def state():
             "mdk_k3": mdk3(), "analysis_running": False,   # v0.2 inferred this from a leftover log file; never claimed now
             # v0.3
             "generated_at": iso(now), "server_time": now, "paper": paper, "studies": sts,
-            "overview": safe(lambda: fa_overview(now, sts)) if isinstance(sts, list) and sts else None,
+            "overview": (safe(lambda: gs_overview(now, sts)) if os.path.exists(P("results", "gemma_swap", "queue_state.json"))
+                         else safe(lambda: fa_overview(now, sts))) if isinstance(sts, list) and sts else None,
             "insights": safe(lambda: insights(sts, paper)) if isinstance(sts, list) and sts else None,
             "diagnostics": safe(lambda: diagnostics(now)), "infra": safe(lambda: infra(sts if isinstance(sts, list) else [], g)),
         })

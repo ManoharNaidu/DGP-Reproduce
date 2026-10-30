@@ -1,0 +1,61 @@
+{
+  "exp": "3",
+  "arms": [
+    {
+      "arm": "zs_GS0",
+      "reference": "gs_G0",
+      "new_file": "zs_GS0_41dd80909f.jsonl",
+      "ref_file": "gs_G0_dd0b80a7a2.jsonl",
+      "targets": 10023,
+      "identical": 10023,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "ok": true
+    },
+    {
+      "arm": "zs_GS1",
+      "reference": "gs_G1",
+      "new_file": "zs_GS1_c3a961f670.jsonl",
+      "ref_file": "gs_G1_4c89738671.jsonl",
+      "targets": 10023,
+      "identical": 10023,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "ok": true
+    },
+    {
+      "arm": "zs_GS1b",
+      "reference": "gs_G1b",
+      "new_file": "zs_GS1b_e75ebbea50.jsonl",
+      "ref_file": "gs_G1b_db67f0f364.jsonl",
+      "targets": 10023,
+      "identical": 10023,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "ok": true
+    },
+    {
+      "arm": "zs_GS2",
+      "reference": "gs_G2",
+      "new_file": "zs_GS2_3ca76efb4f.jsonl",
+      "ref_file": "gs_G2_4236a91c6a.jsonl",
+      "targets": 10023,
+      "identical": 10023,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "ok": true
+    },
+    {
+      "arm": "zs_GS2b",
+      "reference": "gs_G2b",
+      "new_file": "zs_GS2b_18a4be622a.jsonl",
+      "ref_file": "gs_G2b_53811bb040.jsonl",
+      "targets": 10023,
+      "identical": 10023,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "ok": true
+    }
+  ],
+  "ok": true
+}

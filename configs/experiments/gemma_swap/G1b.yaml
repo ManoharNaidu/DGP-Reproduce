@@ -1,0 +1,6 @@
+# Exp 1 (Gemma swap), arm G1b: dr arm R1b (disc · no-verdict) with Gemma-2-9B as text writer AND classifier.
+defaults:
+  - configs/experiments/disc_resid/R1b_disc_nv.yaml
+  - configs/experiments/gemma_swap/_gemma.yaml
+experiment: gs_G1b
+variant: G1b Gemma · disc · no-verdict

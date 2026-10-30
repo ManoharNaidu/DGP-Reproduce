@@ -1,0 +1,16 @@
+# Overlay (no defaults): Gemma-2-9B-it replaces Qwen3-8B as BOTH the text writer and the LoRA classifier
+# (Exp 1, full swap; user decision 2026-10-29). The `qwen` backend class is model-agnostic: it loads any HF chat model
+# by id; Qwen3's `enable_thinking=False` template argument is ignored by Gemma's template. Revision = the snapshot in
+# /workspace/.hf_home. Gemma-2 needs eager attention (soft-capping). Everything else is unchanged from the dr arms.
+summarizer:
+  model_id: google/gemma-2-9b-it
+  revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819
+  attn_implementation: eager
+  # Batches of long reviews: with eager attention one batch of 16 ~4k-token reviews asked for 15 GiB at once and ran out
+  # of memory (2026-10-29 13:06 and 13:16 UTC). A batch is closed before prompts x (longest prompt)^2 exceeds
+  # 16 x 2048^2, so short inputs still go 16 at a time. Greedy decoding; only padding within a batch changes.
+  max_batch_tokens_sq: 67108864
+classifier:
+  model_id: google/gemma-2-9b-it
+  revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819
+  attn_implementation: eager

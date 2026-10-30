@@ -1,0 +1,9 @@
+# Exp 2 (structured zero-shot prompt, Qwen3-8B), arm S2: dr arm R2 (disc + residual loss) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses R2's Qwen text caches unchanged.
+defaults:
+  - configs/experiments/disc_resid/R2_disc_resid_aux.yaml
+experiment: zs_S2
+variant: S2 Qwen · zero-shot prompt · disc + residual loss
+templates: {final: zs_final_disc}
+training:
+  residual_aux: {template: zs_residual_only}

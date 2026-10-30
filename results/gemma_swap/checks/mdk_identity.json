@@ -1,0 +1,119 @@
+{
+  "ok": true,
+  "gemma_cache": "173d9d5c91e37c3f",
+  "qwen_cache": "30447a444d0aa6e2",
+  "settings_equal": {
+    "dataset": true,
+    "split_seed": true,
+    "targets": true,
+    "targets_hash": true,
+    "K": true,
+    "M": true,
+    "use_mdk": true,
+    "operator": true,
+    "adjacency": true,
+    "features": true,
+    "scaling": true,
+    "embedder": true,
+    "random_seed": true
+  },
+  "metapaths": [
+    {
+      "metapath": "RPR-RPR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RPR-RSR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RPR-RUR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RPR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RSR-RPR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RSR-RSR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RSR-RUR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RSR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RUR-RPR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RUR-RSR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RUR-RUR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    },
+    {
+      "metapath": "RUR",
+      "targets": true,
+      "offsets": true,
+      "neighbors": true,
+      "sizes": true,
+      "raw_tokens_equal": false
+    }
+  ],
+  "note": "raw_tokens differ by design: they count review tokens with each model's tokenizer"
+}

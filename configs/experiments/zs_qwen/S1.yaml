@@ -1,0 +1,7 @@
+# Exp 2 (structured zero-shot prompt, Qwen3-8B), arm S1: dr arm R1 (disc · FLAG prompt) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses R1's Qwen text caches unchanged.
+defaults:
+  - configs/experiments/disc_resid/R1_disc.yaml
+experiment: zs_S1
+variant: S1 Qwen · zero-shot prompt · disc · FLAG prompt
+templates: {final: zs_final_disc}

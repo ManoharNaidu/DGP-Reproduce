@@ -1,0 +1,210 @@
+{
+  "kinds": [
+    {
+      "kind": "neighbour summaries (node_summary, B=10)",
+      "expected": 35747,
+      "gemma": {
+        "count": 35747,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.02,
+        "tokens_mean": 17.7,
+        "tokens_p95": 28.0,
+        "hit_cap_pct": 0.09,
+        "class_word_pct": 0.11,
+        "cache": "5f81238faa9ae208"
+      },
+      "qwen": {
+        "count": 36261,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.22,
+        "tokens_mean": 23.7,
+        "tokens_p95": 56.0,
+        "hit_cap_pct": 5.11,
+        "class_word_pct": 0.08,
+        "cache": "6d167c62839cd689"
+      },
+      "samples": [
+        {
+          "key": "31301",
+          "gemma": "Disappointing \"guerilla\" Disney film with no plot or story, resembling Eraserhead.",
+          "qwen": "The film's only merit was guerrilla filmmaking. It lacks plot, genre, and coherence. A disappointment for Disney fans. Two stars for the filmmaking technique."
+        },
+        {
+          "key": "27089",
+          "gemma": "Amazing actors, great show, season 5 was fantastic!",
+          "qwen": "I love this show. Actors are amazing. Season 5 was great!"
+        },
+        {
+          "key": "5026",
+          "gemma": "Grandbaby loves and learns from Diego.",
+          "qwen": "Grandbaby loves Diego, learns well, well done."
+        }
+      ]
+    },
+    {
+      "kind": "metapath summaries (B=10)",
+      "expected": 119829,
+      "gemma": {
+        "count": 119829,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.01,
+        "tokens_mean": 18.3,
+        "tokens_p95": 27.0,
+        "hit_cap_pct": 0.01,
+        "class_word_pct": 0.04,
+        "cache": "8253a4ca194f6da6"
+      },
+      "qwen": {
+        "count": 119829,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.2,
+        "tokens_mean": 38.5,
+        "tokens_p95": 56.0,
+        "hit_cap_pct": 26.95,
+        "class_word_pct": 0.09,
+        "cache": "b19e6c18ffa0f14f"
+      },
+      "samples": [
+        {
+          "key": "31371|RPR-RPR|36dbdf1c82de",
+          "gemma": "\"Reign\" is an entertaining historical fiction show about Mary, Queen of Scotland.",
+          "qwen": "Entertaining, fictionalized retelling with historical license."
+        },
+        {
+          "key": "27164|RPR-RSR|383b29351873",
+          "gemma": "Hilarious British comedy, nostalgic Cold War setting, great acting.",
+          "qwen": "BEST show ever. Addicted, no cable. Fun, hits home. Loved Cold War, fought Russia, China. Dawn French humor, British shows, gift of laughter. Great acting, story, action. Suggest for movie night."
+        },
+        {
+          "key": "4957|RPR-RUR|03c3fd9f7561",
+          "gemma": "Nostalgic, well-made, but lacking the edge of earlier seasons.",
+          "qwen": "Strong actors, good writing, and interesting history. Worth watching next season."
+        }
+      ]
+    },
+    {
+      "kind": "D line \u00b7 FLAG prompt (dr_discriminative)",
+      "expected": 10023,
+      "gemma": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.0,
+        "tokens_mean": 28.7,
+        "tokens_p95": 37.0,
+        "hit_cap_pct": 0.0,
+        "class_word_pct": 74.73,
+        "cache": "854cd8ca4ecf3ed8"
+      },
+      "qwen": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.54,
+        "tokens_mean": 30.7,
+        "tokens_p95": 41.0,
+        "hit_cap_pct": 0.03,
+        "class_word_pct": 92.37,
+        "cache": "90c8d634635cd431"
+      },
+      "samples": [
+        {
+          "key": "31377",
+          "gemma": "The review provides a subjective opinion on the series' quality and offers specific suggestions for improvement, making it potentially helpful to other viewers.",
+          "qwen": "The review provides specific feedback on the series' acting, storyline, and content, offering constructive criticism and highlighting both strengths and areas for improvement, making it helpful."
+        },
+        {
+          "key": "27183",
+          "gemma": "The review provides specific criticisms of the show's portrayal of mental illness, character development, and storytelling techniques, offering both negative and positive aspects, making it potentially helpful to other viewers.",
+          "qwen": "The review is unhelpful because it contains contradictory statements, lacks a clear focus, and includes personal opinions without providing specific examples or constructive feedback about the product."
+        },
+        {
+          "key": "4973",
+          "gemma": "The review provides a detailed and personal account of the reviewer's experience with the show, highlighting its strengths and comparing it to other similar shows, making it helpful.",
+          "qwen": "The review is helpful because it provides specific praise for the show's intelligent writing, realistic scenarios, and well-developed characters, which are valuable insights for potential viewers."
+        }
+      ]
+    },
+    {
+      "kind": "D line \u00b7 no-verdict (dr_discriminative_nv)",
+      "expected": 10023,
+      "gemma": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.0,
+        "tokens_mean": 25.1,
+        "tokens_p95": 33.0,
+        "hit_cap_pct": 0.0,
+        "class_word_pct": 4.27,
+        "cache": "c0a18d2b08a7f3a8"
+      },
+      "qwen": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.1,
+        "tokens_mean": 26.7,
+        "tokens_p95": 40.0,
+        "hit_cap_pct": 0.07,
+        "class_word_pct": 0.26,
+        "cache": "59195eacdb389ece"
+      },
+      "samples": [
+        {
+          "key": "31377",
+          "gemma": "The review provides specific details about the acting, storyline, and personal preferences regarding action and nudity.",
+          "qwen": "The review provides specific feedback on acting, storyline, and content elements like drama, action, nudity, and character portrayal."
+        },
+        {
+          "key": "27183",
+          "gemma": "The review provides specific examples of plot elements and character portrayals, both positive and negative, and offers detailed feedback on the episode's handling of mental illness.",
+          "qwen": "The review critiques the over-dramatization and stereotypical portrayal of mental illness in the episode, while praising the character development and patient-centric approach."
+        },
+        {
+          "key": "4973",
+          "gemma": "The review provides detailed insights into the show's writing, acting, and realism, comparing it to other similar shows and highlighting specific aspects that make it stand out.",
+          "qwen": "The review discusses the reviewer's long-standing interest in family-centered dramas, their initial hesitation to commit to the series, and their eventual positive experience with the show's intelligent writing, realistic scenarios, and strong acting."
+        }
+      ]
+    },
+    {
+      "kind": "R line (dr_residual)",
+      "expected": 10023,
+      "gemma": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.0,
+        "tokens_mean": 14.6,
+        "tokens_p95": 20.0,
+        "hit_cap_pct": 0.0,
+        "class_word_pct": 0.0,
+        "cache": "1466aee76b389827"
+      },
+      "qwen": {
+        "count": 10023,
+        "empty_pct": 0.0,
+        "multi_line_pct": 0.72,
+        "tokens_mean": 22.6,
+        "tokens_p95": 37.0,
+        "hit_cap_pct": 0.24,
+        "class_word_pct": 0.01,
+        "cache": "c01bc89836e0f299"
+      },
+      "samples": [
+        {
+          "key": "31377",
+          "gemma": "This review discusses a series about Mary of Scotland.",
+          "qwen": "A historical drama series focusing on Mary of Scotland with strong acting and a compelling storyline."
+        },
+        {
+          "key": "27183",
+          "gemma": "The reviewer discusses the portrayal of mental illness in a television series.",
+          "qwen": "The review discusses the portrayal of mental illness in a TV series, highlighting both strengths and criticisms of the storytelling and character development."
+        },
+        {
+          "key": "4973",
+          "gemma": "The review discusses the television show Parenthood and the reviewer's enjoyment of it.",
+          "qwen": "The review discusses the reviewer's experience with the TV show Parenthood, highlighting their appreciation for its intelligent writing, realistic scenarios, and strong character development."
+        }
+      ]
+    }
+  ],
+  "ok": true
+}

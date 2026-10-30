@@ -1,0 +1,6 @@
+# Exp 1 (Gemma swap), arm G2: dr arm R2 (disc + residual loss) with Gemma-2-9B as text writer AND classifier.
+defaults:
+  - configs/experiments/disc_resid/R2_disc_resid_aux.yaml
+  - configs/experiments/gemma_swap/_gemma.yaml
+experiment: gs_G2
+variant: G2 Gemma · disc + residual loss

@@ -1,0 +1,6 @@
+# Exp 1 (Gemma swap), arm G2b: dr arm R2b (no-verdict disc + residual loss) with Gemma-2-9B as text writer AND classifier.
+defaults:
+  - configs/experiments/disc_resid/R2b_disc_nv_resid_aux.yaml
+  - configs/experiments/gemma_swap/_gemma.yaml
+experiment: gs_G2b
+variant: G2b Gemma · no-verdict disc + residual loss

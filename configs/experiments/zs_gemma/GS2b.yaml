@@ -1,0 +1,9 @@
+# Exp 3 (structured zero-shot prompt, Gemma-2-9B), arm GS2b: Exp 1 arm G2b (no-verdict disc + residual loss) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses G2b's Gemma text caches unchanged.
+defaults:
+  - configs/experiments/gemma_swap/G2b.yaml
+experiment: zs_GS2b
+variant: GS2b Gemma · zero-shot prompt · no-verdict disc + residual loss
+templates: {final: zs_final_disc}
+training:
+  residual_aux: {template: zs_residual_only}

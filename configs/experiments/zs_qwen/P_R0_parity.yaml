@@ -1,0 +1,6 @@
+# Stack-parity run for Exp 2: dr arm R0 unchanged, re-run on this instance's stack (torch 2.14.1+cu132 vs the dr
+# study's 2.14.0+cu130), seed 0 only, to measure the drift a stack change alone causes.
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+experiment: par_R0
+variant: R0 parity (current stack)

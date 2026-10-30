@@ -1,0 +1,7 @@
+# Exp 3 (structured zero-shot prompt, Gemma-2-9B), arm GS1: Exp 1 arm G1 (disc · FLAG prompt) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses G1's Gemma text caches unchanged.
+defaults:
+  - configs/experiments/gemma_swap/G1.yaml
+experiment: zs_GS1
+variant: GS1 Gemma · zero-shot prompt · disc · FLAG prompt
+templates: {final: zs_final_disc}

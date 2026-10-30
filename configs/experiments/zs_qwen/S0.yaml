@@ -1,0 +1,7 @@
+# Exp 2 (structured zero-shot prompt, Qwen3-8B), arm S0: dr arm R0 (baseline) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses R0's Qwen text caches unchanged.
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+experiment: zs_S0
+variant: S0 Qwen · zero-shot prompt · baseline
+templates: {final: zs_final}

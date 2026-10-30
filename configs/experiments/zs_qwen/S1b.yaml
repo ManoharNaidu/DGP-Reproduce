@@ -1,0 +1,7 @@
+# Exp 2 (structured zero-shot prompt, Qwen3-8B), arm S1b: dr arm R1b (disc · no-verdict) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses R1b's Qwen text caches unchanged.
+defaults:
+  - configs/experiments/disc_resid/R1b_disc_nv.yaml
+experiment: zs_S1b
+variant: S1b Qwen · zero-shot prompt · disc · no-verdict
+templates: {final: zs_final_disc}

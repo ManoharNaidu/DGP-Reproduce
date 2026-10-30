@@ -36,12 +36,12 @@ from dgp_repro.prompts import MetapathBlock, build_prompt
 from dgp_repro.prompts.builder import load_final_template
 from dgp_repro.summarization import load_template, metapath_summaries, node_summaries, prompt_version, template_names
 from dgp_repro.summarization.numeric import numeric_summary
-from dgp_repro.summarization.pipeline import join_neighbor_texts
+from dgp_repro.summarization.pipeline import generation_shard, join_neighbor_texts
 from dgp_repro.utils.cache import ArtifactCache, TextStore
 
 TokenCounter = Callable[[str], int]
 PATH_SUMM_OFF_SEPARATOR = " | "
-STAGES = ("mdk", "fa_text", "node_summaries", "prompts")
+STAGES = ("mdk", "fa_text", "target_text", "node_summaries", "metapath_summaries", "prompts")
 
 
 @dataclass
@@ -132,6 +132,9 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
     """until: 'mdk' | 'node_summaries' | 'prompts'. Earlier stops fill the caches and return no prompts."""
     if until not in STAGES:
         raise ValueError(f"until must be one of {STAGES}")
+    if generation_shard() and until not in ("target_text", "node_summaries", "metapath_summaries"):
+        raise ValueError("DGP_GEN_SHARD is set: a shard may only fill text caches (target_text, node_summaries, "
+                         "metapath_summaries); build MDK and prompts in one unsharded process")
     dgp = cfg["dgp"]
     K, M, B_node, B_meta = dgp["K"], dgp["M"], dgp["B_node"], dgp["B_meta"]
     comp = _components(cfg)
@@ -162,6 +165,9 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
             name = metapath_name(path)
             file = trim_cache.path(f"{name}.npz")
             if not file.exists():
+                if generation_shard():
+                    raise RuntimeError(f"MDK cache {trim_cache.key}/{name}.npz missing: build it unsharded "
+                                       "(--until mdk) before starting shard processes")
                 log(f"trimming metapath {name} (K={K}, M={M}, mdk={comp['mdk']})")
                 result = trim_metapath(graph.relations, path, features, targets, K, M, use_mdk=comp["mdk"],
                                        operator=trim_meta["operator"], adjacency=trim_meta["adjacency"],
@@ -183,6 +189,9 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
         return PromptSet(prompts={}, token_rows=[], trim_stats=trim_stats,
                          metadata={"stopped_after": "fa_text", "fa_coverage": fa.get("coverage")},
                          aux={"fa": fa, "trims": trims, "mdk_key": trim_cache.key if uses_neighbors else None})
+    if until == "target_text":                    # target D/R lines only; they read raw text, not the summaries
+        _generate_target_texts(graph, targets, cfg, summarizer, cache_root, log)
+        return PromptSet(prompts={}, token_rows=[], trim_stats=trim_stats, metadata={"stopped_after": "target_text"})
 
     # ---- 2. node-level summaries s_u (Eq. 5) --------------------------------------------------
     node_template_name, meta_template_name = template_names(task_aware.get("enabled", False),
@@ -227,24 +236,11 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
             path_text = {(v, name): PATH_SUMM_OFF_SEPARATOR.join(per_node_text[u] for u in nbrs)
                          for v, name, nbrs in requests if nbrs}
 
+    if until == "metapath_summaries":
+        return PromptSet(prompts={}, token_rows=[], trim_stats=trim_stats, metadata={"stopped_after": "metapath_summaries"})
+
     # ---- 3b. optional generated target text (discriminative / residual), cached per template and budget
-    target_extra: dict[str, dict[int, str]] = {}
-    for kind, spec in target_text_specs(cfg).items():
-        store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
-                      "template": spec["template"], "B_node": spec["budget"], "role": "target"}
-        cut = spec.get("truncate_chars")      # FLAG feeds the LLM raw_text[:1200]; key omitted when unset
-        if cut:
-            store_meta["truncate_chars"] = cut
-        source = [t[:cut] for t in graph.texts] if cut else graph.texts
-        store = TextStore(ArtifactCache("node_summaries", store_meta, cache_root).path("summaries.jsonl"))
-        tl = [int(t) for t in targets]
-        log(f"target {kind}: {len(tl)} targets, {sum(str(u) in store for u in tl)} cached")
-        generated = node_summaries(source, tl, summarizer, load_template(spec["template"]), spec["budget"], store)
-        if spec.get("fallback_raw"):         # FLAG: a node whose LLM text is unusable keeps its raw text
-            empty = [u for u, s in generated.items() if not s.strip()]
-            generated.update({u: source[u] for u in empty})
-            log(f"target {kind}: {len(empty)} empty outputs replaced by raw text")
-        target_extra[kind] = generated
+    target_extra = _generate_target_texts(graph, targets, cfg, summarizer, cache_root, log)
     for kind in fa.get("kinds", []):              # the target's own line from its subgraph prompt (raw text if failed)
         key = "disc" if kind == "discriminative" else "residual"
         target_extra[key] = {int(v): fa[kind][int(v)].text_for(int(v), graph.texts) for v in targets}
@@ -302,6 +298,28 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
         aux = _flag_arch_branch_prompts(graph, targets, trims, fa, fa_path_text, question, precision)
     return PromptSet(prompts=prompts, token_rows=rows, trim_stats=trim_stats, metadata=metadata, extras=extras_out,
                      aux=aux)
+
+
+def _generate_target_texts(graph: HeteroGraph, targets, cfg: dict, summarizer, cache_root, log) -> dict[str, dict[int, str]]:
+    """Optional generated target text (discriminative / residual), cached per template and budget."""
+    target_extra: dict[str, dict[int, str]] = {}
+    for kind, spec in target_text_specs(cfg).items():
+        store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
+                      "template": spec["template"], "B_node": spec["budget"], "role": "target"}
+        cut = spec.get("truncate_chars")      # FLAG feeds the LLM raw_text[:1200]; key omitted when unset
+        if cut:
+            store_meta["truncate_chars"] = cut
+        source = [t[:cut] for t in graph.texts] if cut else graph.texts
+        store = TextStore(ArtifactCache("node_summaries", store_meta, cache_root).path("summaries.jsonl"))
+        tl = [int(t) for t in targets]
+        log(f"target {kind}: {len(tl)} targets, {sum(str(u) in store for u in tl)} cached")
+        generated = node_summaries(source, tl, summarizer, load_template(spec["template"]), spec["budget"], store)
+        if spec.get("fallback_raw"):         # FLAG: a node whose LLM text is unusable keeps its raw text
+            empty = [u for u, s in generated.items() if not s.strip()]
+            generated.update({u: source[u] for u in empty})
+            log(f"target {kind}: {len(empty)} empty outputs replaced by raw text")
+        target_extra[kind] = generated
+    return target_extra
 
 
 # ---------------------------------------------------------------- FLAG-architecture study (extension)

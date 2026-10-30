@@ -1,0 +1,7 @@
+# Exp 3 (structured zero-shot prompt, Gemma-2-9B), arm GS0: Exp 1 arm G0 (baseline) with the structured zero-shot
+# classification prompt (prompts/dgp/PROVENANCE_ZS.md). Reuses G0's Gemma text caches unchanged.
+defaults:
+  - configs/experiments/gemma_swap/G0.yaml
+experiment: zs_GS0
+variant: GS0 Gemma · zero-shot prompt · baseline
+templates: {final: zs_final}

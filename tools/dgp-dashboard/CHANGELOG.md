@@ -1,3 +1,10 @@
+## 0.4.0 (2026-10-29)
+Gemma swap / structured zero-shot study added as the live study: three studies (Exp 1 gs_G*, Exp 2 zs_S* + par_R0,
+Exp 3 zs_GS*) with five-seed grids and paired deltas against each study's arm 0; job states and the overview come from
+tools/dr-dashboard/v2/server.py (gs_state, read-only). The FLAG-architecture study is now historical. The overview
+follows the Gemma study once results/gemma_swap/queue_state.json exists. Previous files:
+2026-10-29-server-v3-before-gemma-swap.py, 2026-10-29-index-v3-before-gemma-swap.html.
+
 ## 0.3.0 (2026-10-24)
 Complete redesign, visual-first: graphite dark theme (light on a toggle), five sections — Overview (live study progress,
 three-stage pipeline, runs / active jobs / remaining time, GPU summary, latest event), Experiments (one row per

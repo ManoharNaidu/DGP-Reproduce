@@ -1,0 +1,371 @@
+{
+  "dr_R0": {
+    "cell": "R",
+    "label": "Qwen \u00b7 original prompt",
+    "arm": "0",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.74400110792489,
+    "macro_f1_std": 0.44788974209830346,
+    "auroc_mean": 74.9743503661544,
+    "auroc_std": 0.5142411118848895,
+    "auprc_mean": 32.3694744478516,
+    "auprc_std": 0.5652693457824386
+  },
+  "dr_R1": {
+    "cell": "R",
+    "label": "Qwen \u00b7 original prompt",
+    "arm": "1",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.78564911327389,
+    "macro_f1_std": 1.298734226880595,
+    "auroc_mean": 75.18190584361933,
+    "auroc_std": 0.5632054321484014,
+    "auprc_mean": 32.419951169408634,
+    "auprc_std": 1.1678590023443967
+  },
+  "dr_R1b": {
+    "cell": "R",
+    "label": "Qwen \u00b7 original prompt",
+    "arm": "1b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.32748988664575,
+    "macro_f1_std": 0.7822230994783255,
+    "auroc_mean": 75.42416458715509,
+    "auroc_std": 0.578965969914683,
+    "auprc_mean": 32.414425215006275,
+    "auprc_std": 0.8025894471806513
+  },
+  "dr_R2": {
+    "cell": "R",
+    "label": "Qwen \u00b7 original prompt",
+    "arm": "2",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.27845357313826,
+    "macro_f1_std": 2.5965279235696834,
+    "auroc_mean": 75.22545705677815,
+    "auroc_std": 0.4675309924230807,
+    "auprc_mean": 32.521568963863174,
+    "auprc_std": 0.9572060274527965
+  },
+  "dr_R2b": {
+    "cell": "R",
+    "label": "Qwen \u00b7 original prompt",
+    "arm": "2b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.77674229468512,
+    "macro_f1_std": 1.4391770139962996,
+    "auroc_mean": 75.24274158067982,
+    "auroc_std": 0.5059348816686311,
+    "auprc_mean": 32.37016307911496,
+    "auprc_std": 0.7929152238604164
+  },
+  "gs_G0": {
+    "cell": "G",
+    "label": "Gemma \u00b7 original prompt",
+    "arm": "0",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.04456017701168,
+    "macro_f1_std": 1.00888256324113,
+    "auroc_mean": 76.38352887366122,
+    "auroc_std": 0.341357856683239,
+    "auprc_mean": 34.30732767617095,
+    "auprc_std": 1.0027751560394376
+  },
+  "gs_G1": {
+    "cell": "G",
+    "label": "Gemma \u00b7 original prompt",
+    "arm": "1",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.64884186780003,
+    "macro_f1_std": 1.4114500926549343,
+    "auroc_mean": 75.99747878828444,
+    "auroc_std": 0.2709931023883083,
+    "auprc_mean": 34.30113848036734,
+    "auprc_std": 0.6066347380235234
+  },
+  "gs_G1b": {
+    "cell": "G",
+    "label": "Gemma \u00b7 original prompt",
+    "arm": "1b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.59642656186202,
+    "macro_f1_std": 1.6028217199675332,
+    "auroc_mean": 75.82273531948479,
+    "auroc_std": 0.28486610204820245,
+    "auprc_mean": 34.51590522543519,
+    "auprc_std": 0.38394396844000095
+  },
+  "gs_G2": {
+    "cell": "G",
+    "label": "Gemma \u00b7 original prompt",
+    "arm": "2",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.42886098180045,
+    "macro_f1_std": 0.9508320542055917,
+    "auroc_mean": 76.35403745979553,
+    "auroc_std": 0.5809342609705321,
+    "auprc_mean": 34.20186626851562,
+    "auprc_std": 1.8155085633174504
+  },
+  "gs_G2b": {
+    "cell": "G",
+    "label": "Gemma \u00b7 original prompt",
+    "arm": "2b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.97246295254874,
+    "macro_f1_std": 0.8331612270044984,
+    "auroc_mean": 75.98386696424774,
+    "auroc_std": 0.3501775747274354,
+    "auprc_mean": 34.244736994213994,
+    "auprc_std": 0.37937425477106973
+  },
+  "zs_S0": {
+    "cell": "S",
+    "label": "Qwen \u00b7 zero-shot prompt",
+    "arm": "0",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.68250709007548,
+    "macro_f1_std": 0.5283124935171419,
+    "auroc_mean": 75.5207947673701,
+    "auroc_std": 0.14311700770667765,
+    "auprc_mean": 32.758727775314334,
+    "auprc_std": 0.43980247786720617
+  },
+  "zs_S1": {
+    "cell": "S",
+    "label": "Qwen \u00b7 zero-shot prompt",
+    "arm": "1",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.75144716035308,
+    "macro_f1_std": 0.4241761339184274,
+    "auroc_mean": 75.44081288160694,
+    "auroc_std": 0.6726462314813143,
+    "auprc_mean": 33.02184864111452,
+    "auprc_std": 0.7240327130089865
+  },
+  "zs_S1b": {
+    "cell": "S",
+    "label": "Qwen \u00b7 zero-shot prompt",
+    "arm": "1b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.28313668560615,
+    "macro_f1_std": 0.4665845435246238,
+    "auroc_mean": 75.67965690324641,
+    "auroc_std": 0.1182892892316447,
+    "auprc_mean": 32.71820245757891,
+    "auprc_std": 0.5492336133860936
+  },
+  "zs_S2": {
+    "cell": "S",
+    "label": "Qwen \u00b7 zero-shot prompt",
+    "arm": "2",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.06742624619737,
+    "macro_f1_std": 1.5354286974113371,
+    "auroc_mean": 75.48590150401155,
+    "auroc_std": 0.27874002062445485,
+    "auprc_mean": 33.096848596967156,
+    "auprc_std": 0.8325725512853974
+  },
+  "zs_S2b": {
+    "cell": "S",
+    "label": "Qwen \u00b7 zero-shot prompt",
+    "arm": "2b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.14494677753757,
+    "macro_f1_std": 1.0271929525801171,
+    "auroc_mean": 75.67727583631925,
+    "auroc_std": 0.15473938657770372,
+    "auprc_mean": 32.94525963059813,
+    "auprc_std": 0.5065071325885668
+  },
+  "zs_GS0": {
+    "cell": "GS",
+    "label": "Gemma \u00b7 zero-shot prompt",
+    "arm": "0",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.29667074837337,
+    "macro_f1_std": 0.7199801843789428,
+    "auroc_mean": 75.37164166720703,
+    "auroc_std": 0.3404168831428768,
+    "auprc_mean": 32.91524689289853,
+    "auprc_std": 1.3991914803028616
+  },
+  "zs_GS1": {
+    "cell": "GS",
+    "label": "Gemma \u00b7 zero-shot prompt",
+    "arm": "1",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.91078652385443,
+    "macro_f1_std": 1.4204167588650405,
+    "auroc_mean": 75.04400093150966,
+    "auroc_std": 0.39365790989520044,
+    "auprc_mean": 32.30143139937769,
+    "auprc_std": 1.1357334791943237
+  },
+  "zs_GS1b": {
+    "cell": "GS",
+    "label": "Gemma \u00b7 zero-shot prompt",
+    "arm": "1b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 65.38068212072092,
+    "macro_f1_std": 1.0071333252234833,
+    "auroc_mean": 75.3415593443455,
+    "auroc_std": 0.322148271488203,
+    "auprc_mean": 33.12201673708955,
+    "auprc_std": 0.6995170020485236
+  },
+  "zs_GS2": {
+    "cell": "GS",
+    "label": "Gemma \u00b7 zero-shot prompt",
+    "arm": "2",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.24409588641944,
+    "macro_f1_std": 1.2113581892725205,
+    "auroc_mean": 75.13080005940466,
+    "auroc_std": 0.7157536988354786,
+    "auprc_mean": 31.915267866001432,
+    "auprc_std": 0.824929130700352
+  },
+  "zs_GS2b": {
+    "cell": "GS",
+    "label": "Gemma \u00b7 zero-shot prompt",
+    "arm": "2b",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "macro_f1_mean": 64.64490447874519,
+    "macro_f1_std": 0.3955127528790454,
+    "auroc_mean": 75.01412255069093,
+    "auroc_std": 0.48584801021527124,
+    "auprc_mean": 32.244462430220054,
+    "auprc_std": 0.6823049928892849
+  },
+  "par_R0": {
+    "cell": "parity",
+    "seeds": [
+      0
+    ],
+    "macro_f1": 65.3679166990315,
+    "auroc": 75.09245372607343,
+    "auprc": 32.82530464953361
+  }
+}

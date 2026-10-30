@@ -594,6 +594,200 @@ def fa_state(now):
             "results": safe(fa_results), "pilot_log": tail_lines(P("logs", "flag_arch", "pilot.log"), 8)}
 
 
+# ---------------------------------------------------------------- Gemma-swap / structured zero-shot study (2026-10-29)
+# Written by scripts/gs_queue.py: results/gemma_swap/{queue_state.json, status.jsonl, done/, checks/, exp*.md},
+# logs/gemma_swap/<job>.log. Exp 1 = G (Gemma writes + classifies), Exp 2 = S (Qwen, zero-shot prompt) + par_R0,
+# Exp 3 = GS (Gemma, zero-shot prompt). R = the dr study (reference, already finished).
+GS_ARMS = ["0", "1", "1b", "2", "2b"]
+GS_CELLS = {"R": ("dr_R{}", "Qwen · original prompt", "dr study (done)"), "G": ("gs_G{}", "Gemma · original prompt", "Exp 1"),
+            "S": ("zs_S{}", "Qwen · zero-shot prompt", "Exp 2"), "GS": ("zs_GS{}", "Gemma · zero-shot prompt", "Exp 3")}
+GS_EXPS = {1: "Exp 1 · Gemma replaces Qwen (writer + classifier), original prompt",
+           2: "Exp 2 · Qwen, structured zero-shot classification prompt (+ stack-parity run)",
+           3: "Exp 3 · Gemma, structured zero-shot classification prompt"}
+GS_TEXTS = [  # key, label, stage, metadata selector, total, budget
+    ("node", "Neighbour summaries · node_summary, B=10", "node_summaries",
+     lambda m: m.get("template") == "node_summary" and m.get("B_node") == 10, 35747, 10),
+    ("tt_disc", "D line · FLAG prompt (dr_discriminative)", "node_summaries",
+     lambda m: m.get("template") == "dr_discriminative" and m.get("role") == "target", N_TARGETS, 40),
+    ("tt_resid", "R line (dr_residual)", "node_summaries",
+     lambda m: m.get("template") == "dr_residual" and m.get("role") == "target", N_TARGETS, 40),
+    ("tt_nv", "D line · no-verdict (dr_discriminative_nv)", "node_summaries",
+     lambda m: m.get("template") == "dr_discriminative_nv" and m.get("role") == "target", N_TARGETS, 40),
+    ("meta", "Metapath summaries · B=10 (needs all neighbour summaries)", "metapath_summaries",
+     lambda m: m.get("template") == "metapath_summary" and m.get("node_template") == "node_summary" and not m.get("node_text"),
+     119829, 10),
+]
+GS_CLASS = re.compile(r"\b(unhelpful|not helpful|helpful|useful|useless|not useful)\b", re.I)
+_gs_scan = {}                         # path -> incremental scan state (offset + running counts), so big files are read once
+
+
+def gs_store(stage, sel):
+    for meta in glob.glob(P("datasets", "cache", stage, "*", "metadata.json")):
+        m = read_json(meta)
+        if m and m.get("summarizer") == "google/gemma-2-9b-it" and sel(m):
+            return os.path.dirname(meta), m
+    return None, None
+
+
+def gs_scan(path, cap):
+    st = _gs_scan.setdefault(path, {"off": 0, "keys": set(), "empty": 0, "multi": 0, "cap": 0, "tok": 0, "ntok": 0,
+                                    "cls": 0, "last": []})
+    try:
+        with open(path, "rb") as f:
+            f.seek(st["off"])
+            data = f.read()
+    except OSError:
+        return st
+    cut = data.rfind(b"\n") + 1                # a half-written last line waits for the next read
+    for line in data[:cut].decode("utf-8", errors="replace").splitlines():
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        if row.get("key") in st["keys"]:
+            continue
+        st["keys"].add(row.get("key"))
+        text = str(row.get("text", ""))
+        st["empty"] += not text.strip()
+        st["multi"] += len([x for x in text.splitlines() if x.strip()]) > 1
+        st["cls"] += bool(GS_CLASS.search(text))
+        n = row.get("generated_tokens")
+        if isinstance(n, (int, float)):
+            st["tok"] += n
+            st["ntok"] += 1
+            st["cap"] += n >= cap
+        st["last"] = (st["last"] + [text[:220]])[-5:]
+    st["off"] += cut
+    return st
+
+
+def gs_generation(now, jobs):
+    rows = []
+    group_of = {"node": "e1_node_", "meta": "e1_meta_", "tt_disc": "e1_tt2_", "tt_resid": "e1_tt2_", "tt_nv": "e1_tt1b_"}
+    for key, label, stage, sel, total, budget in GS_TEXTS:
+        d, meta = gs_store(stage, sel)
+        st = gs_scan(os.path.join(d, "summaries.jsonl"), 4 * budget + 16) if d else None
+        done = len(st["keys"]) if st else 0
+        shard_jobs = [j for j in jobs if j["name"].startswith(group_of[key])]
+        running = sum(j["state"] == "running" for j in shard_jobs)
+        series = HIST["gen"].setdefault("gs_" + key, [])
+        push(series, [round(now), done], now)
+        rs = rate_series(series)
+        rate = rs[-1][1] if rs else None
+        state = ("completed" if done >= total else "running" if running else
+                 "failed" if any(j["state"] in ("failed", "skipped") for j in shard_jobs) else "queued")
+        rows.append({"key": key, "label": label, "total": total, "done": done, "state": state, "shards_running": running,
+                     "shards": len(shard_jobs), "cache": os.path.relpath(d, R) if d else None,
+                     "rate_now": rate, "rate_series": rs, "eta_s": (total - done) / rate * 60 if rate and done < total else None,
+                     "empty_pct": round(100 * st["empty"] / done, 2) if st and done else None,
+                     "multi_line_pct": round(100 * st["multi"] / done, 2) if st and done else None,
+                     "class_word_pct": round(100 * st["cls"] / done, 2) if st and done else None,
+                     "tokens_mean": round(st["tok"] / st["ntok"], 1) if st and st["ntok"] else None,
+                     "hit_cap_pct": round(100 * st["cap"] / st["ntok"], 2) if st and st["ntok"] else None,
+                     "samples": st["last"] if st else []})
+    return rows
+
+
+def gs_train_row(j, now):
+    m = re.match(r"e(\d)_train_(par_R0|GS\w+|G\w+|S\w+)_s(\d)$", j["name"])
+    cell, seed = m.group(2), int(m.group(3))
+    exp = ("par_R0" if cell == "par_R0" else "zs_" + cell if cell.startswith(("GS", "S")) else "gs_" + cell)
+    row = {"job": j["name"], "exp_no": j["exp"], "arm": cell, "seed": seed, "experiment": exp, "state": j["state"],
+           "gpu": j.get("gpu"), "seconds": j.get("seconds")}
+    d = run_dir(exp, seed)
+    if j["state"] == "running" and d:
+        hist = []
+        for x in read_lines(os.path.join(d, "training_log.jsonl")):
+            try:
+                hist.append(json.loads(x))
+            except ValueError:
+                pass
+        row["epochs_done"], row["max_epochs"] = len(hist), MAX_EPOCHS
+        if hist:
+            row["last"] = {k: hist[-1].get(k) for k in ("epoch", "train_loss", "val_loss", "val_auroc", "val_auprc", "val_macro_f1")}
+        started = iso_to_epoch(j.get("started", "")) if j.get("started") else None
+        row["elapsed_s"] = now - started if started else None
+    mt = run_metrics(exp, seed)
+    if mt and isinstance(mt.get("test"), dict):
+        row["test"] = {k: mt["test"].get(k) for k in METRICS}
+        row["best_epoch"] = mt.get("best_epoch")
+    if j["state"] == "failed":
+        row["error"] = safe(lambda: error_snippet(P("logs", "gemma_swap", f"{j['name']}.log")))
+    return row
+
+
+def gs_results():
+    out = {}
+    for c, (pat, label, src) in GS_CELLS.items():
+        for a in GS_ARMS:
+            per = {}
+            for s in SEEDS:
+                t = ((run_metrics(pat.format(a), s) or {}).get("test")) or {}
+                if all(isinstance(t.get(k), (int, float)) for k in METRICS):
+                    per[str(s)] = {k: t[k] for k in METRICS}
+            out[f"{c}{a}"] = {"cell": c, "arm": a, "label": label, "source": src, "experiment": pat.format(a), "per_seed": per}
+    par = (run_metrics("par_R0", 0) or {}).get("test")
+    out["par_R0"] = {"cell": "parity", "arm": "0", "per_seed": {"0": {k: par[k] for k in METRICS}} if par else {}}
+    return out
+
+
+def gs_state(now):
+    qs = read_json(P("results", "gemma_swap", "queue_state.json"))
+    if not qs:
+        return {"started": False}
+    jobs = qs.get("jobs") or []
+    ev = []
+    for ln in tail_lines(P("results", "gemma_swap", "status.jsonl"), 40):
+        try:
+            ev.append(json.loads(ln))
+        except ValueError:
+            pass
+    alive = process_alive_py("scripts/gs_queue.py")
+    exps = []
+    for n, title in GS_EXPS.items():
+        mine = [j for j in jobs if j["exp"] == n]
+        tr = [j for j in mine if j["group"] == "train"]
+        st = ("completed" if mine and all(j["state"] == "done" for j in mine) else
+              "failed" if any(j["state"] in ("failed", "skipped") for j in mine) else
+              "running" if any(j["state"] == "running" for j in mine) else "waiting")
+        if st == "running" and not alive:
+            st = "stopped"
+        steps = []
+        for g, label in (("gen", "Gemma text generation (shards)"), ("check", "Checks"), ("prompts", "Prompts (5 arms)"),
+                         ("train", "LoRA training"), ("analysis", "Analysis report")):
+            js = [j for j in mine if j["group"] == g]
+            if js:
+                steps.append({"group": g, "label": label, "total": len(js), "done": sum(j["state"] == "done" for j in js),
+                              "running": sum(j["state"] == "running" for j in js),
+                              "failed": sum(j["state"] in ("failed", "skipped") for j in js)})
+        secs = [j["seconds"] for j in tr if j["state"] == "done" and j.get("seconds")]
+        exps.append({"exp": n, "title": title, "state": st, "jobs": len(mine), "done": sum(j["state"] == "done" for j in mine),
+                     "steps": steps, "train_mean_s": sum(secs) / len(secs) if secs else None,
+                     "report": f"files/gs_exp{n}.md" if os.path.exists(P("results", "gemma_swap", f"exp{n}.md")) else None})
+    checks = {}
+    for name in ("mdk_identity", "text_checks", "layout_exp2", "layout_exp3"):
+        c = read_json(P("results", "gemma_swap", "checks", f"{name}.json"))
+        checks[name] = {"ok": c.get("ok"), "file": f"files/gs_{name}.md"} if isinstance(c, dict) else None
+    return {"started": True, "alive": alive, "updated": qs.get("updated"), "current_exp": qs.get("current_exp"),
+            "gate": qs.get("gate"), "gate_hours": qs.get("gate_hours"), "disk_free_gb": qs.get("disk_free_gb"),
+            "min_free_gb": qs.get("min_free_gb"), "free_slots": qs.get("free_slots"), "shards": qs.get("shards"),
+            "experiments": exps, "checks": checks, "generation": safe(lambda: gs_generation(now, jobs), []),
+            "training": [gs_train_row(j, now) for j in jobs if j["group"] == "train"],
+            "other_jobs": [{k: j.get(k) for k in ("name", "exp", "group", "state", "gpu", "seconds")} for j in jobs
+                           if j["group"] in ("check", "prompts", "analysis")],
+            "results": safe(gs_results), "cells": {c: v[1] for c, v in GS_CELLS.items()},
+            "events": ev[-15:][::-1]}
+
+
+def process_alive_py(script):
+    if ARGS.root:
+        return bool((read_json(P("mock_liveness.json")) or {}).get(script))
+    try:
+        return subprocess.run(["pgrep", "-f", re.escape(script)], capture_output=True, timeout=3).returncode == 0
+    except Exception:
+        return False
+
+
 # ---------------------------------------------------------------- diagnostics + insights
 _insights_lock = threading.Lock()
 
@@ -710,7 +904,7 @@ def state():
              "mock": bool(ARGS.root), "overview": safe(lambda: overview(gen, q, ev, now)),
              "events": ev[-15:][::-1], "generation": gen, "queue": q, "results": safe(results),
              "diag": safe(lambda: diagnostics(gen)), "gpu": safe(lambda: gpus(now)), "files": safe(files),
-             "fa": safe(lambda: fa_state(now)),
+             "fa": safe(lambda: fa_state(now)), "gs": safe(lambda: gs_state(now)),
              "provenance": {k: safe(lambda k=k: provenance_header(k)) for k in STUDIES}}
         save_history()
         _cache.update(t=now, v=v)
@@ -997,7 +1191,10 @@ def prompt_samples(study, arm, n=5, rng=None):
 
 # ---------------------------------------------------------------- HTTP
 SERVE = {"deviation.md": ("results", "disc_resid", "deviation.md"),
-         "text_diagnostics.md": ("results", "disc_resid", "text_diagnostics.md")}
+         "text_diagnostics.md": ("results", "disc_resid", "text_diagnostics.md"),
+         **{f"gs_exp{n}.md": ("results", "gemma_swap", f"exp{n}.md") for n in (1, 2, 3)},
+         **{f"gs_{c}.md": ("results", "gemma_swap", "checks", f"{c}.md")
+            for c in ("mdk_identity", "text_checks", "layout_exp2", "layout_exp3")}}
 
 
 class H(BaseHTTPRequestHandler):
@@ -1035,9 +1232,12 @@ class H(BaseHTTPRequestHandler):
             res = prompt_samples(q.get("study", ""), q.get("arm", ""), max(1, min(5, n)))
             self.send(400 if "error" in res else 200, json.dumps(res, default=str).encode(), "application/json")
         elif path == "/api/log":
-            m = re.search(r"(?:^|&)job=(dr_R[0-9]b?_s[0-4]|fa_F[0-2]_s[0-4])(?:&|$)", query)   # whitelist: training logs only
-            if not m:
-                self.send(400, b"bad job", "text/plain")
+            m = re.search(r"(?:^|&)job=(dr_R[0-9]b?_s[0-4]|fa_F[0-2]_s[0-4]|e[1-3]_[a-z]+_?[A-Za-z0-9_]*)(?:&|$)", query)
+            if not m or (m.group(1).startswith("e") and not os.path.exists(P("logs", "gemma_swap", f"{m.group(1)}.log"))):
+                self.send(400, b"bad job", "text/plain")    # whitelist: known training logs and existing study job logs
+            elif re.match(r"e[1-3]_", m.group(1)):
+                lines = tail_lines(P("logs", "gemma_swap", f"{m.group(1)}.log"), 60)
+                self.send(200, ("\n".join(lines) or "(log is empty)").encode(), "text/plain; charset=utf-8")
             else:
                 folder = "flag_arch" if m.group(1).startswith("fa_") else "disc_resid"
                 lines = tail_lines(P("logs", folder, f"train_{m.group(1)}.log"), 60)

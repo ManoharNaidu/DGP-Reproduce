@@ -209,7 +209,7 @@ function renderScope() {
     onclick: () => { UI.scope = k; store.set("scope", k); renderScope(); if (DATA) render(DATA); }}, l)));
 }
 const scopeNote = () => UI.scope === "current" ? el("div", {cls: "small muted", style: "margin-bottom:10px"},
-  "Showing the current run only (FLAG-architecture study). Switch to “All studies” for the finished main reproduction and extension experiments.") : null;
+  "Showing the current run only (Gemma swap / structured zero-shot study, 3 experiments). Switch to “All studies” for the finished reproduction, extension, disc/resid and FLAG-architecture studies.") : null;
 let DATA = null, LAST_OK = 0, LAST_ERR = null;
 
 // ---------- tooltip (data-tip on any element) ----------

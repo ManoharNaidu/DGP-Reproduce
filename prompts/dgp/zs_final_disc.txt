@@ -1,0 +1,31 @@
+<task>
+Decide whether the target review is fraud. In this dataset, fraud means an Amazon Instant Video review that other shoppers judge to be unhelpful.
+</task>
+
+<definition>
+Yes: fraud, a review that other shoppers find unhelpful.
+No: not fraud, a review that other shoppers find helpful.
+</definition>
+
+<target_review>
+{target_text}
+</target_review>
+
+<key_signals>
+{target_disc}
+</key_signals>
+
+<neighbourhood>
+One line per relation path: a summary of the target's closest neighbouring reviews along that path, and their mean star rating.
+{metapath_blocks}
+</neighbourhood>
+
+<constraints>
+- Judge only from the information above.
+- Do not assume either answer by default.
+- Do not explain your answer.
+</constraints>
+
+<output_format>
+Respond with exactly one word, either Yes or No.
+</output_format>

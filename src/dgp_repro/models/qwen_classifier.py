@@ -51,6 +51,8 @@ class QwenFraudClassifier:
         self.tokenizer.padding_side = "left"  # the answer position is then always index -1
 
         load_kwargs = {"revision": cfg.get("revision")}
+        if cfg.get("attn_implementation"):            # Gemma-2: "eager" (attention soft-capping)
+            load_kwargs["attn_implementation"] = cfg["attn_implementation"]
         precision = cfg.get("precision", "canonical")
         if precision == "canonical":
             load_kwargs["dtype"] = torch.bfloat16 if device.startswith("cuda") else torch.float32

@@ -28,7 +28,8 @@ class QwenSummarizer:
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, revision=self.revision)
         self.tokenizer.padding_side = "left"  # decoder-only batched generation
         dtype = torch.bfloat16 if device.startswith("cuda") else torch.float32
-        self.model = AutoModelForCausalLM.from_pretrained(self.name, revision=self.revision, dtype=dtype)
+        extra = {"attn_implementation": cfg["attn_implementation"]} if cfg.get("attn_implementation") else {}
+        self.model = AutoModelForCausalLM.from_pretrained(self.name, revision=self.revision, dtype=dtype, **extra)
         self.model.to(device).eval()
         for p in self.model.parameters():
             p.requires_grad_(False)
@@ -44,14 +45,38 @@ class QwenSummarizer:
             return budget
         return int(self.cfg.get("max_new_tokens_factor", 4) * budget + self.cfg.get("max_new_tokens_extra", 16))
 
+    def _batches(self, rendered: list[str]) -> list[list[str]]:
+        """Consecutive batches of at most `batch_size` prompts, in input order. With `max_batch_tokens_sq` set, a batch
+        is also closed before (prompts x longest prompt length^2) would exceed it: eager attention (Gemma-2) needs
+        memory proportional to that product, and one batch of 16 ~4k-token reviews asked for 15 GiB at once.
+        Unset (the default, every Qwen config) gives exactly the old fixed-size batches."""
+        cap = self.cfg.get("max_batch_tokens_sq")
+        if not cap:
+            return [rendered[i:i + self.batch_size] for i in range(0, len(rendered), self.batch_size)]
+        lens = [len(ids) for ids in self.tokenizer(rendered, add_special_tokens=False)["input_ids"]]
+        out, cur, longest = [], [], 0
+        for text, n in zip(rendered, lens):
+            if cur and (len(cur) >= self.batch_size or (len(cur) + 1) * max(longest, n) ** 2 > cap):
+                out.append(cur)
+                cur, longest = [], 0
+            cur.append(text)
+            longest = max(longest, n)
+        if cur:
+            out.append(cur)
+        return out
+
     def summarize(self, prompts: list[str], budget: int) -> list[str]:
         import torch
 
         outputs, lengths = [], []
-        for start in range(0, len(prompts), self.batch_size):
-            rendered = [self._render(p) for p in prompts[start:start + self.batch_size]]
-            enc = self.tokenizer(rendered, return_tensors="pt", padding=True,
-                                 truncation=True, max_length=self.cfg.get("max_input_tokens", 4096)).to(self.device)
+        for rendered in self._batches([self._render(p) for p in prompts]):
+            enc = self.tokenizer(rendered, return_tensors="pt", padding=True).to(self.device)
+            # Never truncate: cutting the right end would drop the chat template's assistant header and the
+            # model would continue the input instead of answering. Inputs within the limit are unchanged.
+            limit = self.cfg.get("max_input_tokens", 4096)
+            longest = int(enc["attention_mask"].sum(dim=1).max())
+            if limit and longest > limit:
+                raise ValueError(f"summarizer input of {longest} tokens exceeds max_input_tokens={limit}")
             with torch.no_grad():
                 gen = self.model.generate(**enc, max_new_tokens=self._max_new_tokens(budget), do_sample=False,
                                           pad_token_id=self.tokenizer.pad_token_id)

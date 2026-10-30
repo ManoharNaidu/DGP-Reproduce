@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import time
 from pathlib import Path
 
@@ -70,8 +71,17 @@ class TextStore:
         return len(self.data)
 
     def add_many(self, rows: list[tuple[str, str, dict]]) -> None:
-        with open(self.path, "a", encoding="utf-8") as f:
-            for key, text, extra in rows:
-                f.write(json.dumps({"key": key, "text": text, **extra}, ensure_ascii=False) + "\n")
-                self.data[key] = text
-                self.extra[key] = extra
+        # One O_APPEND write per batch, so several shard processes can append to the same file without
+        # interleaving partial lines (a buffered writer may split a line across two write calls).
+        payload = "".join(json.dumps({"key": key, "text": text, **extra}, ensure_ascii=False) + "\n"
+                          for key, text, extra in rows).encode("utf-8")
+        fd = os.open(self.path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o664)
+        try:
+            view = memoryview(payload)
+            while view:
+                view = view[os.write(fd, view):]
+        finally:
+            os.close(fd)
+        for key, text, extra in rows:
+            self.data[key] = text
+            self.extra[key] = extra

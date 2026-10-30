@@ -157,6 +157,14 @@ table.data tr.gold td:first-child { border-left: 2px solid var(--gold); } table.
 .sample .sm { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin-bottom: 6px; } .sample .sm b { color: var(--ink-2); font-weight: 600; }
 .sample pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 11.5px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-2); max-height: 260px; overflow: auto; }
 .fasub { margin: 14px 0 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.gsexps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.gscard { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--panel-2); min-width: 0; }
+.gscard.cur { border-color: color-mix(in srgb, var(--run) 60%, var(--line)); }
+.gscard h3 { margin: 0 0 4px; font-size: 12.5px; font-weight: 600; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.gsstep { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(60px, 1.2fr) 74px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--ink-2); margin-top: 5px; }
+.gschecks { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+.gsnote { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+@media (max-width: 1100px) { .gsexps { grid-template-columns: 1fr; } }
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } section.half { grid-column: span 12; } .samples, .dgrid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .hwrap, main { padding: 0 12px; } .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gauges { grid-template-columns: 1fr; } .overall { grid-template-columns: 1fr; } }
 </style>
@@ -165,7 +173,7 @@ table.data tr.gold td:first-child { border-left: 2px solid var(--gold); } table.
 <header>
   <div class="hwrap">
     <div class="topbar">
-      <h1>Disc/Resid Studies <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo · current: FLAG-architecture study (first section; the header follows it while it has data)</span></h1>
+      <h1>Disc/Resid Studies <span class="crumb">· FLAG's discriminative and residual text in DGP · AmazonVideo · current: Gemma swap &amp; structured zero-shot study (first section; the header follows it once it has started)</span></h1>
       <span id="mockbadge"></span>
       <span class="spacer"></span>
       <span class="small muted" id="refresh">connecting…</span>
@@ -183,6 +191,22 @@ table.data tr.gold td:first-child { border-left: 2px solid var(--gold); } table.
   </div>
 </header>
 <main>
+  <section id="gs">
+    <div class="sh"><h2>Gemma swap &amp; structured zero-shot prompt · 3 experiments, one after another, on all GPUs</h2><span id="gsbadge"></span><span class="meta" id="gsmeta"></span></div>
+    <div class="sb">
+      <div class="gsexps" id="gsexps"><div class="empty">Starts when scripts/gs_queue.py is launched.</div></div>
+      <div class="gsnote" id="gsgate"></div>
+      <div class="fasub">Text generation · Gemma-2-9B writes every text for Exp 1 (hash-sliced shards fill each cache in parallel; Exp 2 and 3 reuse existing caches)</div>
+      <div class="scroll"><table class="gtable" id="gsgen"></table></div>
+      <details class="drawer"><summary>Spot-check: last 5 Gemma lines per text (truncated; no labels shown)</summary><div class="samples" id="gssamples"></div></details>
+      <div class="fasub">Checks and step jobs</div><div class="gschecks" id="gschecks"></div>
+      <div class="fasub">Training · LoRA runs · rows = arm, columns = seed · G = Exp 1, S = Exp 2, GS = Exp 3</div>
+      <div class="scroll"><div class="matrix fam" id="gsmatrix"></div></div>
+      <div class="fasub">Results · test set · 2 × 2 per arm: model (Qwen / Gemma) × classification prompt (original / zero-shot) · mean ± std over finished seeds · Δ paired by seed, mean (seeds better / n) · grey = |Δ| &lt; 0.5</div>
+      <div class="scroll"><table class="data" id="gsres"></table></div>
+      <pre class="log" id="gslog"></pre>
+    </div>
+  </section>
   <section>
     <div class="sh"><h2>FLAG-architecture study · D &amp; R written per trimmed subgraph (FLAG's architecture)</h2><span id="fabadge"></span><span class="meta" id="fameta"></span></div>
     <div class="sb">
@@ -513,6 +537,7 @@ function renderHeaderFA(s) {
   if (changed("ticker", ev)) put("ticker", ev.map(ln => { const m = ln.match(/^\[(.*?)\]\s*(.*)$/); return el("span", {}, el("b", {}, "[" + (m ? m[1] : "") + "]"), " " + (m ? m[2] : ln)); }));
 }
 function renderHeader(s) {
+  if (gsActive(s.gs)) return renderHeaderGS(s);
   renderProv(s);
   if (faActive(s.fa)) return renderHeaderFA(s);
   const o = s.overview || {}, g = s.generation || {}, q = s.queue || {};
@@ -539,6 +564,125 @@ function renderHeader(s) {
   const dl = $("devlink");
   if (dev) { dl.href = withToken(dev); dl.setAttribute("aria-disabled", "false"); dl.title = "results/disc_resid/deviation.md"; }
   else { dl.removeAttribute("href"); dl.setAttribute("aria-disabled", "true"); dl.title = "written when the training queue finishes"; }
+}
+
+// ---------- Gemma swap / zero-shot study ----------
+const gsActive = gs => !!gs && gs.started;
+const GS_ARMS = ["0", "1", "1b", "2", "2b"];
+const GS_WHAT = {"0": "baseline", "1": "disc · FLAG prompt", "1b": "disc · no-verdict", "2": "disc + residual loss", "2b": "no-verdict + residual loss"};
+const GS_STATE = {pending: "waiting", skipped: "failed"};
+function renderHeaderGS(s) {
+  const gs = s.gs, ex = gs.experiments || [], tr = gs.training || [], gen = gs.generation || [];
+  const kpi = (k, badgeNode, v, sub) => el("div", {cls: "kpi"}, el("div", {cls: "k"}, el("span", {}, k), badgeNode), el("div", {cls: "v"}, v), el("div", {cls: "s"}, sub));
+  const cur = ex.find(e => e.state === "running") || ex.find(e => e.state !== "completed") || ex[ex.length - 1] || {};
+  const allJobs = ex.reduce((a, e) => a + e.jobs, 0), allDone = ex.reduce((a, e) => a + e.done, 0);
+  const genDone = gen.reduce((a, t) => a + Math.min(t.done, t.total), 0), genTot = gen.reduce((a, t) => a + t.total, 0);
+  const trDone = tr.filter(j => j.state === "done").length, trRun = tr.filter(j => j.state === "running");
+  const g = gs.gate || {};
+  put("kpis",
+    kpi("Current", stateBadge(cur.state), cur.exp ? `Exp ${cur.exp}` : "—", cur.title || "—"),
+    kpi("Gemma text", badge(genDone >= genTot && genTot ? "ok" : "plain", "Exp 1"), genTot ? pct(genDone / genTot) : "—", `${genDone.toLocaleString()} / ${genTot.toLocaleString()} lines`),
+    kpi("Training runs", badge(trRun.length ? "run" : "plain", `${trRun.length} running`), `${trDone} / ${tr.length}`, "LoRA runs done, all 3 experiments"),
+    kpi("Gemma gate", badge(g.stopped ? "bad" : isNum(g.projection_h) ? "ok" : "plain", g.stopped ? "stopped" : isNum(g.projection_h) ? "passed" : "pending"),
+        isNum(g.projection_h) ? `${g.projection_h} h` : "—", isNum(g.peak_gb) ? `peak ${g.peak_gb} GB → ${g.gemma_weight === 1 ? "2" : "1"} per GPU · limit ${gs.gate_hours} h` : "first Gemma run decides"),
+    kpi("Disk free", badge(gs.disk_free_gb < 3 ? "warn" : "ok", `stop < ${gs.min_free_gb} GB`), isNum(gs.disk_free_gb) ? `${gs.disk_free_gb} GB` : "—", "checked before every job"),
+    kpi("Last refresh", badge(s.mock ? "warn" : gs.alive ? "ok" : "warn", gs.alive ? "queue alive" : "queue not running"), el("span", {id: "agev"}, "0s ago"), "queue state " + (gs.updated || "—")));
+  const p = allJobs ? allDone / allJobs : 0;
+  $("overallbar").firstElementChild.style.width = (p * 100).toFixed(2) + "%";
+  $("overallpct").textContent = `${allDone} / ${allJobs} jobs (${pct(p)}) · 3 experiments`;
+  put("mockbadge", s.mock ? badge("warn", "MOCK DATA") : null);
+  put("prov", el("span", {}, el("b", {}, "Gemma swap & structured zero-shot study")), el("span", {}, "branch ", el("span", {cls: "mono"}, "gemma-swap")),
+      el("span", {}, "launcher ", el("span", {cls: "mono"}, "scripts/gs_queue.py")), el("span", {}, "plan approved 2026-10-29"));
+  put("hyp", el("b", {}, "Question: "), "does Gemma-2-9B instead of Qwen3-8B (Exp 1), and a structured zero-shot classification prompt with either model (Exp 2, Exp 3), change DGP's results on AmazonVideo across the 5 dr arms? Reference: the dr study (Qwen, original prompt), paired seed by seed.");
+  if (changed("ticker", gs.events)) put("ticker", (gs.events || []).slice(0, 10).map(e => el("span", {}, el("b", {}, "[" + (e.t || "").slice(11, 19) + "]"), " " + [e.event, e.job, e.exp ? "exp " + e.exp : null, isNum(e.gpu) ? "gpu " + e.gpu : null, isNum(e.seconds) ? dur(e.seconds) : null, e.rc ? "rc " + e.rc : null].filter(Boolean).join(" · "))));
+}
+function gsCell(j) {
+  if (!j) return el("div", {cls: "cell waiting", style: "opacity:.35"}, el("div", {cls: "st"}, "n/a"));
+  const st = GS_STATE[j.state] || j.state;
+  const label = {waiting: "Queued", running: "Running", done: "Done", failed: j.state === "skipped" ? "Skipped" : "Failed"}[st] || st;
+  const kids = [el("div", {cls: "st"}, el("span", {}, label + (isNum(j.gpu) ? ` · gpu ${j.gpu}` : "")), st === "done" ? el("span", {cls: "mono"}, dur(j.seconds)) : st === "running" ? el("span", {cls: "mono"}, dur(j.elapsed_s)) : null)];
+  let title = `${j.job} · ${j.experiment} · ${label}`;
+  if (st === "running") {
+    const e = j.epochs_done ?? 0, mx = j.max_epochs || 10, L = j.last || {};
+    kids.push(el("div", {cls: "bar thin"}, el("i", {style: `width:${Math.min(100, e / mx * 100)}%`})));
+    kids.push(el("div", {cls: "m"}, el("span", {}, "epoch"), el("span", {}, `${e} / ≤${mx}`), el("span", {}, "val loss"), el("span", {}, f(L.val_loss, 3)), el("span", {}, "val AUROC"), el("span", {}, f(L.val_auroc))));
+  } else if (st === "done" && j.test) {
+    kids.push(el("div", {cls: "m"}, el("span", {}, "F1"), el("span", {}, f(j.test.macro_f1)), el("span", {}, "AUROC"), el("span", {}, f(j.test.auroc)), el("span", {}, "AUPRC"), el("span", {}, f(j.test.auprc))));
+    title += ` · best epoch ${j.best_epoch ?? "—"}`;
+  } else if (st === "failed") {
+    if (j.error) kids.push(errorBlock(j.error));
+    kids.push(el("a", {href: withToken("api/log?job=" + encodeURIComponent(j.job)), target: "_blank", rel: "noopener", cls: "small"}, "open log ↗"));
+  }
+  return el("div", {cls: `cell ${st}`, title}, kids);
+}
+function renderGS(gs) {
+  const sec = $("gs");
+  if (!gsActive(gs)) { put("gsbadge", badge("plain", "Not started")); return; }
+  const ex = gs.experiments || [];
+  const cur = ex.find(e => e.state === "running") || ex.find(e => e.state !== "completed");
+  put("gsbadge", stateBadge(cur ? cur.state : "completed"));
+  $("gsmeta").textContent = `${gs.shards || "—"} generation shards · 2 slots per GPU · free slots ${JSON.stringify(gs.free_slots || {})}`;
+  put("gsexps", ex.map(e => el("div", {cls: "gscard" + (cur && cur.exp === e.exp ? " cur" : "")},
+    el("h3", {}, el("span", {}, e.title), stateBadge(e.state)),
+    e.steps.map(st => el("div", {cls: "gsstep"}, el("span", {}, st.label),
+      el("div", {cls: "bar" + (st.failed ? " bad" : st.done === st.total ? " ok" : "")}, el("i", {style: `width:${(st.done / st.total * 100).toFixed(1)}%`})),
+      el("span", {cls: "mono r"}, `${st.done}/${st.total}${st.running ? ` ▸${st.running}` : ""}${st.failed ? ` ✗${st.failed}` : ""}`))),
+    el("div", {cls: "gsnote"}, isNum(e.train_mean_s) ? `mean training run ${dur(e.train_mean_s)} (wall, incl. prompt build)` : "no finished training run yet",
+      e.report ? [" · ", el("a", {href: withToken(e.report), target: "_blank", rel: "noopener"}, "report ↗")] : null))));
+  const g = gs.gate || {};
+  $("gsgate").textContent = g.stopped ? `GATE STOP: ${g.stopped}. The queue launches nothing new until a person decides.`
+    : isNum(g.projection_h) ? `Gemma gate passed: first Gemma run took ${dur(g.measured_s)} at a peak of ${g.peak_gb} GB → ${g.gemma_weight === 1 ? "two" : "one"} Gemma run(s) per GPU; projected training left at that point ${g.projection_h} h (limit ${gs.gate_hours} h).`
+    : `Gemma gate: Gemma training starts one run per GPU; the first finished run decides runs per GPU (≤ 34 GB peak → two) and projects the remaining time (stop if > ${gs.gate_hours} h).`;
+  // generation
+  const rows = [el("tr", {}, ["Text", "State", "Progress", "", "Throughput", "items/min", "ETA", "Empty %", "Multi-line %", "Hit cap %", "Class words %", "Tokens"].map((h, i) => el("th", {cls: i >= 5 ? "r" : ""}, h)))];
+  for (const t of gs.generation || []) {
+    const p = t.total ? Math.min(1, t.done / t.total) : 0;
+    rows.push(el("tr", {},
+      el("td", {}, el("div", {}, t.label), el("div", {cls: "small muted mono"}, t.cache || "cache not created yet")),
+      el("td", {}, stateBadge(t.state), t.shards_running ? el("div", {cls: "small muted"}, `${t.shards_running}/${t.shards} shards`) : null),
+      el("td", {style: "min-width:140px"}, el("div", {cls: "bar" + (t.state === "completed" ? " ok" : t.state === "failed" ? " bad" : "")}, el("i", {style: `width:${(p * 100).toFixed(1)}%`}))),
+      el("td", {cls: "mono small"}, `${t.done.toLocaleString()} / ${t.total.toLocaleString()}`),
+      el("td", {}, sparkline(t.rate_series, 120, 24, t.state === "completed" ? "var(--ok)" : "var(--chart)")),
+      el("td", {cls: "r mono"}, isNum(t.rate_now) && t.state === "running" ? Math.round(t.rate_now) : "—"),
+      el("td", {cls: "r mono"}, t.state === "completed" ? "—" : dur(t.eta_s)),
+      el("td", {cls: "r mono"}, f(t.empty_pct)), el("td", {cls: "r mono"}, f(t.multi_line_pct)), el("td", {cls: "r mono"}, f(t.hit_cap_pct)),
+      el("td", {cls: "r mono", title: "lines naming helpful / unhelpful / useful / useless (a class verdict in a D line)"}, f(t.class_word_pct)),
+      el("td", {cls: "r mono"}, f(t.tokens_mean, 1))));
+  }
+  put("gsgen", rows);
+  if (changed("gssamples", (gs.generation || []).map(t => t.samples)))
+    put("gssamples", (gs.generation || []).map(t => el("div", {}, el("h4", {}, t.label), t.samples.length ? t.samples.slice().reverse().map(x => el("p", {}, x.length >= 220 ? x + "…" : x)) : el("div", {cls: "empty"}, "no lines yet"))));
+  // checks + step jobs
+  const CK = {mdk_identity: "MDK neighbours = dr study", text_checks: "Gemma text caches", layout_exp2: "Exp 2 prompt fields = R prompts", layout_exp3: "Exp 3 prompt fields = G prompts"};
+  put("gschecks", Object.entries(CK).map(([k, label]) => { const c = (gs.checks || {})[k]; return c ? el("a", {href: withToken(c.file), target: "_blank", rel: "noopener"}, badge(c.ok ? "ok" : "bad", `${label}: ${c.ok ? "pass" : "FAIL"}`)) : badge("plain", `${label}: pending`); }),
+      (gs.other_jobs || []).filter(j => j.group !== "check").map(j => el("a", {href: withToken("api/log?job=" + encodeURIComponent(j.name)), target: "_blank", rel: "noopener", title: "open log"},
+        badge({done: "ok", running: "run", failed: "bad", skipped: "bad"}[j.state] || "plain", `${j.name.replace(/^e\d_/, "")}${isNum(j.seconds) ? " · " + dur(j.seconds) : ""}`))));
+  // training matrix
+  const T = {}; for (const j of gs.training || []) T[`${j.arm}|${j.seed}`] = j;
+  const rowsM = [el("div", {cls: "hd"}, "arm"), ...SEEDS.map(s => el("div", {cls: "hd"}, "seed " + s))];
+  const rowDefs = [...GS_ARMS.map(a => ["G" + a, `Exp 1 · G${a} · ${GS_WHAT[a]}`]), ...GS_ARMS.map(a => ["S" + a, `Exp 2 · S${a} · ${GS_WHAT[a]}`]), ["par_R0", "Exp 2 · R0 parity (this stack)"], ...GS_ARMS.map(a => ["GS" + a, `Exp 3 · GS${a} · ${GS_WHAT[a]}`])];
+  for (const [arm, label] of rowDefs) { rowsM.push(el("div", {cls: "hd", style: "align-self:center;text-transform:none;letter-spacing:0;font-size:12px;color:var(--ink-2)"}, label)); for (const s of SEEDS) rowsM.push(gsCell(T[`${arm}|${s}`])); }
+  put("gsmatrix", rowsM);
+  // 2x2 results
+  if (changed("gsres", gs.results)) {
+    const R = gs.results || {}, cells = ["R", "G", "S", "GS"], names = gs.cells || {};
+    const paired = (a, b, m) => { const A = (R[a] || {}).per_seed || {}, B = (R[b] || {}).per_seed || {}; const ss = Object.keys(A).filter(k => k in B); if (!ss.length) return null;
+      const d = ss.map(k => A[k][m] - B[k][m]); return {mean: d.reduce((x, y) => x + y, 0) / d.length, better: d.filter(x => x > 0).length, n: d.length}; };
+    const dcell = d => d ? el("td", {cls: "r mono"}, signedDelta(d.mean, 0.5), el("span", {cls: "muted"}, ` (${d.better}/${d.n})`)) : el("td", {cls: "r muted"}, "—");
+    const head = el("tr", {}, el("th", {}, "arm"), el("th", {}, "metric"), cells.map(c => el("th", {cls: "r"}, `${c} · ${names[c] || ""}`)),
+      ["Δ G − R (model, orig. prompt)", "Δ S − R (prompt, Qwen)", "Δ GS − G (prompt, Gemma)", "Δ GS − S (model, zero-shot)"].map(h => el("th", {cls: "r"}, h)));
+    const body = [];
+    for (const a of GS_ARMS) for (const m of ["macro_f1", "auroc", "auprc"]) {
+      body.push(el("tr", {}, el("td", {}, m === "macro_f1" ? el("b", {}, `${a} · ${GS_WHAT[a]}`) : ""), el("td", {cls: "muted"}, {macro_f1: "Macro-F1", auroc: "AUROC", auprc: "AUPRC"}[m]),
+        cells.map(c => { const st = stats(Object.values(((R[c + a] || {}).per_seed) || {}).map(v => v[m])); return el("td", {cls: "r mono"}, st ? `${f(st.mean)} ± ${f(st.std)}` : "—", st ? el("span", {cls: "muted"}, ` n=${st.n}`) : null); }),
+        dcell(paired("G" + a, "R" + a, m)), dcell(paired("S" + a, "R" + a, m)), dcell(paired("GS" + a, "G" + a, m)), dcell(paired("GS" + a, "S" + a, m))));
+    }
+    const par = ((R.par_R0 || {}).per_seed || {})["0"], r0 = (((R.R0 || {}).per_seed) || {})["0"];
+    if (par && r0) body.push(el("tr", {}, el("td", {}, el("b", {}, "stack drift")), el("td", {cls: "muted"}, "R0 seed 0"),
+      el("td", {cls: "r mono", colspan: 4}, `this stack − dr study: F1 ${(par.macro_f1 - r0.macro_f1).toFixed(2)} · AUROC ${(par.auroc - r0.auroc).toFixed(2)} · AUPRC ${(par.auprc - r0.auprc).toFixed(2)}`), el("td", {colspan: 4})));
+    put("gsres", head, body);
+  }
+  $("gslog").textContent = (gs.events || []).map(e => `[${e.t}] ` + Object.entries(e).filter(([k]) => k !== "t").map(([k, v]) => `${k}=${typeof v === "object" ? JSON.stringify(v) : v}`).join(" ")).join("\n") || "(no events yet)";
 }
 
 // ---------- 1 generation ----------
@@ -792,7 +936,7 @@ function renderGpu(gp) {
 // ---------- loop ----------
 function render(s) {
   const t0 = performance.now();
-  for (const [name, fn] of [["fa", () => renderFA(s.fa)], ["header", () => renderHeader(s)], ["generation", () => renderGeneration(s.generation)], ["queue", () => renderQueue(s.queue)],
+  for (const [name, fn] of [["gs", () => renderGS(s.gs)], ["fa", () => renderFA(s.fa)], ["header", () => renderHeader(s)], ["generation", () => renderGeneration(s.generation)], ["queue", () => renderQueue(s.queue)],
                             ["results", () => changed("res", s.results) && renderResults(s.results)], ["diag", () => renderDiag(s.diag, s.generation)], ["gpu", () => renderGpu(s.gpu)]]) {
     try { fn(); } catch (e) { console.error(name, e); }
   }

@@ -2,6 +2,7 @@
 
     python scripts/generate_summaries.py --dataset amazonvideo --device cuda:0
     python scripts/generate_summaries.py --dataset amazonvideo --until node_summaries --device cuda:0
+    DGP_GEN_SHARD=0/4 python scripts/generate_summaries.py ... --until metapath_summaries   # one slice of 4
 
 Resumable: summaries are appended to datasets/cache/*_summaries/<key>/summaries.jsonl as they finish,
 so an interrupted run continues where it stopped.
@@ -18,7 +19,7 @@ from dgp_repro.experiment import build_prompts, config_hash
 
 def main():
     parser = base_parser(__doc__)
-    parser.add_argument("--until", default="prompts", choices=["mdk", "fa_text", "node_summaries", "prompts"])
+    parser.add_argument("--until", default="prompts", choices=["mdk", "fa_text", "target_text", "node_summaries", "metapath_summaries", "prompts"])
     args = parser.parse_args()
     cfg = experiment_config(args)
     device = device_for(args, cfg)
