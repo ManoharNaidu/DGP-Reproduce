@@ -4,7 +4,7 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 (Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He, Cheng Chen — AAAI 2026;
 [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/38541) · [arXiv:2507.21653](https://arxiv.org/abs/2507.21653)).
 
-> **Status (2026-10-15): DGP reproduced on AmazonVideo, and the extension study is finished.**
+> **Status (2026-10-30): DGP reproduced on AmazonVideo; five follow-up studies finished (§17–§22).**
 > The official repository ([Xtra-Computing/DGP](https://github.com/Xtra-Computing/DGP)) contains only a README —
 > code release is pending industry-partner approval — so **every DGP component here is a `PAPER_RECONSTRUCTION`**,
 > built from both paper versions and traced to evidence in [`research/`](research/).
@@ -18,6 +18,14 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 >   +0.7 to +1.0 AUPRC. FLAG's residual loss (E1, E2) makes Macro-F1 worse and much less stable.
 > - **Markov diffusion: DGP vs FLAG-MD** — the two projects' diffusion operators were verified to be the same operator to
 >   ~1e-16 (§18).
+> - **dr study** (2026-10-15 → 10-16, §19): FLAG's published prompts inside DGP against a same-stack baseline. AUROC up
+>   0.21–0.45 on all seeds for every variant; AUPRC flat.
+> - **Neighbours at K = 1, 2, 3** (2026-10-17, §20): K = 2 already finds 64% of K = 3's distinct neighbours.
+> - **FLAG-architecture study** (2026-10-23 → 10-26, §21): FLAG-style text per sampled subgraph parsed for only 2.8% of
+>   subgraphs with Qwen3-8B; stopped after its baseline.
+> - **Gemma swap / zero-shot prompt** (2026-10-29 → 10-30, §22): **Gemma-2-9B-it instead of Qwen3-8B raises AUPRC by
+>   about 2 points in every arm** (95% CIs exclude 0) — the largest gain found. A structured zero-shot classification
+>   prompt does nothing for Qwen and costs Gemma about 2 AUPRC.
 >
 > The MLP baseline remains partially reproduced. See [`research/reproduction_matrix.md`](research/reproduction_matrix.md).
 
@@ -35,10 +43,12 @@ What exists and works today:
   and LoRA fine-tuning on 2× A100 80GB. See §16.
 - **Extension study complete**: K sweep, FLAG-style discriminative/residual text, residual auxiliary loss, a
   software-stack parity check, an LLM-free neighbour analysis and a DGP-vs-FLAG diffusion comparison. See §17–§18.
+- **Follow-up studies complete**: the dr study (§19), the K = 1, 2, 3 neighbour analysis (§20), the FLAG-architecture
+  study (§21, stopped after its baseline) and the Gemma swap / zero-shot prompt study (§22).
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
-- 84 unit tests and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
-- A read-only progress dashboard (`tools/dgp-dashboard/`, v0.2.0).
+- 100 unit tests (all passing on 2026-10-30) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
+- Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
 What is outstanding: the paper's ablations / budget / task-aware studies and the hyperparameter grid search on GPU
 (compute decision pending, `research/compute_plan.md` §6), the YelpReviews data (available only by email request), and the
@@ -63,23 +73,26 @@ The resulting prompt is classified by LoRA-tuned **Qwen3-8B** from the logits of
 ```
 configs/     datasets/, models/dgp.yaml (every value tagged PAPER / GRID / RECON), experiments/
              experiments/ext/  K1, K3, armB, armC, armD, armE1, armE2, armBC  (extension study, §17)
+             experiments/disc_resid/ (§19), flagarch/ (§21), gemma_swap/, zs_qwen/, zs_gemma/ (§22)
 src/dgp_repro/
   data/ mdk/ embeddings/ summarization/ prompts/ models/ training/ metrics/ evaluation/ baselines/ utils/
   pipeline.py      graph -> prompts (the paper's Figure 3)
   experiment.py    prompts -> train -> evaluate -> records
-prompts/dgp/     versioned prompt templates + PROVENANCE.md; extension templates + PROVENANCE_EXT.md
+prompts/dgp/     versioned prompt templates + PROVENANCE.md; study templates + PROVENANCE_{EXT,DR,FA,ZS}.md
 scripts/         prepare_data, build_mdk, generate_summaries, train, evaluate, run_ablation, run_sensitivity,
                  run_grid, run_mlp, reproduce, compare_with_paper, analyze_complexity, fetch_baselines,
-                 export_baseline_data, smoke_test, ext_queue (extension scheduler), ext_drain, make_handoff
-analysis/        mdk_comparison.py + MDK_COMPARISON.md (DGP vs FLAG-MD), neighbor_analysis.py, out/
+                 export_baseline_data, smoke_test, ext_queue (extension scheduler), ext_drain, make_handoff,
+                 dr_* (§19), fa_* (§21), gs_queue / gs_checks / gs_analysis (§22)
+analysis/        mdk_comparison.py + MDK_COMPARISON.md (DGP vs FLAG-MD), neighbor_analysis.py, neighbors_k123/, out/
 methods/         official baselines, fetched at pinned commits (never committed) + README.md provenance
 research/        paper specification, version divergence, evidence matrix, provenance, gaps, compute plan,
                  FINAL_REPRODUCTION_REPORT.md
 docs/            installation, reproduction, datasets, architecture, troubleshooting,
                  Markov_Diffusion_DGP_vs_FLAG.docx
-tools/           dgp-dashboard/ (read-only progress dashboard)
-tests/           unit/ (84 tests)
-results/         raw/<run_id>/, aggregated/, tables/, figures/, token_usage/, complexity/, ext/ (queue state)
+tools/           dgp-dashboard/, dr-dashboard/v2/ (read-only progress dashboards)
+tests/           unit/ (100 tests)
+results/         raw/<run_id>/, aggregated/, tables/, figures/, token_usage/, complexity/,
+                 ext/, disc_resid/, flag_arch/, gemma_swap/ (queue state, checks, analyses per study)
 checkpoints/     LoRA adapters, one per run (adapter_model.safetensors + adapter_config.json)
 HANDOFF_4GPU.md  hand-off note from the 2-GPU to the 4-GPU instance (now historical, see §17)
 ```
@@ -351,7 +364,139 @@ The companion FLAG project (`../FLAG-Reproduce`) borrowed DGP's diffusion distan
 
 Write-ups: [`analysis/MDK_COMPARISON.md`](analysis/MDK_COMPARISON.md) and `docs/Markov_Diffusion_DGP_vs_FLAG.docx`.
 
-## 19. Reproducibility
+## 19. dr study: FLAG's published prompts inside DGP
+
+**Question.** Do FLAG's prompts as published, a variant without a class verdict, and FLAG's residual branch improve
+DGP against a baseline re-run on the **same** software stack? (§17 compared its arms with the September baseline.)
+
+**Design.** Two pilots of 200 reviews showed that FLAG's discriminative prompt states a class verdict in 188 of 200
+lines, so a **no-verdict** variant was added (`prompts/dgp/PROVENANCE_DR.md`). One line per target for each kind,
+5 arms × 5 seeds (`configs/experiments/disc_resid/`):
+
+| Arm | What changes from R0 |
+|---|---|
+| R0 | none: the main configuration re-run on this stack (reference) |
+| R1 | FLAG-prompt discriminative line next to the raw text (`Key signals:`) |
+| R1b | the same with the no-verdict prompt |
+| R2 / R2b | R1 / R1b + FLAG's residual branch and loss (CE + 0.1·KL-to-uniform + 0.1·squared cosine) |
+
+**Results** (test, 5 seeds, Δ vs R0 with the paired bootstrap 95% CI; `results/disc_resid/deviation_final.md`):
+
+| Arm | Macro-F1 | AUROC | AUPRC | Δ AUROC (better) | CI Δ AUROC | Δ AUPRC | CI Δ AUPRC |
+|---|---|---|---|---|---|---|---|
+| R0 | 64.74 ± 0.45 | 74.97 ± 0.51 | 32.37 ± 0.57 | — | — | — | — |
+| R1 | 64.79 ± 1.30 | 75.18 ± 0.56 | 32.42 ± 1.17 | +0.21 (5/5) | [−0.30, +0.72] | +0.05 | [−0.57, +0.68] |
+| R1b | 65.33 ± 0.78 | 75.42 ± 0.58 | 32.41 ± 0.80 | +0.45 (5/5) | [+0.11, +0.79] | +0.04 | [−0.48, +0.56] |
+| R2 | 64.28 ± 2.60 | 75.23 ± 0.47 | 32.52 ± 0.96 | +0.25 (5/5) | [−0.27, +0.78] | +0.15 | [−0.54, +0.85] |
+| R2b | 64.78 ± 1.44 | 75.24 ± 0.51 | 32.37 ± 0.79 | +0.27 (5/5) | [−0.10, +0.67] | +0.00 | [−0.56, +0.57] |
+
+**What it shows.** Every variant raises AUROC on all five seeds, but only R1b's interval excludes 0; AUPRC does not
+move. FLAG's lines carry label signal (a TF-IDF probe on the FLAG-prompt line: AUROC 71.62 vs 63.43 on raw text,
+`results/disc_resid/text_diagnostics.md`), but the classifier gains little from it. The residual loss again widens the
+Macro-F1 spread.
+
+**How it was run.** `scripts/dr_generate_all.sh` (generation, 2026-10-15 02:13 → 03:31 UTC), then `scripts/dr_queue.sh`
+(25 runs one after another on one GPU, 2026-10-15 03:31 → 10-16 07:35 UTC), then
+`python scripts/dr_analysis.py --stem deviation_final`. Dashboard: `tools/dr-dashboard/v2/`. Report:
+`results/2026-10-17-dgp-disc-resid-report.docx`.
+
+## 20. Neighbours at K = 1, 2, 3, measured against K = 3
+
+An LLM-free extension of the §17 neighbour analysis (`analysis/neighbors_k123/`, outputs in
+`analysis/out/neighbors_k123/`, summary in `SUMMARY.md`). It recomputes 32,400 cached selections live, then measures
+each K against K = 3 (Top-M = 4 per metapath, 10,023 targets):
+
+| K | Distinct neighbours per target | Share of K = 3's covered | Label gap | Gap − K = 3 gap (95% CI) |
+|---|---|---|---|---|
+| 1 | 11.78 | 0.239 | 0.118 | 0.022 [0.011, 0.034] |
+| 2 | 32.59 | 0.640 | 0.097 | 0.002 [−0.004, 0.007] |
+| 3 | 51.03 | 1.000 | 0.095 | — |
+
+K = 2 finds 64% of K = 3's distinct neighbours and has the same label gap; K changes the selection only through the
+composite metapaths. Report: `results/2026-10-18-dgp-neighbors-k123-report.docx`.
+
+## 21. FLAG-architecture study (stopped after its baseline)
+
+**Question.** Does discriminative text help when it is generated the way FLAG generates it: **after** sampling, one
+prompt per trimmed target subgraph (target + its MDK Top-M neighbours), one output line per node?
+(`prompts/dgp/PROVENANCE_FA.md`, `configs/experiments/flagarch/`.)
+
+**Arms.** F0 = main configuration (reference). F1 = FLAG-style discriminative lines (neighbours' lines replace node
+summaries; the target's line is added as `Key signals:`). F2 (+ residual text and loss) was taken out of scope on
+2026-10-23. Text model: Qwen3-8B; FLAG's layout, parser and decoding (greedy, 550 new tokens, reviews cut to 1,200
+characters).
+
+**What happened.**
+
+- Pilot (200 subgraphs): prompts averaged 4,076 tokens and 196 of 200 answers hit the 550-token cap. FLAG's parser
+  (exactly one line per node, about 33 nodes per subgraph) accepted 6 of 200.
+- Full F1 generation: **277 of 10,023 subgraphs parsed (2.76%)**, so 97% of targets fell back to raw text.
+- Training (2026-10-25): all five **F0** runs finished — Macro-F1 65.10 ± 0.36, AUROC 74.92 ± 0.49, AUPRC 32.28 ± 0.58,
+  in line with R0 (§19). All five **F1** runs failed at the first batch: `prompt of 4143 tokens exceeds max_seq_len=4096`.
+- R text was generated afterwards for the record (1,590 of 10,023 subgraphs parsed, 15.9%); no arm uses it.
+
+The study gives no evidence for or against FLAG's architecture inside DGP: the generation step does not work at DGP's
+subgraph size with this model and output budget. Re-running F1 would need smaller subgraphs or per-node prompts, plus a
+lower `dgp.max_target_tokens`. Commands: `scripts/fa_pilot.py`, `scripts/fa_queue.sh`, `scripts/fa_r_after_queue.sh`;
+records in `results/flag_arch/` and `logs/flag_arch/`.
+
+## 22. Gemma swap and the structured zero-shot prompt
+
+Three experiments on the five dr arms (0, 1, 1b, 2, 2b = §19's R0 … R2b), 5 seeds each, paired by seed with §19:
+
+| Exp | Cell | Text writer + classifier | Final classification prompt | Configs |
+|---|---|---|---|---|
+| — | R | Qwen3-8B | original | `disc_resid/` (§19) |
+| 1 | G | **Gemma-2-9B-it** | original | `gemma_swap/` |
+| 2 | S | Qwen3-8B | **structured zero-shot** | `zs_qwen/` (+ `P_R0_parity.yaml`) |
+| 3 | GS | **Gemma-2-9B-it** | **structured zero-shot** | `zs_gemma/` |
+
+- **Gemma** (`google/gemma-2-9b-it`, revision `11c9b30`) replaces Qwen3-8B in both roles. It needs eager attention, and
+  generation closes a batch before prompts × longest² exceeds 16 × 2,048² (`summarizer.max_batch_tokens_sq`), after two
+  out-of-memory stops on 2026-10-29. Neighbour selection is identical to §19 for all 12 metapaths.
+- **Structured zero-shot prompt** (`prompts/dgp/zs_*.txt`, `PROVENANCE_ZS.md`): the best Gemma zero-shot prompt from
+  the 2026-10-20 prompt test (`../experiments/prompt_testing/`), with `<task>`, `<definition>`, `<target_review>`,
+  `<key_signals>`, `<neighbourhood>`, `<constraints>`, `<output_format>` sections. It replaces only the final and the
+  residual-branch prompts; every field carries the same text as before (checked for all 10,023 targets). It adds a
+  definition of "fraud" (a review other shoppers judge unhelpful) and asks for one word, `Yes` or `No`.
+
+**Results** (test, 5 seeds; Δ = mean paired difference, with the paired bootstrap 95% CI of ΔAUPRC):
+
+| Arm | R: AUROC / AUPRC | G: AUROC / AUPRC | S: AUROC / AUPRC | GS: AUROC / AUPRC | G − R: Δ AUPRC [CI] | GS − G: Δ AUPRC [CI] |
+|---|---|---|---|---|---|---|
+| 0 | 74.97 / 32.37 | **76.38** / 34.31 | 75.52 / 32.76 | 75.37 / 32.92 | +1.94 [+0.70, +3.10] | −1.39 [−2.23, −0.52] |
+| 1 | 75.18 / 32.42 | 76.00 / 34.30 | 75.44 / 33.02 | 75.04 / 32.30 | +1.88 [+0.52, +3.20] | −2.00 [−2.90, −1.12] |
+| 1b | 75.42 / 32.41 | 75.82 / **34.52** | 75.68 / 32.72 | 75.34 / 33.12 | +2.10 [+0.75, +3.41] | −1.39 [−2.27, −0.46] |
+| 2 | 75.23 / 32.52 | 76.35 / 34.20 | 75.49 / 33.10 | 75.13 / 31.92 | +1.68 [+0.42, +2.81] | −2.29 [−3.20, −1.36] |
+| 2b | 75.24 / 32.37 | 75.98 / 34.24 | 75.68 / 32.95 | 75.01 / 32.24 | +1.87 [+0.65, +3.07] | −2.00 [−3.04, −0.94] |
+
+**What it shows.**
+
+1. **Gemma is the better backbone** with the original prompt: AUPRC +1.68 to +2.10 in every arm and AUROC +0.40 to
+   +1.41 (CI excludes 0 in 4 of 5 arms). Within Gemma, no D/R arm beats G0. The best values come within 0.1–1 point of
+   the paper on AUROC and AUPRC (G0 AUROC 76.38 vs 77.32; G1b AUPRC 34.52 vs 34.63); Macro-F1 stays about one point
+   below (best 65.97 vs 66.91).
+2. **The zero-shot prompt does nothing measurable for Qwen** (every S − R CI for AUROC and AUPRC includes 0). An R0 seed-0
+   re-run on the same stack moved Macro-F1 by +0.58, as much as most arm effects.
+3. **The zero-shot prompt hurts Gemma** (GS − G: AUPRC −1.39 to −2.29, AUROC −0.48 to −1.22) and removes its advantage
+   over Qwen. The prompt × model interaction (GS − G) − (S − R) is negative on all 25 paired seeds for AUPRC.
+4. **Cost.** Gemma uses about 25–27 GB at training time against about 20 GB for Qwen. Its prompts are shorter (540 vs
+   782 tokens with the original prompt) because its summaries are shorter. Two Gemma runs sharing one GPU were much slower
+   than one run alone (2.1–4.3 h per pair vs 68–81 min), so Exp 2 and 3 ran one training job per GPU.
+
+**How it was run.** One resumable queue on 4 A100 80 GB, the three experiments one after another (2026-10-29 12:59 →
+10-30 22:57 UTC, 76 training runs, all rc 0); Exp 3 reuses Exp 1's Gemma text caches:
+
+```bash
+nohup ../envs/dgp-fa/bin/python scripts/gs_queue.py > logs/gemma_swap/queue.log 2>&1 &
+# one training run per GPU, as used from Exp 2 on:
+QWEN_TRAIN_WEIGHT=2 GEMMA_WEIGHT=2 setsid nohup ../envs/dgp-fa/bin/python scripts/gs_queue.py >> logs/gemma_swap/queue.log 2>&1 &
+```
+
+Analyses (written by the queue): `results/gemma_swap/exp{1,2,3}.md`; checks: `results/gemma_swap/checks/`. Full write-up
+with figures: `reports/2026-10-23-DGP-experiment-log.docx` (experiments E11–E13) in the parent folder.
+
+## 23. Reproducibility
 
 Every run writes `results/raw/<run_id>/run_manifest.json` (git commit, versions, GPU, full config, prompt version,
 K, M, budgets, LoRA settings, seed, runtime, peak memory) and `predictions.csv`, from which `scripts/evaluate.py`
@@ -359,7 +504,7 @@ recomputes all metrics. Caches carry metadata sidecars; summaries are cached per
 skips existing lines. Training has no mid-run checkpoint: a stopped run restarts from epoch 0. Seeds are set centrally.
 Test labels are read only by the split builder and evaluation.
 
-## 20. Decisions and known gaps
+## 24. Decisions and known gaps
 
 Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](research/evidence_matrix.md),
 [`research/reproduction_gaps.md`](research/reproduction_gaps.md) and
@@ -376,6 +521,9 @@ Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](resea
 | D7 | Threshold for Macro-F1 not stated | Threshold that maximises validation F1 (0.5 gives ≈49.5) |
 | D8 | Software stack changed for the extension study | One parity run on the new stack; arms compared seed by seed with the original baseline |
 | D9 | K=3 prompts exceed the default sequence length | `max_seq_len` 8192 for K3 only |
+| D10 | FLAG's discriminative prompt mostly states a class verdict (§19) | A no-verdict variant (R1b, R2b) next to FLAG's own prompt |
+| D11 | Gemma-2 with eager attention runs out of memory on batches of long reviews (§22) | Length-capped batches (`max_batch_tokens_sq`); greedy decoding, so only padding changes |
+| D12 | DGP reads the first answer token; the prototype zero-shot prompt asked for `<label>…</label>` (§22) | The zero-shot prompt asks for one word, `Yes` or `No` |
 
 The paper also never states LoRA alpha, the maximum sequence length, the metapath-summary or final classification
 prompts, or how the split was sampled. The two paper versions differ in method details:
@@ -383,9 +531,11 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
 paper's ablation / budget / task-aware studies on GPU, YelpReviews (data access), ConsisGAD 5-seed run and the other
-baselines, and rebuilding the 5-seed aggregate files for the extension arms (§17).
+baselines, and rebuilding the 5-seed aggregate files for the extension arms (§17). From the follow-up studies: whether
+Gemma's gain comes from its text or from Gemma as the classifier (§22), which part of the zero-shot prompt hurts Gemma
+(§22), and why two Gemma runs sharing a GPU are so slow.
 
-## 21. Citation
+## 25. Citation
 
 ```bibtex
 @inproceedings{li2026dgp,
