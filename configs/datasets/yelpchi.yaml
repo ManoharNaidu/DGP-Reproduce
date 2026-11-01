@@ -1,9 +1,11 @@
 # YelpReviews — original Rayana & Akoglu YelpChi release (67,395 reviews, raw text).
-# STATUS: BLOCKED ON DATA ACCESS (email srayana@cs.stonybrook.edu). See docs/datasets.md.
-# Do NOT substitute YelpChi.mat (45,954 nodes, no text).
+# Source since 2026-11-01: the release mirror in FLAG-Reproduce/datasets/raw/yelpchi, converted by
+# scripts/convert_yelpchi_mirror.py (the official copy is email-gated: srayana@cs.stonybrook.edu).
+# The built graph matches Table 1 exactly (67,395 nodes, 17,486,608 edges, 8,919 frauds) with RSR and RTR
+# scoped to the product. Do NOT substitute YelpChi.mat (45,954 nodes, no text).
 name: yelpchi
 display_name: YelpReviews
-reproducibility: BLOCKED
+reproducibility: MIRROR
 processed_dir: datasets/processed/yelpchi
 
 source:

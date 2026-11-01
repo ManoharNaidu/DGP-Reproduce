@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T16:14Z",
+  "updated": "2026-11-01T16:20Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -62,8 +62,8 @@
       "id": "yelp",
       "title": "DGP on YelpChi: build graph, check edge count against Table 1, then 5 seeds",
       "kind": "GPU",
-      "state": "waiting",
-      "detail": ""
+      "state": "running",
+      "detail": "Mirror converted; graph matches Table 1 exactly (67,395 nodes, 17,486,608 edges, 8,919 frauds). GPU queue started 16:15Z: Qwen summaries (~6-7 h), then 5 seeds in two lanes."
     },
     {
       "id": "nomdk",

@@ -182,12 +182,22 @@ first-token training and readout, metrics and token accounting.
 
 ## 11. Yelp reproduction
 
-Blocked until the data arrives. Once `datasets/raw/yelpchi/reviews.jsonl` exists:
+**Data (2026-11-01).** The official release is email-gated; we use the release mirror that FLAG-Reproduce downloaded
+(`../FLAG-Reproduce/datasets/raw/yelpchi/`: metadata, hotel and restaurant review text, 67,395 rows), converted by
+`scripts/convert_yelpchi_mirror.py` to `datasets/raw/yelpchi/reviews.jsonl` (row join as in FLAG; the join is supported
+statistically, not proven). With RSR = same product + same star and RTR = same product + same month the graph matches
+Table 1 **exactly**: 67,395 nodes, 17,486,608 edges (RUR 220,224 · RSR 16,333,680 · RTR 932,704), 8,919 frauds; split
+1,348 / 1,348 / 13,479. Every other scoping misses by orders of magnitude.
 
 ```bash
-python scripts/prepare_data.py --dataset yelpchi --probe
-python scripts/reproduce.py --dataset yelpchi --device cuda:0 --seeds 0 1 2 3 4
+python scripts/convert_yelpchi_mirror.py
+python scripts/prepare_data.py --dataset yelpchi --probe     # RSR product / RTR product: 17,486,608 = paper
+python scripts/prepare_data.py --dataset yelpchi
+DATASET=yelpchi bash scripts/ctl_queue.sh YELP configs/experiments/dgp_yelp.yaml dgp_yelpchi   # summaries, 5 seeds
 ```
+
+Same model config as the AmazonVideo main run (`dgp_yelp.yaml` differs from `dgp_amazon.yaml` only in the dataset).
+Started 2026-11-01T16:15Z on one A100; results pending.
 
 ## 12. Amazon reproduction
 

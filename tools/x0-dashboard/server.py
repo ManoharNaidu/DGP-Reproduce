@@ -30,7 +30,8 @@ CONTROLS_MD = os.path.join(ROOT, "results", "controls", "controls.md")
 METRICS = ("macro_f1", "auroc", "auprc")
 MAX_EPOCHS, PATIENCE = 10, 2                       # configs/models/dgp.yaml (early stopping on val loss)
 # control queues: NAME -> (experiment, title, fallback hours per run while two runs share the GPU)
-CONTROLS = {"T0": ("ctl_T0", "Control · LLM on the target review only", 0.8)}
+CONTROLS = {"T0": ("ctl_T0", "Control · LLM on the target review only", 0.8),
+            "YELP": ("dgp_yelpchi", "DGP on YelpChi (summaries, then 5 seeds)", 1.2)}
 # reference cells shown in the results tables: experiment -> (short, label)
 CELLS = {"dr_R0": ("R0", "Qwen text · Qwen classifier"), "gs_X0": ("X0", "Gemma text · Qwen classifier"),
          "gs_G0": ("G0", "Gemma text · Gemma classifier")}
