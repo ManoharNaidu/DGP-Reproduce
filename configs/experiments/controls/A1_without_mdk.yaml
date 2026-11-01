@@ -1,0 +1,9 @@
+# Ablation (2026-11-01): the paper's Figure 4 "w/o MDK" bar on AmazonVideo. The R0 configuration (Qwen3-8B writes and
+# classifies, same recipe, seeds and split) with MDK switched off: the M = 4 neighbours per metapath are drawn at random
+# (seeded) instead of by Markov diffusion distance (configs/experiments/ablations/without_mdk.yaml). Paired with dr_R0
+# by seed: R0 − noMDK = what diffusion-based neighbour selection adds.
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+  - configs/experiments/ablations/without_mdk.yaml
+experiment: ctl_noMDK
+variant: A1 w/o MDK

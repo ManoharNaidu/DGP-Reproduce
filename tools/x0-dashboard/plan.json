@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T16:20Z",
+  "updated": "2026-11-01T22:50Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -42,35 +42,35 @@
       "title": "FLAG: double-check every reported value from the raw results",
       "kind": "CPU",
       "state": "done",
-      "detail": "All README \u00a711 numbers reproduce from the raw runs (45 exact, 6 differ only by unstated scope). One error: flag_finetuned keep rate 17% -> 27%, fixed in 2 docx + number log. Commit 5d129e7 (FLAG branch verification-2026-11-01)."
+      "detail": "All README §11 numbers reproduce from the raw runs (45 exact, 6 differ only by unstated scope). One error: flag_finetuned keep rate 17% -> 27%, fixed in 2 docx + number log. Commit 5d129e7 (FLAG branch verification-2026-11-01)."
     },
     {
       "id": "flagctl",
       "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
       "kind": "CPU",
       "state": "running",
-      "detail": "Running on CPU since 16:09Z (FLAG branch flag-controls): text_dual and baseline_z on 7 GNNs, MLP on 3 inputs, and baseline/text/flag re-runs, all with per-node scores; Reddit + Instagram, 25 runs per cell. Log: FLAG-Reproduce/logs/controls/queue.log"
+      "detail": "Runs finished except 8 slow Instagram CARE-GNN baseline runs in each of two jobs. Re-runs reproduce results/main bit for bit (CPU-stored runs). LLM text alone (flag - text_dual): Reddit +0.62 AUC, Instagram -0.94 (both Holm p<0.05); architecture alone ~0. Instagram: 42.4% of subgraphs have LLM text (the 9.1% figure counts node slots); on those nodes the LLM text costs -2.18 AUC. Analysis: FLAG results/controls/analysis/controls.md."
     },
     {
       "id": "stats",
       "title": "One statistics standard (seed-level paired t + Holm) for E2-E14",
       "kind": "CPU",
       "state": "done",
-      "detail": "scripts/stats_standard.py: 34 comparisons, 102 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9. results/stats/all_comparisons.md; README \u00a723; report \u00a78 Table 56. Commit a07aa64."
+      "detail": "scripts/stats_standard.py: 34 comparisons, 102 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9. results/stats/all_comparisons.md; README §23; report §8 Table 56. Commit a07aa64."
     },
     {
       "id": "yelp",
       "title": "DGP on YelpChi: build graph, check edge count against Table 1, then 5 seeds",
       "kind": "GPU",
       "state": "running",
-      "detail": "Mirror converted; graph matches Table 1 exactly (67,395 nodes, 17,486,608 edges, 8,919 frauds). GPU queue started 16:15Z: Qwen summaries (~6-7 h), then 5 seeds in two lanes."
+      "detail": "Graph matches Table 1 exactly. Node summaries done (60,013). At 22:47Z the single generation process (33.6k of 162.3k metapath summaries) was restarted as 3 shards on the same cache to finish faster; training (5 seeds) follows automatically (scripts/yelp_nomdk_chain.sh)."
     },
     {
       "id": "nomdk",
       "title": "Ablation: w/o MDK (random neighbours)",
       "kind": "GPU",
-      "state": "waiting",
-      "detail": ""
+      "state": "queued",
+      "detail": "Config controls/A1_without_mdk.yaml (R0 with mdk: false, M=4 random neighbours). Summaries (~120k) generate alongside YelpChi training, then 5 seeds as ctl_noMDK. Same chain script."
     },
     {
       "id": "cell4",
