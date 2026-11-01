@@ -1,0 +1,3269 @@
+{
+  "comparisons": [
+    {
+      "experiment": "E2",
+      "comparison": "arm B \u2212 Sept. baseline",
+      "arm": "ext_armB",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.3816686351457065,
+      "delta_per_seed": [
+        -0.0841,
+        0.7108,
+        1.6072,
+        -0.0768,
+        -0.2488
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.58706252159262,
+        1.350399791884033
+      ],
+      "t": 1.0938865819343728,
+      "p": 0.33545940530950163,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm B \u2212 Sept. baseline",
+      "arm": "ext_armB",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.04573531042069874,
+      "delta_per_seed": [
+        0.0251,
+        -0.6723,
+        0.6803,
+        0.4027,
+        -0.2071
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.6083946882731163,
+        0.6998653091145138
+      ],
+      "t": 0.19412284867810833,
+      "p": 0.855539679768681,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm B \u2212 Sept. baseline",
+      "arm": "ext_armB",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.7082635195702309,
+      "delta_per_seed": [
+        0.7682,
+        -0.2097,
+        1.2917,
+        1.5106,
+        0.1805
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.1933447936805055,
+        1.6098718328209674
+      ],
+      "t": 2.1810521855226725,
+      "p": 0.09463315240487652,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm C \u2212 Sept. baseline",
+      "arm": "ext_armC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.06334462843341555,
+      "delta_per_seed": [
+        -0.1866,
+        0.5873,
+        0.9023,
+        -1.4175,
+        0.4312
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -1.0762171761241908,
+        1.202906432991022
+      ],
+      "t": 0.15433378238120737,
+      "p": 0.8848204795753539,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm C \u2212 Sept. baseline",
+      "arm": "ext_armC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.4773934603282271,
+      "delta_per_seed": [
+        -0.4583,
+        -0.6859,
+        -0.0899,
+        -0.445,
+        -0.7079
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -0.7866923253139632,
+        -0.16809459534249105
+      ],
+      "t": -4.285359198595407,
+      "p": 0.0127931377760426,
+      "holm_family": 0.2174833421927242,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm C \u2212 Sept. baseline",
+      "arm": "ext_armC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.5263836688718954,
+      "delta_per_seed": [
+        -0.6094,
+        -0.133,
+        -0.1984,
+        -0.8503,
+        -0.8408
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -0.9533564076435114,
+        -0.09941093010027935
+      ],
+      "t": -3.4228774537223097,
+      "p": 0.026709539401492496,
+      "holm_family": 0.3771575515832036,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm BC \u2212 Sept. baseline",
+      "arm": "ext_armBC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.4703588671403537,
+      "delta_per_seed": [
+        -0.1726,
+        1.2245,
+        1.5545,
+        -0.3623,
+        0.1076
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.6017724324818922,
+        1.5424901667625996
+      ],
+      "t": 1.2180649653809594,
+      "p": 0.29013237756520704,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm BC \u2212 Sept. baseline",
+      "arm": "ext_armBC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.20625338596084647,
+      "delta_per_seed": [
+        -0.2298,
+        -0.7888,
+        0.2278,
+        0.1363,
+        -0.3768
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.7162290834165728,
+        0.30372231149487977
+      ],
+      "t": -1.1228990062436814,
+      "p": 0.3243201876575944,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm BC \u2212 Sept. baseline",
+      "arm": "ext_armBC",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.99357235946037,
+      "delta_per_seed": [
+        0.5821,
+        1.061,
+        0.8909,
+        1.6232,
+        0.8108
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.5070155354879424,
+        1.4801291834327976
+      ],
+      "t": 5.669634004023119,
+      "p": 0.0047734318886657095,
+      "holm_family": 0.08592177399598278,
+      "holm_global": 0.42483543809124813
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm D \u2212 Sept. baseline",
+      "arm": "ext_armD",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.5225478338626871,
+      "delta_per_seed": [
+        -0.4097,
+        -0.4365,
+        0.4531,
+        -2.4653,
+        0.2457
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -1.9567173959067716,
+        0.9116217281813975
+      ],
+      "t": -1.011613559481728,
+      "p": 0.3689438814579179,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm D \u2212 Sept. baseline",
+      "arm": "ext_armD",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.023240677408298892,
+      "delta_per_seed": [
+        0.2516,
+        -0.1979,
+        0.4976,
+        -0.1485,
+        -0.2866
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.393950210128455,
+        0.44043156494505276
+      ],
+      "t": 0.154668922451159,
+      "p": 0.8845728357171974,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm D \u2212 Sept. baseline",
+      "arm": "ext_armD",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.7128209769743045,
+      "delta_per_seed": [
+        -0.8653,
+        -0.327,
+        -0.808,
+        -0.2925,
+        -1.2713
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -1.2209243372660257,
+        -0.20471761668258326
+      ],
+      "t": -3.8950899896948843,
+      "p": 0.017614508276014112,
+      "holm_family": 0.2818321324162258,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E1 \u2212 Sept. baseline",
+      "arm": "ext_armE1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.38203876616185684,
+      "delta_per_seed": [
+        0.2028,
+        0.9928,
+        1.2618,
+        -3.8263,
+        -0.5413
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -2.928427322272535,
+        2.1643497899488215
+      ],
+      "t": -0.416554519835734,
+      "p": 0.698386232161809,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E1 \u2212 Sept. baseline",
+      "arm": "ext_armE1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.10422135625293834,
+      "delta_per_seed": [
+        0.0032,
+        -0.4741,
+        0.1536,
+        0.1055,
+        -0.3093
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.4447643045395002,
+        0.23632159203362357
+      ],
+      "t": -0.849716242493002,
+      "p": 0.44335007332203286,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E1 \u2212 Sept. baseline",
+      "arm": "ext_armE1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.1368277449425115,
+      "delta_per_seed": [
+        -0.2447,
+        -0.1981,
+        0.4099,
+        0.0307,
+        -0.682
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.6333470125543541,
+        0.35969152266933113
+      ],
+      "t": -0.7651157718976447,
+      "p": 0.4868512082893542,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E2 \u2212 Sept. baseline",
+      "arm": "ext_armE2",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.1085867198232449,
+      "delta_per_seed": [
+        -0.8262,
+        0.1802,
+        0.6694,
+        -5.9388,
+        0.3724
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -4.533084820306595,
+        2.3159113806601046
+      ],
+      "t": -0.8987974534154632,
+      "p": 0.4195746272345407,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E2 \u2212 Sept. baseline",
+      "arm": "ext_armE2",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.4360786372627615,
+      "delta_per_seed": [
+        -0.4474,
+        -0.2584,
+        -0.0673,
+        -0.6761,
+        -0.7312
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -0.7830894774097603,
+        -0.08906779711576268
+      ],
+      "t": -3.489079469092745,
+      "p": 0.02514383677221357,
+      "holm_family": 0.3771575515832036,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E2",
+      "comparison": "arm E2 \u2212 Sept. baseline",
+      "arm": "ext_armE2",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "FLAG text / residual-loss arm vs baseline (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.6096297150825087,
+      "delta_per_seed": [
+        -0.8089,
+        0.3778,
+        -0.2574,
+        -1.4157,
+        -0.944
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -1.4654874089306564,
+        0.24622797876563884
+      ],
+      "t": -1.9776692440697632,
+      "p": 0.11911889939362753,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K1 \u2212 Sept. baseline",
+      "arm": "ext_K1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.14518220032744011,
+      "delta_per_seed": [
+        -0.3496,
+        -0.8564,
+        0.0766,
+        0.2057,
+        0.1977
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.7133444587732449,
+        0.4229800581183647
+      ],
+      "t": -0.709463544029854,
+      "p": 0.5172030105760334,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K1 \u2212 Sept. baseline",
+      "arm": "ext_K1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.18060723830401743,
+      "delta_per_seed": [
+        -0.2041,
+        -0.5238,
+        0.2761,
+        0.1744,
+        -0.6256
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.6815255577909829,
+        0.320311081182948
+      ],
+      "t": -1.0010535914638852,
+      "p": 0.37344887134406957,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K1 \u2212 Sept. baseline",
+      "arm": "ext_K1",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.07039922560105935,
+      "delta_per_seed": [
+        0.2529,
+        -0.3902,
+        0.0462,
+        0.3902,
+        0.0529
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.2961957355997207,
+        0.4369941868018393
+      ],
+      "t": 0.5331758644187293,
+      "p": 0.6221586109498752,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K3 \u2212 Sept. baseline",
+      "arm": "ext_K3",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.21879832304384764,
+      "delta_per_seed": [
+        0.1471,
+        0.3099,
+        1.1676,
+        -0.3636,
+        -0.167
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.5162399828670441,
+        0.9538366289547393
+      ],
+      "t": 0.8264624144829548,
+      "p": 0.45498888655874087,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K3 \u2212 Sept. baseline",
+      "arm": "ext_K3",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.0876410424819909,
+      "delta_per_seed": [
+        0.4564,
+        -0.2056,
+        0.0901,
+        0.2521,
+        -0.1548
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.25682471327744655,
+        0.43210679824142834
+      ],
+      "t": 0.7063998070783234,
+      "p": 0.5189136158123637,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E3",
+      "comparison": "K3 \u2212 Sept. baseline",
+      "arm": "ext_K3",
+      "reference": "dgp_amazonvideo_seed0",
+      "what": "metapath depth vs K = 2 (other stack)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.013211545505848932,
+      "delta_per_seed": [
+        0.1261,
+        0.0531,
+        -0.4785,
+        0.1941,
+        0.0392
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.34523332459896355,
+        0.31881023358726573
+      ],
+      "t": -0.11047808656408967,
+      "p": 0.9173514544356008,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1 \u2212 R0",
+      "arm": "dr_R1",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.04164800534901332,
+      "delta_per_seed": [
+        0.6059,
+        0.0624,
+        1.1769,
+        -2.6603,
+        1.0234
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -1.9089738790877533,
+        1.99226988978578
+      ],
+      "t": 0.059280274416642346,
+      "p": 0.955572314163269,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1 \u2212 R0",
+      "arm": "dr_R1",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.20755547746493336,
+      "delta_per_seed": [
+        0.2602,
+        0.161,
+        0.1899,
+        0.1063,
+        0.3203
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.10326107227166045,
+        0.31184988265820623
+      ],
+      "t": 5.525381619432016,
+      "p": 0.005240293648639601,
+      "holm_family": 0.06288352378367522,
+      "holm_global": 0.4506652537830057
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1 \u2212 R0",
+      "arm": "dr_R1",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.05047672155704177,
+      "delta_per_seed": [
+        -0.407,
+        0.8888,
+        0.0858,
+        -1.0215,
+        0.7063
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.9297003235997645,
+        1.030653766713848
+      ],
+      "t": 0.14298013525817713,
+      "p": 0.8932191779489196,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1b \u2212 R0",
+      "arm": "dr_R1b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.5834887787208729,
+      "delta_per_seed": [
+        1.1836,
+        0.7041,
+        1.5037,
+        -0.9803,
+        0.5063
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.6063197010883066,
+        1.7732972585300524
+      ],
+      "t": 1.3615843147102333,
+      "p": 0.24497506445971237,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1b \u2212 R0",
+      "arm": "dr_R1b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.4498142210006705,
+      "delta_per_seed": [
+        0.3198,
+        0.5309,
+        0.784,
+        0.2151,
+        0.3993
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.17723641955652203,
+        0.7223920224448189
+      ],
+      "t": 4.581754220369144,
+      "p": 0.010169961190032582,
+      "holm_family": 0.1118695730903584,
+      "holm_global": 0.8339368175826717
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R1b \u2212 R0",
+      "arm": "dr_R1b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.04495076715467974,
+      "delta_per_seed": [
+        0.2899,
+        0.08,
+        0.3097,
+        -0.6133,
+        0.1584
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.42681574587610205,
+        0.5167172801854615
+      ],
+      "t": 0.2645447143751662,
+      "p": 0.8044320918386036,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2 \u2212 R0",
+      "arm": "dr_R2",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.46554753478660726,
+      "delta_per_seed": [
+        0.2773,
+        0.3795,
+        1.5001,
+        -5.7532,
+        1.2685
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -4.195537777634295,
+        3.26444270806108
+      ],
+      "t": -0.34653366095895083,
+      "p": 0.7464033183495083,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2 \u2212 R0",
+      "arm": "dr_R2",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.25110669062375734,
+      "delta_per_seed": [
+        0.0581,
+        0.0694,
+        0.7623,
+        0.1824,
+        0.1833
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.11133736103902975,
+        0.6135507422865445
+      ],
+      "t": 1.9235629302406043,
+      "p": 0.1267506164888814,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2 \u2212 R0",
+      "arm": "dr_R2",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.15209451601157936,
+      "delta_per_seed": [
+        -0.1394,
+        0.6714,
+        0.4312,
+        -0.7086,
+        0.5059
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.5553588494678832,
+        0.8595478814910418
+      ],
+      "t": 0.5969044676486678,
+      "p": 0.582714824271363,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2b \u2212 R0",
+      "arm": "dr_R2b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.032741186760236476,
+      "delta_per_seed": [
+        0.6568,
+        0.4341,
+        1.4135,
+        -2.9572,
+        0.6166
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -2.0942065931591385,
+        2.159688966679611
+      ],
+      "t": 0.042739228756369006,
+      "p": 0.9679577709078796,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2b \u2212 R0",
+      "arm": "dr_R2b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.26839121452541403,
+      "delta_per_seed": [
+        0.2087,
+        0.0586,
+        0.788,
+        0.0922,
+        0.1946
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.10103145596104385,
+        0.637813885011872
+      ],
+      "t": 2.0171297902912344,
+      "p": 0.11386955474495457,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E8",
+      "comparison": "R2b \u2212 R0",
+      "arm": "dr_R2b",
+      "reference": "dr_R0",
+      "what": "FLAG prompt variant vs same-stack baseline",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.0006886312633618275,
+      "delta_per_seed": [
+        -0.4591,
+        0.2349,
+        0.6583,
+        -0.6562,
+        0.2255
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.6739254283425004,
+        0.675302690869224
+      ],
+      "t": 0.002834134381314492,
+      "p": 0.9978744027709859,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E10",
+      "comparison": "F0 \u2212 R0",
+      "arm": "fa_F0",
+      "reference": "dr_R0",
+      "what": "same configuration re-run (stack / noise check)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.36086155853843993,
+      "delta_per_seed": [
+        0.8712,
+        0.0356,
+        0.7193,
+        0.042,
+        0.1362
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.13845890891228674,
+        0.8601820259891666
+      ],
+      "t": 2.0065516500321867,
+      "p": 0.11525143641009171,
+      "holm_family": 0.3457543092302751,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E10",
+      "comparison": "F0 \u2212 R0",
+      "arm": "fa_F0",
+      "reference": "dr_R0",
+      "what": "same configuration re-run (stack / noise check)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.05931924494729231,
+      "delta_per_seed": [
+        -0.0144,
+        -0.3623,
+        0.0056,
+        -0.043,
+        0.1175
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.28277435613685803,
+        0.1641358662422734
+      ],
+      "t": -0.7370456929858278,
+      "p": 0.5019888978277753,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E10",
+      "comparison": "F0 \u2212 R0",
+      "arm": "fa_F0",
+      "reference": "dr_R0",
+      "what": "same configuration re-run (stack / noise check)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.09287456782317918,
+      "delta_per_seed": [
+        0.1035,
+        -0.7283,
+        -0.09,
+        -0.0812,
+        0.3315
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.5827211039876353,
+        0.396971968341277
+      ],
+      "t": -0.5264120907113132,
+      "p": 0.6264403230090078,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.3005590690868004,
+      "delta_per_seed": [
+        -1.1491,
+        0.0337,
+        2.3445,
+        -0.7548,
+        1.0285
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -1.454769544847898,
+        2.055887683021499
+      ],
+      "t": 0.4754014431054542,
+      "p": 0.6592978911734495,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.4091785075068088,
+      "delta_per_seed": [
+        1.0793,
+        1.3376,
+        1.8821,
+        1.6982,
+        1.0487
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9483196402942417,
+        1.870037374719376
+      ],
+      "t": 8.489598547124407,
+      "p": 0.0010555094183669455,
+      "holm_family": 0.015832641275504183,
+      "holm_global": 0.10343992299996066
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.9378532283193557,
+      "delta_per_seed": [
+        1.1822,
+        2.2367,
+        2.4637,
+        1.0461,
+        2.7606
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9742877808521737,
+        2.9014186757865374
+      ],
+      "t": 5.583785849214218,
+      "p": 0.005044819798132038,
+      "holm_family": 0.06053783757758445,
+      "holm_global": 0.44394414223561934
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1 \u2212 R1",
+      "arm": "gs_G1",
+      "reference": "dr_R1",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.8631927545261391,
+      "delta_per_seed": [
+        1.4223,
+        0.8649,
+        1.2734,
+        0.6857,
+        0.0697
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.19973716594705038,
+        1.5266483431052278
+      ],
+      "t": 3.6123100617466672,
+      "p": 0.022510354646901425,
+      "holm_family": 0.1800828371752114,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1 \u2212 R1",
+      "arm": "gs_G1",
+      "reference": "dr_R1",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.8155729446651122,
+      "delta_per_seed": [
+        0.8183,
+        0.5798,
+        1.2068,
+        1.2518,
+        0.2212
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.2771385628080676,
+        1.3540073265221568
+      ],
+      "t": 4.20551433275374,
+      "p": 0.0136352204519782,
+      "holm_family": 0.136352204519782,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1 \u2212 R1",
+      "arm": "gs_G1",
+      "reference": "dr_R1",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.8811873109586983,
+      "delta_per_seed": [
+        2.1461,
+        0.5624,
+        2.2404,
+        2.6869,
+        1.7702
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.8801273089841977,
+        2.882247312933199
+      ],
+      "t": 5.217482759444543,
+      "p": 0.006438549223566373,
+      "holm_family": 0.0708240414592301,
+      "holm_global": 0.5408381347795753
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1b \u2212 R1b",
+      "arm": "gs_G1b",
+      "reference": "dr_R1b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.2689366752162627,
+      "delta_per_seed": [
+        0.5614,
+        0.2099,
+        1.4867,
+        -1.3979,
+        0.4846
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -1.0328706661104556,
+        1.5707440165429811
+      ],
+      "t": 0.5735778957517514,
+      "p": 0.5969612429915806,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1b \u2212 R1b",
+      "arm": "gs_G1b",
+      "reference": "dr_R1b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.3985707323297191,
+      "delta_per_seed": [
+        0.2835,
+        0.1812,
+        0.4934,
+        1.4523,
+        -0.4176
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.44493933035910943,
+        1.2420807950185477
+      ],
+      "t": 1.3119105601709666,
+      "p": 0.259775321731957,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G1b \u2212 R1b",
+      "arm": "gs_G1b",
+      "reference": "dr_R1b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 2.101480010428916,
+      "delta_per_seed": [
+        1.3492,
+        1.4061,
+        2.7923,
+        2.8784,
+        2.0814
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        1.1952240640847707,
+        3.007735956773061
+      ],
+      "t": 6.438185495127995,
+      "p": 0.002994242170312787,
+      "holm_family": 0.03892514821406623,
+      "holm_global": 0.2724760374984636
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2 \u2212 R2",
+      "arm": "gs_G2",
+      "reference": "dr_R2",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.1504074086621756,
+      "delta_per_seed": [
+        0.8462,
+        0.7822,
+        -1.5148,
+        5.5729,
+        0.0655
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -2.138647837267222,
+        4.439462654591573
+      ],
+      "t": 0.9711126083140099,
+      "p": 0.3864828477515399,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2 \u2212 R2",
+      "arm": "gs_G2",
+      "reference": "dr_R2",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.1285804030173723,
+      "delta_per_seed": [
+        1.5272,
+        1.5723,
+        0.1109,
+        1.6619,
+        0.7706
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.2947119083561933,
+        1.9624488976785512
+      ],
+      "t": 3.757716661369884,
+      "p": 0.01981404647095633,
+      "holm_family": 0.17832641823860698,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2 \u2212 R2",
+      "arm": "gs_G2",
+      "reference": "dr_R2",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.6802973046524463,
+      "delta_per_seed": [
+        0.702,
+        2.7309,
+        -0.8258,
+        3.013,
+        2.7814
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.40938636864969347,
+        3.769980977954586
+      ],
+      "t": 2.232516474327068,
+      "p": 0.08936088320024484,
+      "holm_family": 0.536165299201469,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2b \u2212 R2b",
+      "arm": "gs_G2b",
+      "reference": "dr_R2b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.1957206578636317,
+      "delta_per_seed": [
+        0.2617,
+        -1.352,
+        1.0829,
+        4.6114,
+        1.3746
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -1.5157522483956143,
+        3.9071935641228777
+      ],
+      "t": 1.2243724656240218,
+      "p": 0.2879901464505744,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2b \u2212 R2b",
+      "arm": "gs_G2b",
+      "reference": "dr_R2b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.7411253835679219,
+      "delta_per_seed": [
+        0.2754,
+        0.7388,
+        0.1364,
+        1.7681,
+        0.787
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.05378483050082572,
+        1.5360355976366695
+      ],
+      "t": 2.5885866191260622,
+      "p": 0.0607743946293441,
+      "holm_family": 0.4254207624054087,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E11",
+      "comparison": "G2b \u2212 R2b",
+      "arm": "gs_G2b",
+      "reference": "dr_R2b",
+      "what": "Gemma-2-9B-it instead of Qwen3-8B (writer + classifier)",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.874573915099036,
+      "delta_per_seed": [
+        1.7571,
+        1.4785,
+        1.4822,
+        2.8692,
+        1.7859
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        1.1608054773788616,
+        2.58834235281921
+      ],
+      "t": 7.291792822238256,
+      "p": 0.0018803212606717053,
+      "holm_family": 0.026324497649403873,
+      "holm_global": 0.1767501985031403
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S0 \u2212 R0",
+      "arm": "zs_S0",
+      "reference": "dr_R0",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.9385059821505962,
+      "delta_per_seed": [
+        0.3308,
+        0.7536,
+        2.1358,
+        1.2216,
+        0.2506
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.021332311172210572,
+        1.898344275473403
+      ],
+      "t": 2.714738887235179,
+      "p": 0.053275628226200855,
+      "holm_family": 0.7991344233930129,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S0 \u2212 R0",
+      "arm": "zs_S0",
+      "reference": "dr_R0",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.5464444012157031,
+      "delta_per_seed": [
+        0.5497,
+        -0.0558,
+        0.7853,
+        1.167,
+        0.2861
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.03350336865827486,
+        1.1263921710896811
+      ],
+      "t": 2.6160508960104423,
+      "p": 0.05904356726785162,
+      "holm_family": 0.8266099417499226,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S0 \u2212 R0",
+      "arm": "zs_S0",
+      "reference": "dr_R0",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.38925332746274177,
+      "delta_per_seed": [
+        0.6477,
+        -0.0664,
+        0.3439,
+        0.8237,
+        0.1973
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.05063744451488089,
+        0.8291440994403645
+      ],
+      "t": 2.4568382984193646,
+      "p": 0.06992878249034508,
+      "holm_family": 0.9090741723744861,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1 \u2212 R1",
+      "arm": "zs_S1",
+      "reference": "dr_R1",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.9657980470791798,
+      "delta_per_seed": [
+        0.4607,
+        0.9027,
+        0.1132,
+        3.0547,
+        0.2978
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.5288389824821833,
+        2.460435076640543
+      ],
+      "t": 1.7940712075155278,
+      "p": 0.14725096797964488,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1 \u2212 R1",
+      "arm": "zs_S1",
+      "reference": "dr_R1",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.25890703798760056,
+      "delta_per_seed": [
+        0.5729,
+        -0.0952,
+        -0.6025,
+        1.835,
+        -0.4157
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.9679272120510503,
+        1.4857412880262515
+      ],
+      "t": 0.585931781982192,
+      "p": 0.5893883602099037,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1 \u2212 R1",
+      "arm": "zs_S1",
+      "reference": "dr_R1",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.6018974717058839,
+      "delta_per_seed": [
+        1.5405,
+        -0.7735,
+        -0.1825,
+        2.8139,
+        -0.3889
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -1.2875782468219859,
+        2.4913731902337535
+      ],
+      "t": 0.8844439083084621,
+      "p": 0.4264169311416538,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1b \u2212 R1b",
+      "arm": "zs_S1b",
+      "reference": "dr_R1b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.04435320103959413,
+      "delta_per_seed": [
+        -1.5738,
+        -0.4324,
+        0.0825,
+        1.6807,
+        0.0213
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -1.498520612439762,
+        1.4098142103605737
+      ],
+      "t": -0.08468366637900615,
+      "p": 0.9365819616113511,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1b \u2212 R1b",
+      "arm": "zs_S1b",
+      "reference": "dr_R1b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.2554923160913319,
+      "delta_per_seed": [
+        0.305,
+        -0.2557,
+        0.063,
+        1.3005,
+        -0.1353
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.5163438735598944,
+        1.0273285057425583
+      ],
+      "t": 0.9190556233803551,
+      "p": 0.41007270414555785,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S1b \u2212 R1b",
+      "arm": "zs_S1b",
+      "reference": "dr_R1b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.30377724257264094,
+      "delta_per_seed": [
+        0.2543,
+        0.3109,
+        0.0072,
+        1.4766,
+        -0.5302
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.6089406727952528,
+        1.2164951579405345
+      ],
+      "t": 0.9240761291196194,
+      "p": 0.4077458731393681,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2 \u2212 R2",
+      "arm": "zs_S2",
+      "reference": "dr_R2",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.7889726730591036,
+      "delta_per_seed": [
+        0.4832,
+        0.3727,
+        0.0122,
+        2.9243,
+        0.1525
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        -0.7106739731134848,
+        2.288619319231692
+      ],
+      "t": 1.460703640981348,
+      "p": 0.21788820494309738,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2 \u2212 R2",
+      "arm": "zs_S2",
+      "reference": "dr_R2",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.26044444723339666,
+      "delta_per_seed": [
+        0.4672,
+        -0.4118,
+        0.2497,
+        0.7593,
+        0.2378
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.2750949029224541,
+        0.7959837973892474
+      ],
+      "t": 1.3502457111446102,
+      "p": 0.24827890420826762,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2 \u2212 R2",
+      "arm": "zs_S2",
+      "reference": "dr_R2",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.5752796331039818,
+      "delta_per_seed": [
+        1.5524,
+        -0.2332,
+        0.8117,
+        0.7634,
+        -0.018
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -0.3139764128332644,
+        1.4645356790412278
+      ],
+      "t": 1.796144461146849,
+      "p": 0.14689602538250035,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2b \u2212 R2b",
+      "arm": "zs_S2b",
+      "reference": "dr_R2b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.36820448285245816,
+      "delta_per_seed": [
+        0.6084,
+        -0.8405,
+        0.3261,
+        1.3022,
+        0.4448
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.5933099432333082,
+        1.3297189089382246
+      ],
+      "t": 1.0632180926179924,
+      "p": 0.3476100679803755,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2b \u2212 R2b",
+      "arm": "zs_S2b",
+      "reference": "dr_R2b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.43453425563943426,
+      "delta_per_seed": [
+        0.4905,
+        0.0527,
+        0.2631,
+        1.5604,
+        -0.1941
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.4078616782413407,
+        1.2769301895202092
+      ],
+      "t": 1.4321775053601162,
+      "p": 0.22536193646881114,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E12",
+      "comparison": "S2b \u2212 R2b",
+      "arm": "zs_S2b",
+      "reference": "dr_R2b",
+      "what": "structured zero-shot prompt, Qwen",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.5750965514831747,
+      "delta_per_seed": [
+        0.5307,
+        0.564,
+        0.3966,
+        1.9589,
+        -0.5748
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.5477617004544046,
+        1.697954803420754
+      ],
+      "t": 1.4220174297390784,
+      "p": 0.22808544035066144,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS0 \u2212 G0",
+      "arm": "zs_GS0",
+      "reference": "gs_G0",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.2521105713616791,
+      "delta_per_seed": [
+        1.6514,
+        0.7925,
+        -0.9432,
+        -0.1155,
+        -0.1247
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -0.9827115699334132,
+        1.4869327126567715
+      ],
+      "t": 0.5668599050966295,
+      "p": 0.6011055064565461,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS0 \u2212 G0",
+      "arm": "zs_GS0",
+      "reference": "gs_G0",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.0118872064541875,
+      "delta_per_seed": [
+        -0.2474,
+        -1.3554,
+        -1.4015,
+        -0.8072,
+        -1.2478
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -1.6176023141379758,
+        -0.40617209877039917
+      ],
+      "t": -4.6382354439121265,
+      "p": 0.009746874325147408,
+      "holm_family": 0.1267093662269163,
+      "holm_global": 0.8089905689872349
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS0 \u2212 G0",
+      "arm": "zs_GS0",
+      "reference": "gs_G0",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.3920807832724216,
+      "delta_per_seed": [
+        0.4804,
+        -1.1885,
+        -3.4293,
+        -0.9424,
+        -1.8807
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -3.163220731349549,
+        0.3790591648047059
+      ],
+      "t": -2.1822306480934928,
+      "p": 0.09450860879879051,
+      "holm_family": 0.4725430439939526,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1 \u2212 G1",
+      "arm": "zs_GS1",
+      "reference": "gs_G1",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.738055343945615,
+      "delta_per_seed": [
+        -0.9321,
+        -4.1638,
+        -1.0911,
+        2.3013,
+        0.1954
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -3.650476199181007,
+        2.1743655112897766
+      ],
+      "t": -0.7035968525562749,
+      "p": 0.5204822243378314,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1 \u2212 G1",
+      "arm": "zs_GS1",
+      "reference": "gs_G1",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.9534778567748106,
+      "delta_per_seed": [
+        -0.4454,
+        -1.5142,
+        -1.1019,
+        -0.8799,
+        -0.8259
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -1.4408310743556456,
+        -0.46612463919397545
+      ],
+      "t": -5.4319512683176505,
+      "p": 0.005572660839315196,
+      "holm_family": 0.07801725175041274,
+      "holm_global": 0.47367617134179163
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1 \u2212 G1",
+      "arm": "zs_GS1",
+      "reference": "gs_G1",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.99970708098965,
+      "delta_per_seed": [
+        -1.4344,
+        -2.4161,
+        -3.8671,
+        -0.7866,
+        -1.4943
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -3.4828861813159806,
+        -0.5165279806633192
+      ],
+      "t": -3.743362440599053,
+      "p": 0.020062364110790924,
+      "holm_family": 0.22068600521870016,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1b \u2212 G1b",
+      "arm": "zs_GS1b",
+      "reference": "gs_G1b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.2157444411411092,
+      "delta_per_seed": [
+        -0.8384,
+        -0.2542,
+        -1.6127,
+        0.9822,
+        0.6443
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -1.5349578311183756,
+        1.1034689488361573
+      ],
+      "t": -0.4540604288364511,
+      "p": 0.6733316820915576,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1b \u2212 G1b",
+      "arm": "zs_GS1b",
+      "reference": "gs_G1b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.4811759751392913,
+      "delta_per_seed": [
+        -0.0227,
+        -1.0818,
+        -0.5237,
+        -1.0137,
+        0.236
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -1.20801890937059,
+        0.24566695909200748
+      ],
+      "t": -1.8380293980943156,
+      "p": 0.1399178703728356,
+      "holm_family": 0.5596714814913424,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS1b \u2212 G1b",
+      "arm": "zs_GS1b",
+      "reference": "gs_G1b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.3938884883456395,
+      "delta_per_seed": [
+        -0.4827,
+        -1.2817,
+        -2.5144,
+        -1.6294,
+        -1.0613
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -2.3281408361377505,
+        -0.4596361405535283
+      ],
+      "t": -4.142408504302697,
+      "p": 0.014348421456464163,
+      "holm_family": 0.17218105747756995,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2 \u2212 G2",
+      "arm": "zs_GS2",
+      "reference": "gs_G2",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.1847650953810132,
+      "delta_per_seed": [
+        -1.0322,
+        -2.7703,
+        -1.3553,
+        -0.9169,
+        0.151
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -2.4903185584733913,
+        0.12078836771136481
+      ],
+      "t": -2.519571463652161,
+      "p": 0.06538662017263003,
+      "holm_family": 0.39231972103578017,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2 \u2212 G2",
+      "arm": "zs_GS2",
+      "reference": "gs_G2",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.2232374003908717,
+      "delta_per_seed": [
+        -1.4796,
+        -1.9101,
+        -0.1092,
+        -2.2119,
+        -0.4054
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -2.3721535525302593,
+        -0.07432124825148412
+      ],
+      "t": -2.95604817330314,
+      "p": 0.04171783140058943,
+      "holm_family": 0.37546048260530485,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2 \u2212 G2",
+      "arm": "zs_GS2",
+      "reference": "gs_G2",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -2.2865984025141883,
+      "delta_per_seed": [
+        -1.939,
+        -4.5,
+        0.4348,
+        -2.9294,
+        -2.4995
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -4.5150793737177715,
+        -0.05811743131060565
+      ],
+      "t": -2.8488531085750224,
+      "p": 0.046449634741640586,
+      "holm_family": 0.37546048260530485,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2b \u2212 G2b",
+      "arm": "zs_GS2b",
+      "reference": "gs_G2b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -1.327558473803552,
+      "delta_per_seed": [
+        -1.3419,
+        0.3682,
+        -1.539,
+        -2.5089,
+        -1.6162
+      ],
+      "seeds_better": 1,
+      "ci95": [
+        -2.629718639573765,
+        -0.025398308033338868
+      ],
+      "t": -2.830598971882664,
+      "p": 0.04731629614223206,
+      "holm_family": 0.37546048260530485,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2b \u2212 G2b",
+      "arm": "zs_GS2b",
+      "reference": "gs_G2b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.9697444135568105,
+      "delta_per_seed": [
+        -0.7377,
+        -1.5349,
+        -0.0212,
+        -1.7446,
+        -0.8102
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -1.8252430031347566,
+        -0.1142458239788644
+      ],
+      "t": -3.1472198354424026,
+      "p": 0.034606420397174854,
+      "holm_family": 0.34606420397174853,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E13",
+      "comparison": "GS2b \u2212 G2b",
+      "arm": "zs_GS2b",
+      "reference": "gs_G2b",
+      "what": "structured zero-shot prompt, Gemma",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -2.000274563993942,
+      "delta_per_seed": [
+        -2.6728,
+        -1.3627,
+        -2.2306,
+        -1.5183,
+        -2.217
+      ],
+      "seeds_better": 0,
+      "ci95": [
+        -2.6778244652579617,
+        -1.322724662729922
+      ],
+      "t": -8.19666936987501,
+      "p": 0.0012069547142061706,
+      "holm_family": 0.01810432071309256,
+      "holm_global": 0.11586765256379239
+    },
+    {
+      "experiment": "E14",
+      "comparison": "X0 \u2212 R0",
+      "arm": "gs_X0",
+      "reference": "dr_R0",
+      "what": "Gemma's text, Qwen classifier",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.5516903344990794,
+      "delta_per_seed": [
+        1.1299,
+        0.2049,
+        1.23,
+        -0.4793,
+        0.6729
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.3246321435986138,
+        1.4280128125967728
+      ],
+      "t": 1.7479158267513284,
+      "p": 0.15539405268606094,
+      "holm_family": 0.4661821580581828,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E14",
+      "comparison": "X0 \u2212 R0",
+      "arm": "gs_X0",
+      "reference": "dr_R0",
+      "what": "Gemma's text, Qwen classifier",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.3934007143898043,
+      "delta_per_seed": [
+        0.4125,
+        0.1846,
+        0.4952,
+        0.6505,
+        0.2241
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.1536911559100159,
+        0.6331102728695926
+      ],
+      "t": 4.556578781321242,
+      "p": 0.01036570686985409,
+      "holm_family": 0.06219424121912454,
+      "holm_global": 0.8396222564581813
+    },
+    {
+      "experiment": "E14",
+      "comparison": "X0 \u2212 R0",
+      "arm": "gs_X0",
+      "reference": "dr_R0",
+      "what": "Gemma's text, Qwen classifier",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.49298122908961445,
+      "delta_per_seed": [
+        0.4092,
+        0.008,
+        0.412,
+        1.0693,
+        0.5664
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.017592367548469767,
+        0.9683700906307591
+      ],
+      "t": 2.8791909764629366,
+      "p": 0.0450497616513758,
+      "holm_family": 0.1801990466055032,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 X0",
+      "arm": "gs_G0",
+      "reference": "gs_X0",
+      "what": "Gemma as classifier, Gemma's text",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": -0.251131265412279,
+      "delta_per_seed": [
+        -2.279,
+        -0.1712,
+        1.1145,
+        -0.2754,
+        0.3555
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -1.8158606569253302,
+        1.313598126100772
+      ],
+      "t": -0.44560559570100855,
+      "p": 0.6789368003289572,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 X0",
+      "arm": "gs_G0",
+      "reference": "gs_X0",
+      "what": "Gemma as classifier, Gemma's text",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.0157777931170044,
+      "delta_per_seed": [
+        0.6668,
+        1.153,
+        1.3868,
+        1.0477,
+        0.8246
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.6668652631107366,
+        1.3646903231232723
+      ],
+      "t": 8.082975070048821,
+      "p": 0.0012729212570629586,
+      "holm_family": 0.010183370056503669,
+      "holm_global": 0.12092751942098107
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 X0",
+      "arm": "gs_G0",
+      "reference": "gs_X0",
+      "what": "Gemma as classifier, Gemma's text",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.4448719992297412,
+      "delta_per_seed": [
+        0.773,
+        2.2287,
+        2.0517,
+        -0.0232,
+        2.1941
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        0.1800355689648725,
+        2.7097084294946097
+      ],
+      "t": 3.171641560844904,
+      "p": 0.03380459540744277,
+      "holm_family": 0.16902297703721383,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "both roles",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 0.3005590690868004,
+      "delta_per_seed": [
+        -1.1491,
+        0.0337,
+        2.3445,
+        -0.7548,
+        1.0285
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -1.454769544847898,
+        2.055887683021499
+      ],
+      "t": 0.4754014431054542,
+      "p": 0.6592978911734495,
+      "holm_family": 1.0,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "both roles",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.4091785075068088,
+      "delta_per_seed": [
+        1.0793,
+        1.3376,
+        1.8821,
+        1.6982,
+        1.0487
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9483196402942417,
+        1.870037374719376
+      ],
+      "t": 8.489598547124407,
+      "p": 0.0010555094183669455,
+      "holm_family": 0.009499584765302509,
+      "holm_global": 0.10343992299996066
+    },
+    {
+      "experiment": "E14",
+      "comparison": "G0 \u2212 R0",
+      "arm": "gs_G0",
+      "reference": "dr_R0",
+      "what": "both roles",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.9378532283193557,
+      "delta_per_seed": [
+        1.1822,
+        2.2367,
+        2.4637,
+        1.0461,
+        2.7606
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9742877808521737,
+        2.9014186757865374
+      ],
+      "t": 5.583785849214218,
+      "p": 0.005044819798132038,
+      "holm_family": 0.03531373858692426,
+      "holm_global": 0.44394414223561934
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 T0",
+      "arm": "dr_R0",
+      "reference": "ctl_T0",
+      "what": "graph context, classifier fixed",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.3957947237275037,
+      "delta_per_seed": [
+        -0.1643,
+        1.8107,
+        -0.9573,
+        7.0677,
+        -0.7779
+      ],
+      "seeds_better": 2,
+      "ci95": [
+        -2.7706542658240596,
+        5.5622437132790665
+      ],
+      "t": 0.9301319752798027,
+      "p": 0.4049539569703097,
+      "holm_family": 0.4049539569703097,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 T0",
+      "arm": "dr_R0",
+      "reference": "ctl_T0",
+      "what": "graph context, classifier fixed",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.6871654566105492,
+      "delta_per_seed": [
+        1.7605,
+        2.5661,
+        1.0242,
+        1.3927,
+        1.6924
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9781724120914287,
+        2.3961585011296695
+      ],
+      "t": 6.607007374581981,
+      "p": 0.0027199119558185113,
+      "holm_family": 0.011260700407915046,
+      "holm_global": 0.25023189993530304
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 T0",
+      "arm": "dr_R0",
+      "reference": "ctl_T0",
+      "what": "graph context, classifier fixed",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 1.826998088627645,
+      "delta_per_seed": [
+        2.0752,
+        2.7658,
+        1.2793,
+        1.9142,
+        1.1006
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        0.9991253921268098,
+        2.65487078512848
+      ],
+      "t": 6.127222122212883,
+      "p": 0.0035946760951961246,
+      "holm_family": 0.011260700407915046,
+      "holm_global": 0.32352084856765123
+    },
+    {
+      "experiment": "E15",
+      "comparison": "T0 \u2212 MLP",
+      "arm": "ctl_T0",
+      "reference": "mlp_amazonvideo",
+      "what": "fine-tuned LLM vs MLP",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 3.5219266505634663,
+      "delta_per_seed": [
+        5.7036,
+        2.8859,
+        4.9077,
+        -1.9607,
+        6.0731
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.5798871827565546,
+        7.623740483883488
+      ],
+      "t": 2.383929746004074,
+      "p": 0.07566523386649023,
+      "holm_family": 0.15133046773298045,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E15",
+      "comparison": "T0 \u2212 MLP",
+      "arm": "ctl_T0",
+      "reference": "mlp_amazonvideo",
+      "what": "fine-tuned LLM vs MLP",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 4.957684640758705,
+      "delta_per_seed": [
+        5.6843,
+        4.1549,
+        4.9878,
+        3.9797,
+        5.9817
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        3.850853474557363,
+        6.064515806960047
+      ],
+      "t": 12.436168834303373,
+      "p": 0.00024038776597133606,
+      "holm_family": 0.0016827143617993523,
+      "holm_global": 0.024038776597133604
+    },
+    {
+      "experiment": "E15",
+      "comparison": "T0 \u2212 MLP",
+      "arm": "ctl_T0",
+      "reference": "mlp_amazonvideo",
+      "what": "fine-tuned LLM vs MLP",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 5.433542741719177,
+      "delta_per_seed": [
+        6.8125,
+        3.5222,
+        5.2122,
+        4.0303,
+        7.5905
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        3.2628151519920987,
+        7.604270331446255
+      ],
+      "t": 6.949712723292901,
+      "p": 0.002252140081583009,
+      "holm_family": 0.011260700407915046,
+      "holm_global": 0.20944902758721984
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 MLP",
+      "arm": "dr_R0",
+      "reference": "mlp_amazonvideo",
+      "what": "DGP vs MLP",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 4.91772137429097,
+      "delta_per_seed": [
+        5.5393,
+        4.6966,
+        3.9504,
+        5.107,
+        5.2952
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        4.1449721125543455,
+        5.6904706360275945
+      ],
+      "t": 17.669099298383202,
+      "p": 6.0266521933889366e-05,
+      "holm_family": 0.0005423986974050043,
+      "holm_global": 0.0061471852372567155
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 MLP",
+      "arm": "dr_R0",
+      "reference": "mlp_amazonvideo",
+      "what": "DGP vs MLP",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 6.644850097369255,
+      "delta_per_seed": [
+        7.4448,
+        6.7209,
+        6.012,
+        5.3724,
+        7.6741
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        5.446666673476424,
+        7.843033521262085
+      ],
+      "t": 15.39752692260922,
+      "p": 0.00010380849422068312,
+      "holm_family": 0.0008304679537654649,
+      "holm_global": 0.010484657916288994
+    },
+    {
+      "experiment": "E15",
+      "comparison": "R0 \u2212 MLP",
+      "arm": "dr_R0",
+      "reference": "mlp_amazonvideo",
+      "what": "DGP vs MLP",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 7.260540830346821,
+      "delta_per_seed": [
+        8.8877,
+        6.288,
+        6.4915,
+        5.9445,
+        8.6911
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        5.508561086679902,
+        9.012520574013742
+      ],
+      "t": 11.506122215381971,
+      "p": 0.00032574405513052096,
+      "holm_family": 0.0019544643307831257,
+      "holm_global": 0.032248661457921574
+    }
+  ],
+  "n_tests": 102
+}

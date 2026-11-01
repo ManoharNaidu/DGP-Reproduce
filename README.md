@@ -573,6 +573,31 @@ recomputes all metrics. Caches carry metadata sidecars; summaries are cached per
 skips existing lines. Training has no mid-run checkpoint: a stopped run restarts from epoch 0. Seeds are set centrally.
 Test labels are read only by the split builder and evaluation.
 
+**One statistics standard (2026-11-01).** The studies were analysed with different tools as they ran (bootstrap CIs
+over test reviews, McNemar, Holm only from Exp 4 on). `python scripts/stats_standard.py` re-tests every paired
+comparison of E2–E15 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
+the 3 metrics × the comparisons of each experiment ("family") and over all 102 tests ("global") →
+[`results/stats/all_comparisons.md`](results/stats/all_comparisons.md).
+
+| Experiment | Comparisons | Tests | p < 0.05 | Holm family < 0.05 | Holm global < 0.05 |
+|---|---|---|---|---|---|
+| E2 FLAG text / residual arms vs Sept. baseline | 6 | 18 | 5 | 0 | 0 |
+| E3 K = 1, 3 vs K = 2 | 2 | 6 | 0 | 0 | 0 |
+| E8 dr prompts vs R0 | 4 | 12 | 2 | 0 | 0 |
+| E10 F0 re-run vs R0 | 1 | 3 | 0 | 0 | 0 |
+| E11 Gemma vs Qwen, 5 arms | 5 | 15 | 8 | 3 (G0 AUROC +1.41; G1b AUPRC +2.10; G2b AUPRC +1.87) | 0 |
+| E12 zero-shot prompt, Qwen | 5 | 15 | 0 | 0 | 0 |
+| E13 zero-shot prompt, Gemma | 5 | 15 | 9 | 1 (GS2b AUPRC −2.00) | 0 |
+| E14 writer vs classifier | 3 | 9 | 6 | 3 (G0 − X0 AUROC; G0 − R0 AUROC, AUPRC) | 0 |
+| E15 target-only LLM and MLP | 3 | 9 | 7 | 7 | 4 (all vs the MLP) |
+
+Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep and the F0 re-run are
+null, and Gemma's gain (E11) and the zero-shot penalty for Gemma (E13) survive in some arms but not all: they rest on
+the consistent sign across arms (E11 AUPRC better on 24 of 25 paired seeds) and on the bootstrap CIs of the studies'
+own analyses rather than on any single corrected seed-level test. Five seeds give little power: a seed-level test
+detects only differences several times the seed-to-seed std of the difference. Seed-level tests leave out test-set
+sampling noise, which the bootstrap CIs include, so the two answer different questions and both are reported.
+
 ## 24. Decisions and known gaps
 
 Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](research/evidence_matrix.md),
