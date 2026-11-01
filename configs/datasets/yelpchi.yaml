@@ -5,7 +5,7 @@
 # scoped to the product. Do NOT substitute YelpChi.mat (45,954 nodes, no text).
 name: yelpchi
 display_name: YelpReviews
-reproducibility: MIRROR
+reproducibility: BLOCKED   # field kept unchanged so the running queue keeps one config hash; data now from the mirror (see above)
 processed_dir: datasets/processed/yelpchi
 
 source:
