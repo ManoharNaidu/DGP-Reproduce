@@ -1,0 +1,62 @@
+{
+  "cells": {
+    "mlp_yelpchi": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "macro_f1": {
+        "mean": 63.64109323574369,
+        "std": 0.4260744902688289
+      },
+      "auroc": {
+        "mean": 74.65838089559564,
+        "std": 0.7092186495337856
+      },
+      "auprc": {
+        "mean": 33.672000373783796,
+        "std": 1.0096079990355284
+      },
+      "threshold_per_seed": [
+        0.3,
+        0.3,
+        0.2,
+        0.3,
+        0.3
+      ]
+    }
+  },
+  "paper": {
+    "dgp_yelpchi": {
+      "macro_f1": 69.07,
+      "auroc": 84.28,
+      "auprc": 48.87
+    },
+    "mlp_yelpchi": {
+      "macro_f1": 62.09,
+      "auroc": 75.0,
+      "auprc": 32.24
+    }
+  },
+  "paper_other": {
+    "ConsisGAD (paper's best baseline)": [
+      67.33,
+      82.12,
+      42.11
+    ],
+    "LLM (target only)": [
+      60.79,
+      71.18,
+      30.45
+    ],
+    "FLAG": [
+      64.79,
+      73.98,
+      38.45
+    ]
+  },
+  "cost": null
+}
