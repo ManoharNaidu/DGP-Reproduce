@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T16:10Z",
+  "updated": "2026-11-01T16:30Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -55,8 +55,8 @@
       "id": "stats",
       "title": "One statistics standard (seed-level paired t + Holm) for E2-E14",
       "kind": "CPU",
-      "state": "waiting",
-      "detail": ""
+      "state": "done",
+      "detail": "scripts/stats_standard.py: 34 comparisons, 102 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9. results/stats/all_comparisons.md; README \u00a723; report \u00a78 Table 56. Commit a07aa64."
     },
     {
       "id": "yelp",
