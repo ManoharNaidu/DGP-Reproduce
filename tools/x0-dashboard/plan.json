@@ -1,0 +1,97 @@
+{
+  "updated": "2026-11-01T14:50Z",
+  "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
+  "items": [
+    {
+      "id": "exp4",
+      "title": "Exp 4 / E14: Gemma text + Qwen classifier (writer vs classifier)",
+      "kind": "GPU",
+      "state": "done",
+      "detail": "Classifier carries ~72-75% of Gemma's AUROC/AUPRC gain. Committed c973753 (branch writer-classifier)."
+    },
+    {
+      "id": "docx",
+      "title": "Reports and docx: E14 card, stale D6 and section refs, report 03 conclusion",
+      "kind": "docs",
+      "state": "done",
+      "detail": "DGP experiment log rebuilt (E14, D6 resolved, D3 updated, section refs fixed) and report 03 rebuilt; previous files in reports/rebuild/archive-2026-11-01/."
+    },
+    {
+      "id": "mlp",
+      "title": "MLP baseline re-run (5 seeds, CPU)",
+      "kind": "CPU",
+      "state": "done",
+      "detail": "59.83 / 68.33 / 25.11, matches the README's 59.86 / 68.35 / 25.14."
+    },
+    {
+      "id": "T0",
+      "title": "Control: LLM on the target review only (paper's 'LLM' row)",
+      "kind": "GPU",
+      "state": "running",
+      "detail": "Qwen3-8B + LoRA, R0 recipe, no neighbour text. R0 - T0 = what the graph context adds."
+    },
+    {
+      "id": "agg",
+      "title": "Rebuild the 5-seed aggregate files",
+      "kind": "CPU",
+      "state": "done",
+      "detail": "All 34 files rebuilt from every finished seed (means unchanged); run_experiment fixed so new runs aggregate all seeds. 105 unit tests pass."
+    },
+    {
+      "id": "flagcheck",
+      "title": "FLAG: double-check every reported value from the raw results",
+      "kind": "CPU",
+      "state": "next",
+      "detail": ""
+    },
+    {
+      "id": "flagctl",
+      "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
+      "kind": "CPU",
+      "state": "waiting",
+      "detail": ""
+    },
+    {
+      "id": "stats",
+      "title": "One statistics standard (seed-level paired t + Holm) for E2-E14",
+      "kind": "CPU",
+      "state": "waiting",
+      "detail": ""
+    },
+    {
+      "id": "yelp",
+      "title": "DGP on YelpChi: build graph, check edge count against Table 1, then 5 seeds",
+      "kind": "GPU",
+      "state": "waiting",
+      "detail": ""
+    },
+    {
+      "id": "nomdk",
+      "title": "Ablation: w/o MDK (random neighbours)",
+      "kind": "GPU",
+      "state": "waiting",
+      "detail": ""
+    },
+    {
+      "id": "cell4",
+      "title": "Fourth cell: Qwen text + Gemma classifier",
+      "kind": "GPU",
+      "state": "waiting",
+      "detail": "Needs the Gemma download."
+    },
+    {
+      "id": "hparam",
+      "title": "Hyperparameter search",
+      "kind": "GPU",
+      "state": "deferred",
+      "detail": "At the end, as you asked."
+    },
+    {
+      "id": "backup",
+      "title": "Hugging Face backup",
+      "kind": "you",
+      "state": "yours",
+      "detail": "You are doing this."
+    }
+  ]
+}

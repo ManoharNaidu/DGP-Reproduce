@@ -47,7 +47,7 @@ What exists and works today:
   study (§21, stopped after its baseline) and the Gemma swap / zero-shot prompt study (§22).
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
-- 100 unit tests (all passing on 2026-10-30) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
+- 105 unit tests (all passing on 2026-11-01) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
 - Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
 What is outstanding: the paper's ablations / budget / task-aware studies and the hyperparameter grid search on GPU
@@ -90,7 +90,7 @@ research/        paper specification, version divergence, evidence matrix, prove
 docs/            installation, reproduction, datasets, architecture, troubleshooting,
                  Markov_Diffusion_DGP_vs_FLAG.docx
 tools/           dgp-dashboard/, dr-dashboard/v2/ (read-only progress dashboards)
-tests/           unit/ (100 tests)
+tests/           unit/ (105 tests)
 results/         raw/<run_id>/, aggregated/, tables/, figures/, token_usage/, complexity/,
                  ext/, disc_resid/, flag_arch/, gemma_swap/ (queue state, checks, analyses per study)
 checkpoints/     LoRA adapters, one per run (adapter_model.safetensors + adapter_config.json)
@@ -170,7 +170,7 @@ YelpReviews: see the email template in [`docs/datasets.md`](docs/datasets.md).
 
 ```bash
 python scripts/smoke_test.py --real-tokenizer    # CPU, ~30 s, DEBUG_ONLY
-python -m pytest tests/unit -q                   # 84 tests
+python -m pytest tests/unit -q                   # 105 tests
 ```
 
 Checks graph loading, metapath adjacency, MDK, Top-M, both summarization levels, numeric aggregation,
@@ -345,9 +345,10 @@ python analysis/neighbor_analysis.py            # CPU, needs the K=1,2,3 MDK cac
 ```
 
 Per-run outputs: `results/raw/ext_<arm>_seed<s>_<hash>/{metrics.json,predictions.csv,run_manifest.json}` and LoRA
-adapters in `checkpoints/`. **Note:** `results/aggregated/ext_*.json` and `parity_dgp.json` were overwritten by
-each single-seed job, so they hold one seed only; the table above is computed from the five `metrics.json` files per
-arm. Re-run `scripts/evaluate.py` per experiment to rebuild the 5-seed aggregates.
+adapters in `checkpoints/`. **Note:** until 2026-11-01 `results/aggregated/*.json` were overwritten by each
+single-seed job and held one seed only. `run_experiment` now aggregates every finished seed of the same experiment and
+config hash on disk, and `scripts/rebuild_aggregates.py` rebuilt all 34 existing files (means unchanged from the tables
+in this README, which were always computed from the five `metrics.json` files per arm).
 
 ## 18. Markov diffusion: DGP vs FLAG-MD
 
@@ -573,7 +574,7 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
 paper's ablation / budget / task-aware studies on GPU, YelpReviews (data access), ConsisGAD 5-seed run and the other
-baselines, and rebuilding the 5-seed aggregate files for the extension arms (§17). From the follow-up studies: the fourth
+baselines. From the follow-up studies: the fourth
 writer × classifier cell (Qwen text, Gemma classifier; §22 Exp 4 answered the text-vs-classifier question for arm 0),
 which part of the zero-shot prompt hurts Gemma (§22), and why two Gemma runs sharing a GPU are so slow.
 

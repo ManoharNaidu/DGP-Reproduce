@@ -163,18 +163,31 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
     return metrics
 
 
+def seed_metrics_on_disk(experiment: str, cfg_hash: str, raw_dir: Path | None = None) -> dict[int, dict]:
+    """{seed: metrics.json} for every finished run results/raw/<experiment>_seed<k>_<cfg_hash>/."""
+    out = {}
+    for path in sorted((raw_dir or RESULTS / "raw").glob(f"{experiment}_seed*_{cfg_hash}/metrics.json")):
+        seed_part = path.parent.name[len(experiment) + len("_seed"):-(len(cfg_hash) + 1)]
+        if seed_part.isdigit():                                    # skips e.g. gs_G1b_* when experiment is gs_G1
+            metrics = json.loads(path.read_text(encoding="utf-8"))
+            out[int(seed_part)] = metrics
+    return out
+
+
 def run_experiment(cfg: dict, experiment: str, seeds: list[int], device: str, log=print) -> dict:
     """Build prompts once, train/evaluate every seed, aggregate test metrics as mean/std."""
     prompt_set, graph, split = build_prompts(cfg, device, log)
     token_summary = summarize_token_usage(prompt_set.token_rows)
     write_token_usage(prompt_set.token_rows, token_summary, RESULTS / "token_usage", tag=experiment)
-    per_seed = []
     for seed in seeds:
         log(f"[{experiment}] seed {seed}")
-        per_seed.append(run_one_seed(cfg, prompt_set, graph, split, seed, device, experiment))
+        run_one_seed(cfg, prompt_set, graph, split, seed, device, experiment)
+    # Aggregate every finished seed of this experiment and config on disk, not only the seeds of this call: the queues
+    # run one seed per call, which used to leave a one-seed aggregate file (fixed 2026-11-01).
+    finished = seed_metrics_on_disk(experiment, config_hash(cfg))
     aggregated = {"experiment": experiment, "dataset": cfg["dataset"]["name"], "mode": cfg.get("mode", "GPU_REPRODUCTION"),
-                  "seeds": seeds, "test": aggregate_seeds([r["test"] for r in per_seed]),
-                  "val": aggregate_seeds([r["val"] for r in per_seed]), "token_usage": token_summary,
+                  "seeds": sorted(finished), "test": aggregate_seeds([finished[s]["test"] for s in sorted(finished)]),
+                  "val": aggregate_seeds([finished[s]["val"] for s in sorted(finished)]), "token_usage": token_summary,
                   "config_hash": config_hash(cfg)}
     out = RESULTS / "aggregated" / f"{experiment}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -182,4 +195,4 @@ def run_experiment(cfg: dict, experiment: str, seeds: list[int], device: str, lo
     return aggregated
 
 
-__all__ = ["build_prompts", "run_one_seed", "run_experiment", "config_hash", "np"]
+__all__ = ["build_prompts", "run_one_seed", "run_experiment", "seed_metrics_on_disk", "config_hash", "np"]

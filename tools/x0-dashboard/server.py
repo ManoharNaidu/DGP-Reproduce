@@ -1,15 +1,16 @@
-"""Live, read-only progress dashboard for Exp 4 (writer/classifier split: gs_X0 + the par2_R0 drift run).
+"""Live, read-only progress dashboard for the DGP follow-up work of 2026-11-01: Exp 4 (writer vs classifier), the
+control queues (scripts/ctl_queue.sh), baselines, and the overall plan.
 
     python tools/x0-dashboard/server.py [port]        # default 18790, binds 127.0.0.1 only
 
-Plain standard library. Reads (never writes) what scripts/x0_queue.sh and scripts/train.py produce:
-    results/gemma_swap/x0/status.jsonl            queue events (start / end / rc / secs)
-    results/raw/<run>/training_log.jsonl          one line per finished epoch (val loss / AUROC / AUPRC / F1)
-    results/raw/<run>/metrics.json                test metrics once a run is finished
-    logs/gemma_swap/<job>.log                     tails, whitelisted job names only
-    results/gemma_swap/exp4.{json,md}             analysis, once scripts/x0_analysis.py has been run
-    nvidia-smi                                    GPU load
-Reference cells dr_R0 (Qwen writes + classifies) and gs_G0 (Gemma writes + classifies) are read from results/raw too.
+Plain standard library. Reads (never writes):
+    tools/x0-dashboard/plan.json                   the plan and each item's state (edited by hand)
+    results/gemma_swap/x0/status.jsonl             Exp 4 queue events (scripts/x0_queue.sh)
+    results/controls/<NAME>/status.jsonl           control queue events (scripts/ctl_queue.sh), found automatically
+    results/raw/<run>/{training_log.jsonl,metrics.json}
+    logs/gemma_swap/<job>.log, logs/controls/<job>.log   tails, whitelisted job names only
+    results/gemma_swap/exp4.{json,md}              Exp 4 analysis
+    nvidia-smi                                     GPU load
 """
 import glob
 import json
@@ -23,20 +24,39 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-STATUS = os.path.join(ROOT, "results", "gemma_swap", "x0", "status.jsonl")
-LOGS = os.path.join(ROOT, "logs", "gemma_swap")
 RAW = os.path.join(ROOT, "results", "raw")
 EXP4 = os.path.join(ROOT, "results", "gemma_swap", "exp4")
 METRICS = ("macro_f1", "auroc", "auprc")
 MAX_EPOCHS, PATIENCE = 10, 2                       # configs/models/dgp.yaml (early stopping on val loss)
-# job -> (lane, experiment, seed); order = queue order in scripts/x0_queue.sh
-JOBS = {"x0_prompts": ("prep", None, None),
-        "x0_s0": ("A", "gs_X0", 0), "x0_s2": ("A", "gs_X0", 2), "x0_s4": ("A", "gs_X0", 4),
-        "x0_s1": ("B", "gs_X0", 1), "x0_s3": ("B", "gs_X0", 3), "par2_R0_s0": ("B", "par2_R0", 0)}
-CELLS = {"dr_R0": "Qwen text · Qwen classifier", "gs_X0": "Gemma text · Qwen classifier",
-         "gs_G0": "Gemma text · Gemma classifier"}
+# control queues: NAME -> (experiment, title, fallback hours per run while two runs share the GPU)
+CONTROLS = {"T0": ("ctl_T0", "Control · LLM on the target review only", 0.8)}
+# reference cells shown in the results tables: experiment -> (short, label)
+CELLS = {"dr_R0": ("R0", "Qwen text · Qwen classifier"), "gs_X0": ("X0", "Gemma text · Qwen classifier"),
+         "gs_G0": ("G0", "Gemma text · Gemma classifier")}
+BASELINES = [  # short, label, experiment (ours) or None, paper values
+    ("DGP", "DGP (R0 recipe, original prompt)", "dr_R0", {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}),
+    ("DGP·Gemma", "DGP with Gemma-2-9B-it (G0)", "gs_G0", None),
+    ("LLM", "LLM, target review only (T0)", "ctl_T0", {"macro_f1": 59.90, "auroc": 71.78, "auprc": 27.03}),
+    ("MLP", "MLP on DeBERTa + numeric features", "mlp_amazonvideo", {"macro_f1": 61.74, "auroc": 70.47, "auprc": 26.55}),
+]
 PAPER = {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}
-FALLBACK_RUN_S = 1.8 * 3600                       # before any X0 run has finished (2 runs share the GPU)
+
+
+def studies():
+    """Every queue the dashboard knows: Exp 4 plus each results/controls/<NAME>/ that has a status file."""
+    out = [{"key": "x0", "title": "Exp 4 · Gemma text with a Qwen classifier", "status": os.path.join(ROOT, "results", "gemma_swap", "x0", "status.jsonl"),
+            "logs": os.path.join(ROOT, "logs", "gemma_swap"), "proc": "scripts/x0_queue.sh", "fallback_s": 1.8 * 3600,
+            "jobs": [("x0_prompts", "prep", None, None), ("x0_s0", "A", "gs_X0", 0), ("x0_s2", "A", "gs_X0", 2),
+                     ("x0_s4", "A", "gs_X0", 4), ("x0_s1", "B", "gs_X0", 1), ("x0_s3", "B", "gs_X0", 3),
+                     ("par2_R0_s0", "B", "par2_R0", 0)]}]
+    for st in sorted(glob.glob(os.path.join(ROOT, "results", "controls", "*", "status.jsonl")), key=os.path.getmtime):
+        name = os.path.basename(os.path.dirname(st))
+        exp, title, hours = CONTROLS.get(name, ("ctl_" + name, f"Control · {name}", 1.0))
+        out.append({"key": name, "title": title, "status": st, "logs": os.path.join(ROOT, "logs", "controls"),
+                    "proc": f"ctl_queue.sh {name} ", "fallback_s": hours * 3600,
+                    "jobs": [(f"{name}_prompts", "prep", None, None)] +
+                            [(f"{name}_s{s}", "A" if s % 2 == 0 else "B", exp, s) for s in (0, 2, 4, 1, 3)]})
+    return out
 
 
 def epoch_of(t):
@@ -80,6 +100,15 @@ def test_metrics(exp, seed):
     return ({k: t[k] for k in METRICS}, m.get("best_epoch")) if all(k in t for k in METRICS) else (None, None)
 
 
+def per_seed(exp):
+    out = {}
+    for s in range(5):
+        t, be = test_metrics(exp, s)
+        if t:
+            out[s] = {**t, "best_epoch": be}
+    return out
+
+
 def alive(pattern):
     try:
         return subprocess.run(["pgrep", "-f", pattern], capture_output=True, timeout=3).returncode == 0
@@ -101,17 +130,16 @@ def gpu():
         return []
 
 
-def job_rows(now):
-    ev = jsonl(STATUS)
+def job_rows(study, ev, now):
     last = {}
-    for e in ev:                                   # the latest attempt of each job wins (the queue is resumable)
+    for e in ev:                                   # the latest attempt of each job wins (the queues are resumable)
         j = e.get("job")
         if e.get("event") == "start":
             last[j] = {"start": e["t"]}
         elif j in last:
             last[j].update({"end": e["t"], "event": e["event"], "rc": e.get("rc"), "secs": e.get("secs")})
     rows = []
-    for name, (lane, exp, seed) in JOBS.items():
+    for name, lane, exp, seed in study["jobs"]:
         x = last.get(name, {})
         st = ("queued" if not x else "running" if "end" not in x else
               "done" if x.get("event") == "end" and (x.get("rc") or 0) == 0 else "failed")
@@ -129,54 +157,73 @@ def job_rows(now):
             r["test"], _ = test_metrics(exp, seed)
             if st == "running":
                 r["phase"] = (("testing on 7,425 reviews" if hist and (since >= PATIENCE or len(hist) >= MAX_EPOCHS)
-                               else f"training epoch {len(hist) + 1}") if hist or r["elapsed_s"] > 600
+                               else f"training epoch {len(hist) + 1}") if hist or (r["elapsed_s"] or 0) > 600
                               else "loading model / epoch 1")
                 r["phase_note"] = (f"early stop after {len(hist) + PATIENCE - since} epochs at most"
                                    if hist and since < PATIENCE and len(hist) < MAX_EPOCHS else None)
         rows.append(r)
-    return rows, ev
+    return rows
 
 
-def eta(rows, now):
+def eta(rows, now, fallback_s):
     done = [r["elapsed_s"] for r in rows if r["experiment"] and r["state"] == "done" and r["elapsed_s"]]
-    per = sum(done) / len(done) if done else FALLBACK_RUN_S
+    per = sum(done) / len(done) if done else fallback_s
     lanes = {}
     for r in rows:
         if r["lane"] not in ("A", "B") or r["state"] in ("done", "failed"):
             continue
-        left = max(per - (r["elapsed_s"] or 0), 300) if r["state"] == "running" else per
+        left = max(per - (r["elapsed_s"] or 0), 120) if r["state"] == "running" else per
         lanes[r["lane"]] = lanes.get(r["lane"], 0) + left
     secs = max(lanes.values()) if lanes else 0
     return {"per_run_s": per, "measured": bool(done), "remaining_s": secs,
             "finish": datetime.fromtimestamp(now + secs, timezone.utc).strftime("%H:%M UTC") if secs else None}
 
 
-def results():
-    cells = {}
-    for exp, label in CELLS.items():
-        per = {}
-        for s in range(5):
-            t, be = test_metrics(exp, s)
-            if t:
-                per[s] = {**t, "best_epoch": be}
-        cells[exp] = {"label": label, "per_seed": per}
-    par, _ = test_metrics("par2_R0", 0)
-    return {"cells": cells, "paper": PAPER, "par2_R0": par}
+def queue_state(study, now):
+    ev = jsonl(study["status"])
+    rows = job_rows(study, ev, now)
+    q_alive = alive(study["proc"])
+    st = ("done" if ev and ev[-1].get("job") == "queue" and ev[-1].get("event") == "done" else
+          "failed" if any(r["state"] == "failed" for r in rows) and not q_alive else
+          "running" if q_alive else "stopped" if ev else "not started")
+    first = epoch_of(ev[0]["t"]) if ev else None
+    end = epoch_of(ev[-1]["t"]) if st == "done" else now
+    return {"key": study["key"], "title": study["title"], "state": st, "alive": q_alive,
+            "started": ev[0]["t"] if ev else None, "ended": ev[-1]["t"] if st == "done" else None,
+            "elapsed_s": end - first if first else None, "jobs": rows, "eta": eta(rows, now, study["fallback_s"]),
+            "events": [{**e, "queue": study["key"]} for e in ev[-14:]]}
+
+
+def baselines():
+    out = []
+    for short, label, exp, paper in BASELINES:
+        out.append({"short": short, "label": label, "experiment": exp, "paper": paper, "per_seed": per_seed(exp)})
+    r0, t0 = per_seed("dr_R0"), per_seed("ctl_T0")
+    shared = sorted(set(r0) & set(t0))
+    ctx = ({m: sum(r0[s][m] - t0[s][m] for s in shared) / len(shared) for m in METRICS} |
+           {"seeds": shared, "better": {m: sum(r0[s][m] > t0[s][m] for s in shared) for m in METRICS}}) if shared else None
+    return {"rows": out, "graph_context": ctx}
 
 
 def state():
     now = time.time()
-    rows, ev = job_rows(now)
-    q_alive = alive("scripts/x0_queue.sh")
-    st = ("done" if any(e.get("job") == "queue" and e.get("event") == "done" for e in ev[-1:]) else
-          "failed" if any(r["state"] == "failed" for r in rows) and not q_alive else
-          "running" if q_alive else "stopped" if ev else "not started")
-    first = epoch_of(ev[0]["t"]) if ev else None
-    return {"now": datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"), "queue": st,
-            "queue_alive": q_alive, "started": ev[0]["t"] if ev else None,
-            "elapsed_s": now - first if first else None, "jobs": rows, "eta": eta(rows, now),
-            "results": results(), "analysis": read_json(EXP4 + ".json"), "analysis_md": os.path.exists(EXP4 + ".md"),
-            "gpu": gpu(), "events": ev[-14:][::-1]}
+    queues = [queue_state(s, now) for s in studies()]
+    events = sorted((e for q in queues for e in q["events"]), key=lambda e: e.get("t", ""), reverse=True)[:18]
+    par, _ = test_metrics("par2_R0", 0)
+    return {"now": datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "plan": read_json(os.path.join(HERE, "plan.json")), "queues": queues,
+            "exp4": {"cells": {k: {"short": v[0], "label": v[1], "per_seed": per_seed(k)} for k, v in CELLS.items()},
+                     "paper": PAPER, "par2_R0": par, "analysis": read_json(EXP4 + ".json"),
+                     "analysis_md": os.path.exists(EXP4 + ".md")},
+            "baselines": baselines(), "gpu": gpu(), "events": events}
+
+
+def log_path(job):
+    for s in studies():
+        for name, *_ in s["jobs"]:
+            if name == job:
+                return os.path.join(s["logs"], job + ".log")
+    return None
 
 
 class H(BaseHTTPRequestHandler):
@@ -195,12 +242,13 @@ class H(BaseHTTPRequestHandler):
         elif path == "/api/state":
             self.send(200, json.dumps(state(), default=lambda o: None).encode(), "application/json")
         elif path == "/api/log":
-            m = re.search(r"(?:^|&)job=([a-z0-9_]+)(?:&|$)", query)
-            if not m or m.group(1) not in JOBS:       # whitelist: the queue's own job names
+            m = re.search(r"(?:^|&)job=([A-Za-z0-9_]+)(?:&|$)", query)
+            p = log_path(m.group(1)) if m else None      # whitelist: job names of the known queues only
+            if not p:
                 self.send(400, b"bad job", "text/plain")
                 return
             try:
-                with open(os.path.join(LOGS, m.group(1) + ".log"), "rb") as f:
+                with open(p, "rb") as f:
                     f.seek(0, 2)
                     f.seek(max(0, f.tell() - 16384))
                     data = f.read().decode("utf-8", "replace")

@@ -1,0 +1,8 @@
+# Control (2026-11-01): the paper's "LLM" baseline (Table 2: 59.90 / 71.78 / 27.03 on AmazonVideo) — the R0 classifier
+# (Qwen3-8B + LoRA, same recipe, seeds and split) on the target review alone: every neighbour component switched off
+# (configs/experiments/baselines/llm_target_only.yaml). Paired with dr_R0 by seed: R0 − T0 = what the graph context adds.
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+  - configs/experiments/baselines/llm_target_only.yaml
+experiment: ctl_T0
+variant: T0 LLM target only
