@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 4 Progress</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f5f4f0; --surface: #fcfcfb; --surface-2: #f0efea; --border: #e1e0d9;
+  --text: #0b0b0b; --text-2: #52514e; --muted: #6b6a64; --grid: #e1e0d9;
+  --s-r0: #2a78d6; --s-x0: #1baf7a; --s-g0: #eb6834;
+  --good: #1a7f37; --warn: #b26a00; --bad: #c62828; --run: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #111110; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: #33332f;
+    --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926;
+    --good: #4cc26a; --warn: #e0a23a; --bad: #ef6b6b; --run: #3987e5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111110; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
+  --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: #33332f;
+  --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926;
+  --good: #4cc26a; --warn: #e0a23a; --bad: #ef6b6b; --run: #3987e5;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+.sub { color: var(--text-2); margin: 4px 0 0; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-top: 14px; }
+.head { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; justify-content: space-between; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.tile .k { color: var(--muted); font-size: 12px; }
+.tile .v { font-size: 22px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.tile .n { color: var(--text-2); font-size: 12px; margin-top: 2px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; font-size: 12px;
+         font-weight: 600; border: 1px solid currentColor; white-space: nowrap; }
+.st-running { color: var(--run); } .st-done { color: var(--good); } .st-failed { color: var(--bad); }
+.st-queued, .st-stopped, .st-not { color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.st-running .dot { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+.bar { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.bar > i { display: block; height: 100%; background: var(--run); border-radius: 4px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; vertical-align: middle; }
+th { color: var(--muted); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; }
+.lane { color: var(--muted); font-size: 12px; }
+.small { font-size: 12px; color: var(--text-2); }
+button { font: inherit; font-size: 12px; color: var(--text); background: var(--surface-2); border: 1px solid var(--border);
+         border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+button:hover { border-color: var(--muted); }
+pre { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 10px 0 0;
+      max-height: 360px; overflow: auto; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--text-2); margin: 2px 0 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+svg text { fill: var(--muted); font-size: 11px; }
+.tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--text); border: 1px solid var(--border);
+       border-radius: 8px; padding: 6px 9px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.12); display: none; z-index: 9; }
+.ev { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-2); }
+.two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+.pos { color: var(--good); } .neg { color: var(--bad); }
+.note { color: var(--text-2); font-size: 12px; margin: 8px 0 0; }
+.err { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <div class="head">
+    <div>
+      <h1>Exp 4 · Gemma text with a Qwen classifier</h1>
+      <p class="sub">Which role carries Gemma's gain: the text writer or the classifier? AmazonVideo, original DGP prompt, seeds 0–4.</p>
+    </div>
+    <div id="qbadge"></div>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card">
+    <h2>Runs</h2>
+    <div class="scroll"><table id="jobs"></table></div>
+    <p class="note">Two lanes share the A100. Early stopping on validation loss with patience 2 (at most 10 epochs), then one pass over the 7,425 test reviews. Progress is logged once per epoch. The epoch chart shows validation AUROC; the ring marks the best epoch (lowest validation loss).</p>
+    <div id="logbox"></div>
+  </div>
+
+  <div class="card">
+    <h2>Test results so far</h2>
+    <div class="legend" id="legend"></div>
+    <div class="charts" id="charts"></div>
+    <div class="scroll" style="margin-top:14px"><table id="restable"></table></div>
+    <p class="note" id="resnote"></p>
+  </div>
+
+  <div class="card" id="analysis" style="display:none"></div>
+
+  <div class="two">
+    <div class="card"><h2>GPU</h2><div id="gpu"></div></div>
+    <div class="card"><h2>Queue events</h2><div id="events"></div></div>
+  </div>
+  <p class="small" style="margin-top:14px">Refreshes every 15 s · <span id="stamp">loading…</span></p>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const TOKEN = new URLSearchParams(location.search).get("token");
+const q = (p) => p + (TOKEN ? (p.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(TOKEN) : "");
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const f2 = (x) => (x == null || isNaN(x) ? "—" : Number(x).toFixed(2));
+const sg = (x) => (x == null || isNaN(x) ? "—" : (x >= 0 ? "+" : "−") + Math.abs(x).toFixed(2));
+const dur = (s) => { if (s == null) return "—"; s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+  return h ? `${h} h ${String(m).padStart(2, "0")} min` : `${m} min`; };
+const hhmm = (t) => (t ? t.slice(11, 16) + " UTC" : "—");
+const COL = {dr_R0: "--s-r0", gs_X0: "--s-x0", gs_G0: "--s-g0"};
+const SHORT = {dr_R0: "R0", gs_X0: "X0", gs_G0: "G0"};
+const MET = [["auroc", "AUROC"], ["auprc", "AUPRC"], ["macro_f1", "Macro-F1"]];
+const badge = (st, label) => `<span class="badge st-${esc(st.split(" ")[0])}"><span class="dot"></span>${esc(label || st)}</span>`;
+const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+const std = (a) => { const m = mean(a); return Math.sqrt(mean(a.map((x) => (x - m) ** 2))); };
+let openLog = null;
+
+const tip = $("tip");
+function showTip(e, html) { tip.innerHTML = html; tip.style.display = "block";
+  const r = tip.getBoundingClientRect(); let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14; if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px"; }
+document.addEventListener("mousemove", (e) => { const t = e.target.closest("[data-tip]"); t ? showTip(e, t.dataset.tip) : (tip.style.display = "none"); });
+
+function epochChart(h, best) {
+  if (!h || !h.length) return '<span class="small">—</span>';
+  const W = 150, H = 34, n = 10, v = h.map((x) => x.val_auroc), lo = Math.min(...v) - 0.4, hi = Math.max(...v) + 0.4;
+  const X = (i) => 6 + i * (W - 12) / (n - 1), Y = (y) => H - 5 - (y - lo) / (hi - lo) * (H - 10);
+  const pts = v.map((y, i) => `${X(i).toFixed(1)},${Y(y).toFixed(1)}`).join(" ");
+  let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="validation AUROC per epoch">`;
+  s += `<line x1="6" x2="${W - 6}" y1="${H - 2}" y2="${H - 2}" stroke="var(--grid)"/>`;
+  s += `<polyline points="${pts}" fill="none" stroke="var(--run)" stroke-width="2" stroke-linejoin="round"/>`;
+  h.forEach((x, i) => {
+    const t = `Epoch ${x.epoch}<br>val loss ${x.val_loss.toFixed(4)}<br>val AUROC ${f2(x.val_auroc)} · AUPRC ${f2(x.val_auprc)}<br>val Macro-F1 ${f2(x.val_macro_f1)}${x.epoch === best ? "<br><b>best so far</b>" : ""}`;
+    s += `<circle cx="${X(i)}" cy="${Y(x.val_auroc)}" r="${x.epoch === best ? 4.5 : 2.6}" fill="${x.epoch === best ? "var(--surface)" : "var(--run)"}" stroke="var(--run)" stroke-width="2"/>`;
+    s += `<rect x="${X(i) - 7}" y="0" width="14" height="${H}" fill="transparent" data-tip="${esc(t)}"/>`;
+  });
+  return s + "</svg>";
+}
+
+function renderJobs(d) {
+  const rows = d.jobs;
+  let s = `<tr><th>Lane</th><th>Job</th><th>State</th><th>Now</th><th class="num">Elapsed</th><th>Val AUROC by epoch</th>
+           <th class="num">Best ep.</th><th class="num">Test AUROC</th><th class="num">Test AUPRC</th><th class="num">Test F1</th><th></th></tr>`;
+  for (const r of rows) {
+    const name = r.experiment ? `${r.experiment} · seed ${r.seed}` : "Build X0 prompts";
+    const now = r.state === "running" ? esc(r.phase || "running") + (r.phase_note ? `<div class="small">${esc(r.phase_note)}</div>` : "")
+              : r.state === "done" ? `<span class="small">${hhmm(r.start)} → ${hhmm(r.end)}</span>`
+              : r.state === "failed" ? `<span class="err">exit code ${esc(r.rc)}</span>` : '<span class="small">waiting</span>';
+    const t = r.test || {};
+    s += `<tr><td class="lane">${esc(r.lane)}</td><td>${esc(name)}${r.experiment === "par2_R0" ? '<div class="small">R0 re-run: stack drift</div>' : ""}</td>
+      <td>${badge(r.state)}</td><td>${now}</td><td class="num">${dur(r.elapsed_s)}</td>
+      <td>${r.experiment ? epochChart(r.history, r.best_epoch) : ""}</td>
+      <td class="num">${r.best_epoch ?? "—"}${r.history && r.history.length ? `<span class="small"> / ${r.history.length}</span>` : ""}</td>
+      <td class="num">${f2(t.auroc)}</td><td class="num">${f2(t.auprc)}</td><td class="num">${f2(t.macro_f1)}</td>
+      <td>${r.state !== "queued" ? `<button data-log="${esc(r.job)}">${openLog === r.job ? "Hide log" : "Log"}</button>` : ""}</td></tr>`;
+  }
+  $("jobs").innerHTML = s;
+}
+
+async function loadLog() {
+  if (!openLog) { $("logbox").innerHTML = ""; return; }
+  try { const t = await (await fetch(q(`/api/log?job=${encodeURIComponent(openLog)}`))).text();
+    $("logbox").innerHTML = `<pre aria-label="log tail">${esc(openLog)}.log (last lines)\n\n${esc(t)}</pre>`; }
+  catch (e) { $("logbox").innerHTML = `<pre class="err">could not load the log</pre>`; }
+}
+$("jobs").addEventListener("click", (e) => { const b = e.target.closest("button[data-log]"); if (!b) return;
+  openLog = openLog === b.dataset.log ? null : b.dataset.log; refresh(); });
+
+function dotChart(cells, m, label, paper) {
+  const W = 300, H = 170, L = 44, B = 26, T = 10;
+  const all = Object.values(cells).flatMap((c) => Object.values(c.per_seed).map((x) => x[m])).concat([paper]);
+  let lo = Math.min(...all), hi = Math.max(...all); const pad = Math.max(0.4, (hi - lo) * 0.12); lo -= pad; hi += pad;
+  const Y = (v) => T + (hi - v) / (hi - lo) * (H - T - B), keys = Object.keys(cells), bw = (W - L - 8) / keys.length;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${label} per seed">`;
+  const step = (hi - lo) > 6 ? 2 : (hi - lo) > 3 ? 1 : 0.5;
+  for (let g = Math.ceil(lo / step) * step; g <= hi; g += step)
+    s += `<line x1="${L}" x2="${W - 4}" y1="${Y(g)}" y2="${Y(g)}" stroke="var(--grid)"/><text x="${L - 6}" y="${Y(g) + 4}" text-anchor="end">${g.toFixed(step < 1 ? 1 : 0)}</text>`;
+  s += `<line x1="${L}" x2="${W - 4}" y1="${Y(paper)}" y2="${Y(paper)}" stroke="var(--muted)" stroke-dasharray="4 3"/>
+        <text x="${W - 6}" y="${Y(paper) - 4}" text-anchor="end">paper ${paper}</text>`;
+  keys.forEach((k, i) => {
+    const cx = L + bw * (i + 0.5), v = Object.entries(cells[k].per_seed), col = `var(${COL[k]})`;
+    v.forEach(([seed, x], j) => {
+      const xx = cx - 14 + (v.length > 1 ? j * 12 / (v.length - 1) : 6);
+      s += `<circle cx="${xx}" cy="${Y(x[m])}" r="4" fill="${col}" stroke="var(--surface)" stroke-width="2"
+             data-tip="${esc(`${SHORT[k]} · seed ${seed}<br>${label} ${f2(x[m])}`)}"/>`;
+    });
+    if (v.length) {
+      const a = v.map(([, x]) => x[m]), mu = mean(a), sd = std(a);
+      s += `<line x1="${cx + 12}" x2="${cx + 12}" y1="${Y(mu + sd)}" y2="${Y(mu - sd)}" stroke="${col}" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="${cx + 12}" cy="${Y(mu)}" r="5.5" fill="${col}" stroke="var(--surface)" stroke-width="2"
+             data-tip="${esc(`${SHORT[k]} · ${esc(cells[k].label)}<br>${label} ${f2(mu)} ± ${f2(sd)} (n=${a.length})`)}"/>`;
+    }
+    s += `<text x="${cx}" y="${H - 8}" text-anchor="middle">${SHORT[k]} (n=${v.length})</text>`;
+  });
+  return `<div><div class="small" style="font-weight:600;color:var(--text)">${label} (%)</div>${s}</svg></div>`;
+}
+
+function renderResults(d) {
+  const R = d.results, cells = R.cells;
+  $("legend").innerHTML = Object.entries(cells).map(([k, c]) => `<span><i class="sw" style="background:var(${COL[k]})"></i>${SHORT[k]} · ${esc(c.label)}</span>`).join("")
+    + `<span style="color:var(--muted)">small dots = seeds · large dot and bar = mean ± std · dashed = paper</span>`;
+  $("charts").innerHTML = MET.map(([m, l]) => dotChart(cells, m, l, R.paper[m])).join("");
+  let s = `<tr><th>Cell</th><th>Roles</th>${[0, 1, 2, 3, 4].map((x) => `<th class="num">seed ${x} AUROC / AUPRC</th>`).join("")}<th class="num">Mean AUROC</th><th class="num">Mean AUPRC</th><th class="num">Mean F1</th></tr>`;
+  for (const [k, c] of Object.entries(cells)) {
+    const ps = c.per_seed, a = (m) => Object.values(ps).map((x) => x[m]);
+    s += `<tr><td><i class="sw" style="background:var(${COL[k]})"></i> ${SHORT[k]}</td><td class="small">${esc(c.label)}</td>`
+      + [0, 1, 2, 3, 4].map((x) => `<td class="num">${ps[x] ? `${f2(ps[x].auroc)} / ${f2(ps[x].auprc)}` : "—"}</td>`).join("")
+      + MET.map(([m]) => `<td class="num">${a(m).length ? `${f2(mean(a(m)))} ± ${f2(std(a(m)))}` : "—"}</td>`).join("") + "</tr>";
+  }
+  // provisional paired deltas on the seeds all three cells share
+  const shared = [0, 1, 2, 3, 4].filter((x) => Object.values(cells).every((c) => c.per_seed[x]));
+  const dl = (a, b, m) => mean(shared.map((x) => cells[a].per_seed[x][m] - cells[b].per_seed[x][m]));
+  if (shared.length) {
+    for (const [lab, a, b] of [["X0 − R0 · Gemma's text", "gs_X0", "dr_R0"], ["G0 − X0 · Gemma as classifier", "gs_G0", "gs_X0"], ["G0 − R0 · both", "gs_G0", "dr_R0"]]) {
+      s += `<tr><td colspan="2"><b>${lab}</b></td><td colspan="5" class="small">paired over seeds ${shared.join(", ")}</td>`
+        + MET.map(([m]) => { const v = dl(a, b, m); return `<td class="num ${v > 0 ? "pos" : v < 0 ? "neg" : ""}">${sg(v)}</td>`; }).join("") + "</tr>";
+    }
+  }
+  $("restable").innerHTML = s;
+  const tot = shared.length ? dl("gs_G0", "dr_R0", "auprc") : null, wr = shared.length ? dl("gs_X0", "dr_R0", "auprc") : null;
+  const par = R.par2_R0, r0 = cells.dr_R0.per_seed[0];
+  $("resnote").innerHTML = (shared.length
+      ? `Provisional (${shared.length} of 5 seeds, no tests yet): the text accounts for ${sg(wr)} of the ${sg(tot)} AUPRC points Gemma adds${Math.abs(tot) > 0.3 ? ` (${Math.round(100 * wr / tot)}%)` : ""}. `
+      : "Paired differences appear once X0 has finished a seed. ")
+    + (par && r0 ? `Stack drift (R0 seed 0 re-run on this machine): AUROC ${sg(par.auroc - r0.auroc)}, AUPRC ${sg(par.auprc - r0.auprc)}.` : "Stack-drift run (par2_R0) is last in lane B.");
+}
+
+function renderAnalysis(d) {
+  const A = d.analysis, el = $("analysis");
+  if (!A || !A.comparisons || !Object.keys(A.comparisons).length) { el.style.display = "none"; return; }
+  el.style.display = "";
+  let s = `<h2>Analysis (scripts/x0_analysis.py)</h2><div class="scroll"><table><tr><th>Comparison</th><th>What changes</th>`
+    + MET.map(([, l]) => `<th class="num">Δ ${l}</th><th class="num">Holm p</th>`).join("") + `<th class="num">95% CI Δ AUROC</th><th class="num">95% CI Δ AUPRC</th></tr>`;
+  for (const [k, c] of Object.entries(A.comparisons)) {
+    const ci = c.bootstrap_ci95 || {};
+    s += `<tr><td>${esc(k)}</td><td class="small">${esc(c.what)}</td>` + MET.map(([m]) => {
+      const x = c.metrics[m], p = (c.holm_t_p || {})[m];
+      return `<td class="num">${sg(x.delta_mean)} <span class="small">(${esc(x.seeds_better)}/${c.seeds.length})</span></td><td class="num">${p == null ? "—" : p.toFixed(3)}</td>`; }).join("")
+      + `<td class="num">${ci.auroc ? `[${sg(ci.auroc[0])}, ${sg(ci.auroc[1])}]` : "—"}</td><td class="num">${ci.auprc ? `[${sg(ci.auprc[0])}, ${sg(ci.auprc[1])}]` : "—"}</td></tr>`;
+  }
+  s += "</table></div>";
+  const D = A.decomposition;
+  if (D) s += `<p class="note">Writer share of Gemma's gain: AUROC ${D.auroc && D.auroc.writer_share != null ? Math.round(100 * D.auroc.writer_share) + "%" : "—"}, AUPRC ${D.auprc && D.auprc.writer_share != null ? Math.round(100 * D.auprc.writer_share) + "%" : "—"} (seeds ${esc(D.seeds.join(", "))}).</p>`;
+  if (d.analysis_md) s += `<p class="note"><a href="${esc(q("/files/exp4.md"))}" target="_blank" rel="noopener">Open exp4.md</a></p>`;
+  el.innerHTML = s;
+}
+
+function render(d) {
+  const lbl = {running: "Queue running", done: "Queue finished", failed: "A job failed", stopped: "Queue stopped", "not started": "Not started"};
+  $("qbadge").innerHTML = badge(d.queue, lbl[d.queue]);
+  const runs = d.jobs.filter((r) => r.experiment), done = runs.filter((r) => r.state === "done").length;
+  const running = runs.filter((r) => r.state === "running").length, frac = runs.reduce((a, r) => a + (r.state === "done" ? 1 :
+    r.state === "running" ? Math.min(0.95, (r.elapsed_s || 0) / d.eta.per_run_s) : 0), 0) / runs.length;
+  const g = d.gpu[0];
+  $("tiles").innerHTML = `
+    <div class="tile"><div class="k">Runs finished</div><div class="v">${done} / ${runs.length}</div><div class="bar"><i style="width:${(100 * frac).toFixed(1)}%"></i></div><div class="n">${running} running now</div></div>
+    <div class="tile"><div class="k">Elapsed</div><div class="v">${dur(d.elapsed_s)}</div><div class="n">started ${hhmm(d.started)}</div></div>
+    <div class="tile"><div class="k">Expected finish</div><div class="v">${d.queue === "done" ? "done" : esc(d.eta.finish) || "—"}</div><div class="n">${d.queue === "done" ? "" : `≈ ${dur(d.eta.remaining_s)} left · ${d.eta.measured ? "measured" : "estimated"} ${dur(d.eta.per_run_s)} per run`}</div></div>
+    <div class="tile"><div class="k">GPU</div><div class="v">${g ? Math.round(g.util) + "%" : "—"}</div><div class="n">${g ? `${(g.mem_used / 1024).toFixed(1)} of ${(g.mem_total / 1024).toFixed(0)} GB · ${esc(g.temp)} °C` : "nvidia-smi unavailable"}</div></div>`;
+  renderJobs(d); renderResults(d); renderAnalysis(d);
+  $("gpu").innerHTML = d.gpu.length ? d.gpu.map((x) => `<div>${esc(x.name)}</div>
+      <div class="small" style="margin-top:8px">Utilisation ${Math.round(x.util)}%</div><div class="bar"><i style="width:${Number(x.util)}%"></i></div>
+      <div class="small" style="margin-top:8px">Memory ${(x.mem_used / 1024).toFixed(1)} / ${(x.mem_total / 1024).toFixed(0)} GB</div><div class="bar"><i style="width:${(100 * x.mem_used / x.mem_total).toFixed(1)}%"></i></div>
+      <div class="small" style="margin-top:8px">${esc(x.temp)} °C${x.power != null ? ` · ${Math.round(x.power)} W` : ""}</div>`).join("") : '<span class="small">nvidia-smi unavailable</span>';
+  $("events").innerHTML = d.events.length ? d.events.map((e) => `<div class="ev">${esc(String(e.t).slice(11, 19))} · ${esc(e.job)} · ${esc(e.event)}${e.rc != null ? ` · rc ${esc(e.rc)}` : ""}${e.secs ? ` · ${dur(e.secs)}` : ""}</div>`).join("") : '<span class="small">no events yet</span>';
+  $("stamp").textContent = "updated " + d.now;
+}
+
+async function refresh() {
+  try { const r = await fetch(q("/api/state"), {cache: "no-store"}); if (!r.ok) throw new Error(r.status); render(await r.json()); }
+  catch (e) { $("stamp").textContent = `could not reach the server (${e.message}); retrying`; }
+  loadLog();
+}
+refresh(); setInterval(refresh, 15000);
+</script>
+</body>
+</html>

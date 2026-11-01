@@ -1,0 +1,15 @@
+# Writer/classifier split (Exp 4, user request 2026-11-01), arm X0: Gemma-2-9B-it wrote the text, Qwen3-8B is the
+# LoRA classifier. Everything else is dr arm R0. Compared with dr_R0 (Qwen writes, Qwen classifies) and gs_G0 (Gemma
+# writes, Gemma classifies): X0 - R0 = effect of Gemma's text, G0 - X0 = effect of Gemma as classifier.
+# backend=cached reads gs_G0's Gemma summaries (cache keys use the writer's model id only) and fails on any miss, so
+# X0 sees exactly G0's text and Gemma is never loaded. The classifier block is the dgp.yaml default (Qwen3-8B), as in R0.
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+summarizer:
+  backend: cached
+  model_id: google/gemma-2-9b-it
+  # gs_G0's MDK cache key. It differs from this run's (30447a44…) only through the token counter (Gemma vs Qwen
+  # tokenizer); targets, neighbours, offsets and sizes of all 12 metapath files are identical (checked 2026-11-01).
+  source_mdk_cache: 173d9d5c91e37c3f
+experiment: gs_X0
+variant: X0 Gemma text · Qwen classifier

@@ -496,6 +496,47 @@ QWEN_TRAIN_WEIGHT=2 GEMMA_WEIGHT=2 setsid nohup ../envs/dgp-fa/bin/python script
 Analyses (written by the queue): `results/gemma_swap/exp{1,2,3}.md`; checks: `results/gemma_swap/checks/`. Full write-up
 with figures: `reports/2026-10-23-DGP-experiment-log.docx` (experiments E11–E13) in the parent folder.
 
+### Exp 4: Gemma's text with the Qwen classifier (writer vs classifier, 2026-11-01)
+
+Exp 1 swapped Gemma into both roles at once. Exp 4 adds the missing cell for arm 0 (original prompt): **X0 = Gemma's
+text + Qwen3-8B classifier**, 5 seeds, paired with R0 (Qwen writes and classifies) and G0 (Gemma writes and classifies).
+X0 − R0 is the effect of Gemma's text and G0 − X0 the effect of Gemma as the classifier; they add up to G0 − R0.
+
+- **Same text as G0, word for word.** `configs/experiments/gemma_swap/X0.yaml` = R0 + `summarizer.backend: cached`, a
+  read-only backend (`CachedOnlySummarizer`) that serves G0's cached Gemma summaries, never loads Gemma and stops on any
+  cache miss. The neighbour-trimming cache key includes the classifier's tokenizer, which changes only the stored raw-token
+  counts (neighbours identical for all 12 metapaths), so `summarizer.source_mdk_cache` points X0 at G0's trimming cache.
+  9,931 of 10,023 X0 prompts equal G0's; the other 92 differ only where the target review is cut at 1,024 tokens.
+- **Stack drift.** The new 1-GPU instance runs torch 2.14.1 (R0: 2.14.0), so R0 seed 0 was re-run as `par2_R0`.
+
+| Cell | Writer | Classifier | Macro-F1 | AUROC | AUPRC |
+|---|---|---|---|---|---|
+| R0 | Qwen | Qwen | 64.74 ± 0.45 | 74.97 ± 0.51 | 32.37 ± 0.57 |
+| X0 | Gemma | Qwen | 65.30 ± 0.51 | 75.37 ± 0.35 | 32.86 ± 0.37 |
+| G0 | Gemma | Gemma | 65.04 ± 1.01 | **76.38** ± 0.34 | **34.31** ± 1.00 |
+
+| Comparison | Δ AUROC [95% CI] · Holm p | Δ AUPRC [95% CI] · Holm p | Share of G0 − R0 (AUROC / AUPRC) |
+|---|---|---|---|
+| X0 − R0 (Gemma's text) | +0.39 [−0.10, +0.91] · 0.062 | +0.49 [−0.34, +1.30] · 0.180 | 28% / 25% |
+| G0 − X0 (Gemma as classifier) | +1.02 [+0.45, +1.59] · 0.010 | +1.44 [+0.39, +2.45] · 0.169 | 72% / 75% |
+| G0 − R0 (both, Exp 1) | +1.41 [+0.68, +2.14] · 0.009 | +1.94 [+0.70, +3.10] · 0.035 | |
+
+**What it shows.** About three quarters of Gemma's gain comes from Gemma as the classifier. Gemma's text raises AUROC and
+AUPRC on all five seeds, but by under half a point and with CIs that include 0. It also gives Qwen 33% shorter prompts
+(521 vs 782 tokens) at no loss. Stack drift on seed 0: Macro-F1 +0.51, AUROC −0.03, AUPRC −0.19. The fourth cell (Qwen
+text, Gemma classifier) was not run, so the split depends on the order of the swaps. Holm = paired-t p over 3
+comparisons × 3 metrics; CIs are paired bootstrap over the 7,425 test reviews.
+
+```bash
+nohup bash scripts/x0_queue.sh >> logs/gemma_swap/x0_queue.log 2>&1 &   # 5 X0 seeds + par2_R0 seed 0, 2 lanes on 1 GPU
+(cd scripts && ../../envs/dgp-fa/bin/python x0_analysis.py)              # -> results/gemma_swap/exp4.{md,json}
+python tools/x0-dashboard/server.py 18790                                 # read-only progress page (127.0.0.1)
+```
+
+The queue uses `HF_HOME=/workspace/hf_cache` (override with `HF_HOME_DGP`) because the instance's default Hugging Face
+cache was damaged; it holds Qwen3-8B `b968826` (the revision R0 used) and DeBERTa-v3-base. Write-up: experiment E14 in
+the DGP report.
+
 ## 23. Reproducibility
 
 Every run writes `results/raw/<run_id>/run_manifest.json` (git commit, versions, GPU, full config, prompt version,
@@ -524,6 +565,7 @@ Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](resea
 | D10 | FLAG's discriminative prompt mostly states a class verdict (§19) | A no-verdict variant (R1b, R2b) next to FLAG's own prompt |
 | D11 | Gemma-2 with eager attention runs out of memory on batches of long reviews (§22) | Length-capped batches (`max_batch_tokens_sq`); greedy decoding, so only padding changes |
 | D12 | DGP reads the first answer token; the prototype zero-shot prompt asked for `<label>…</label>` (§22) | The zero-shot prompt asks for one word, `Yes` or `No` |
+| D13 | Exp 4 must reuse G0's Gemma text exactly, but cache keys include the classifier's tokenizer (§22) | Read-only `cached` summarizer backend that fails on a miss; `source_mdk_cache` reuses G0's trimming cache (neighbours checked identical) |
 
 The paper also never states LoRA alpha, the maximum sequence length, the metapath-summary or final classification
 prompts, or how the split was sampled. The two paper versions differ in method details:
@@ -531,9 +573,9 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
 paper's ablation / budget / task-aware studies on GPU, YelpReviews (data access), ConsisGAD 5-seed run and the other
-baselines, and rebuilding the 5-seed aggregate files for the extension arms (§17). From the follow-up studies: whether
-Gemma's gain comes from its text or from Gemma as the classifier (§22), which part of the zero-shot prompt hurts Gemma
-(§22), and why two Gemma runs sharing a GPU are so slow.
+baselines, and rebuilding the 5-seed aggregate files for the extension arms (§17). From the follow-up studies: the fourth
+writer × classifier cell (Qwen text, Gemma classifier; §22 Exp 4 answered the text-vs-classifier question for arm 0),
+which part of the zero-shot prompt hurts Gemma (§22), and why two Gemma runs sharing a GPU are so slow.
 
 ## 25. Citation
 

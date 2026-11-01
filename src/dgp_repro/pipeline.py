@@ -224,10 +224,19 @@ def run_dgp_prompt_pipeline(graph: HeteroGraph, split: Split, cfg: dict, *, summ
     elif comp["text_summary"]:
         requests = [(int(v), name, [int(u) for u in t["neighbors"][int(v)]]) for name, t in trims.items() for v in targets]
         if comp["path_summary"]:
+            # The MDK cache key also holds the classifier's token counter, which changes only `raw_tokens`, never the
+            # trimmed neighbours. A cached-only writer (gs_X0) may therefore read the summaries filed under the writer
+            # run's MDK key (summarizer.source_mdk_cache). Store entries are keyed by (target, metapath, neighbour
+            # list), so any neighbour difference is a cache miss and CachedOnlySummarizer raises.
+            mdk_key = trim_cache.key
+            if (cfg.get("summarizer") or {}).get("source_mdk_cache"):
+                if cfg["summarizer"].get("backend") != "cached":
+                    raise ValueError("summarizer.source_mdk_cache is only allowed with summarizer.backend=cached")
+                mdk_key = cfg["summarizer"]["source_mdk_cache"]
             store_meta = {"dataset": graph.name, "summarizer": summarizer.name, "prompt_version": prompt_version(),
                           "node_template": node_template_name, "template": meta_template_name,
                           "node_summary": comp["node_summary"], "B_node": B_node, "B_meta": B_meta,
-                          "mdk_cache": trim_cache.key}
+                          "mdk_cache": mdk_key}
             store = TextStore(ArtifactCache("metapath_summaries", store_meta, cache_root).path("summaries.jsonl"))
             log(f"metapath summaries: {sum(1 for r in requests if r[2])} requests, {len(store)} cached")
             path_text = metapath_summaries(requests, per_node_text, summarizer, load_template(meta_template_name),

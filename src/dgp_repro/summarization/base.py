@@ -61,10 +61,32 @@ class MockSummarizer:
         return out
 
 
+class CachedOnlySummarizer:
+    """Reads summaries another run already wrote; never loads or calls a model.
+
+    `name` is the writer's model id, so cache keys match the run that generated the text (cache keys hold the
+    summarizer name, not its loading options). Any cache miss raises, so a run using it is guaranteed to see exactly
+    the cached text. Used by the writer/classifier split (gs_X0: Gemma-written text, Qwen classifier)."""
+
+    def __init__(self, cfg: dict):
+        if not cfg.get("model_id"):
+            raise ValueError("summarizer.backend=cached needs summarizer.model_id (the model that wrote the cache)")
+        self.name = cfg["model_id"]
+
+    def summarize(self, prompts: list[str], budget: int) -> list[str]:
+        raise RuntimeError(f"summarizer.backend=cached: {len(prompts)} summaries by {self.name} are not in the "
+                           "cache; generate them with the real summarizer first")
+
+    def complete(self, prompts: list[str], max_new_tokens: int) -> list[str]:
+        raise RuntimeError(f"summarizer.backend=cached: {len(prompts)} completions by {self.name} are not cached")
+
+
 def make_summarizer(cfg: dict, device: str = "cpu") -> Summarizer:
     kind = cfg.get("backend", "qwen")
     if kind == "mock":
         return MockSummarizer()
+    if kind == "cached":
+        return CachedOnlySummarizer(cfg)
     if kind == "qwen":
         from dgp_repro.summarization.qwen import QwenSummarizer
         return QwenSummarizer(cfg, device)

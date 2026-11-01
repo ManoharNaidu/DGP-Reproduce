@@ -1,0 +1,17 @@
+{"t": "2026-11-01T07:56:15Z", "job": "x0_prompts", "event": "start"}
+{"t": "2026-11-01T07:56:24Z", "job": "x0_prompts", "event": "failed"}
+{"t": "2026-11-01T07:57:35Z", "job": "x0_prompts", "event": "start"}
+{"t": "2026-11-01T07:58:19Z", "job": "x0_prompts", "event": "end"}
+{"t": "2026-11-01T07:58:19Z", "job": "x0_s0", "event": "start"}
+{"t": "2026-11-01T08:00:19Z", "job": "x0_s1", "event": "start"}
+{"t": "2026-11-01T09:40:59Z", "job": "x0_s0", "event": "end", "rc": 0, "secs": 6160}
+{"t": "2026-11-01T09:40:59Z", "job": "x0_s2", "event": "start"}
+{"t": "2026-11-01T09:44:30Z", "job": "x0_s1", "event": "end", "rc": 0, "secs": 6251}
+{"t": "2026-11-01T09:44:30Z", "job": "x0_s3", "event": "start"}
+{"t": "2026-11-01T11:09:55Z", "job": "x0_s2", "event": "end", "rc": 0, "secs": 5336}
+{"t": "2026-11-01T11:09:55Z", "job": "x0_s4", "event": "start"}
+{"t": "2026-11-01T11:13:12Z", "job": "x0_s3", "event": "end", "rc": 0, "secs": 5322}
+{"t": "2026-11-01T11:13:12Z", "job": "par2_R0_s0", "event": "start"}
+{"t": "2026-11-01T12:59:49Z", "job": "x0_s4", "event": "end", "rc": 0, "secs": 6594}
+{"t": "2026-11-01T13:21:31Z", "job": "par2_R0_s0", "event": "end", "rc": 0, "secs": 7699}
+{"t": "2026-11-01T13:21:31Z", "job": "queue", "event": "done"}
