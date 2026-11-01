@@ -26,6 +26,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 RAW = os.path.join(ROOT, "results", "raw")
 EXP4 = os.path.join(ROOT, "results", "gemma_swap", "exp4")
+CONTROLS_MD = os.path.join(ROOT, "results", "controls", "controls.md")
 METRICS = ("macro_f1", "auroc", "auprc")
 MAX_EPOCHS, PATIENCE = 10, 2                       # configs/models/dgp.yaml (early stopping on val loss)
 # control queues: NAME -> (experiment, title, fallback hours per run while two runs share the GPU)
@@ -258,6 +259,9 @@ class H(BaseHTTPRequestHandler):
                 self.send(200, b"(no log yet)", "text/plain; charset=utf-8")
         elif path == "/files/exp4.md" and os.path.exists(EXP4 + ".md"):
             with open(EXP4 + ".md", "rb") as f:
+                self.send(200, f.read(), "text/plain; charset=utf-8")
+        elif path == "/files/controls.md" and os.path.exists(CONTROLS_MD):
+            with open(CONTROLS_MD, "rb") as f:
                 self.send(200, f.read(), "text/plain; charset=utf-8")
         else:
             self.send(404, b"not found", "text/plain")

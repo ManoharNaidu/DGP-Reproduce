@@ -1,0 +1,23 @@
+{
+  "mean_raw_target_tokens": 117.01267085702884,
+  "mean_raw_neighbor_tokens": 0.0,
+  "mean_trimmed_neighbor_raw_tokens": 0.0,
+  "mean_node_summary_tokens": 0.0,
+  "mean_metapath_summary_tokens": 0.0,
+  "mean_final_prompt_tokens": 121.2890352189963,
+  "mean_num_neighbors_full": 0.0,
+  "mean_num_neighbors_trimmed": 0.0,
+  "nodes": 10023,
+  "average_prompt_length": 121.2890352189963,
+  "p95_prompt_length": 456.0,
+  "max_prompt_length": 1034.0,
+  "mean_full_neighbor_prompt_tokens": 117.01267085702884,
+  "compression_ratio": 0.9647423664122138,
+  "token_reduction": -0.03654616487809692,
+  "targets_truncated": 93,
+  "num_metapaths": 0,
+  "K": 2,
+  "M": 4,
+  "B_node": 10,
+  "B_meta": 10
+}

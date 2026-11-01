@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T14:22Z",
+  "updated": "2026-11-01T16:20Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -27,8 +27,8 @@
       "id": "T0",
       "title": "Control: LLM on the target review only (paper's 'LLM' row)",
       "kind": "GPU",
-      "state": "running",
-      "detail": "Qwen3-8B + LoRA, R0 recipe, no neighbour text. R0 - T0 = what the graph context adds."
+      "state": "done",
+      "detail": "73.29 AUROC / 30.54 AUPRC on the review alone. Graph context adds +1.69 AUROC / +1.83 AUPRC (Holm p 0.011), vs +5.54 / +7.60 in the paper: our LLM baseline is much stronger than the paper's. results/controls/controls.md"
     },
     {
       "id": "agg",
@@ -48,8 +48,8 @@
       "id": "flagctl",
       "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
       "kind": "CPU",
-      "state": "next",
-      "detail": ""
+      "state": "running",
+      "detail": "Adding the controls to the FLAG code (dual raw text, MLP, per-node scores), then CPU runs on Reddit + Instagram."
     },
     {
       "id": "stats",
@@ -95,10 +95,10 @@
     },
     {
       "id": "paperpdf",
-      "title": "Download the FLAG paper PDF (ACM refuses automated download) so the 199 transcribed paper numbers can be re-checked",
-      "kind": "you",
-      "state": "yours",
-      "detail": "Put it anywhere under /workspace and tell me the path."
+      "title": "FLAG: re-check the 199 transcribed paper numbers against the PDF",
+      "kind": "CPU",
+      "state": "done",
+      "detail": "PDF from GitHub (6. 200.pdf). 199/199 match exactly. FLAG commit e78991a."
     }
   ]
 }

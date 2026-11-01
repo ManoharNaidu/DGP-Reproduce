@@ -271,7 +271,7 @@ function renderBaselines(d) {
   const t0 = B.rows.find((r) => r.short === "LLM"), n = t0 ? Object.keys(t0.per_seed).length : 0;
   el.innerHTML = `<summary><span class="grow">Baselines and controls</span>${badge(n === 5 ? "done" : "running", n === 5 ? "complete" : `T0 ${n} / 5 seeds`)}</summary>
     <div class="inner"><div class="scroll"><table>${s}</table></div>
-    <p class="note">Test set, AmazonVideo, mean ± std over seeds. "paper" = the DGP paper's Table 2. T0 is the R0 classifier given only the target review; MLP is the CPU baseline re-run on 2026-11-01. Paired differences need the same seeds in both rows.</p></div>`;
+    <p class="note">Test set, AmazonVideo, mean ± std over seeds. "paper" = the DGP paper's Table 2. T0 is the R0 classifier given only the target review; MLP is the CPU baseline re-run on 2026-11-01. Paired differences need the same seeds in both rows.${n === 5 ? ` <a href="${esc(q("/files/controls.md"))}" target="_blank" rel="noopener">Open controls.md</a> (paired t, Holm, bootstrap CIs).` : ""}</p></div>`;
   el.open = isOpen("baselines", true);
 }
 

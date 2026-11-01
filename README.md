@@ -27,6 +27,9 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 >   about 2 points in every arm** (95% CIs exclude 0) — the largest gain found. A structured zero-shot classification
 >   prompt does nothing for Qwen and costs Gemma about 2 AUPRC.
 >
+> - **Target-only LLM control** (2026-11-01, §13): the same fine-tuned Qwen3-8B on the review alone reaches 73.29 AUROC /
+>   30.54 AUPRC; **the graph context adds +1.7 AUROC / +1.8 AUPRC** (significant), against +5.5 / +7.6 in the paper.
+>
 > The MLP baseline remains partially reproduced. See [`research/reproduction_matrix.md`](research/reproduction_matrix.md).
 
 ---
@@ -203,6 +206,28 @@ adapter. ConsisGAD's official code already runs unmodified on our AmazonVideo gr
 costs ≈35 CPU-hours and has not been done); the others are not yet adapted. PMP, GAAP and FLAG publish **no licence**
 and must never be redistributed. See [`methods/README.md`](methods/README.md).
 
+**Target-only LLM control (`ctl_T0`, 2026-11-01).** The paper's "LLM" row: the same Qwen3-8B + LoRA classifier,
+recipe, split, early stopping and validation-tuned threshold as DGP (dr arm R0), but the prompt holds only
+`Target: <review>` and the question, with no neighbour or metapath summaries
+(`configs/experiments/controls/T0_llm_target_only.yaml`, `scripts/ctl_queue.sh`, 5 seeds, 0.67 h/seed). Analysis:
+`python scripts/ctl_analysis.py` → [`results/controls/controls.md`](results/controls/controls.md).
+
+| AmazonVideo, 5 seeds | Macro-F1 | AUROC | AUPRC | paper |
+|---|---|---|---|---|
+| DGP (dr_R0) | 64.74 ± 0.45 | 74.97 ± 0.51 | 32.37 ± 0.57 | 66.91 / 77.32 / 34.63 |
+| LLM, target only (ctl_T0) | 63.35 ± 2.84 | 73.29 ± 0.36 | 30.54 ± 0.60 | 59.90 / 71.78 / 27.03 |
+| MLP | 59.83 ± 0.50 | 68.33 ± 0.51 | 25.11 ± 1.09 | 61.74 / 70.47 / 26.55 |
+
+- **The graph context adds +1.69 AUROC and +1.83 AUPRC** (DGP − T0, 5/5 seeds, Holm-corrected paired t p = 0.011
+  for both, bootstrap CIs [+0.92, +2.45] and [+0.67, +3.03]). The paper's DGP − LLM gap is **+5.54 / +7.60**, about
+  three to four times larger. The Macro-F1 gap (+1.40) is not significant: T0's seed 3 picked a validation threshold
+  of 0.05 and scored 57.81.
+- **Our target-only LLM is far stronger than the paper's:** +1.51 AUROC and +3.51 AUPRC above the paper's LLM row,
+  while DGP − MLP matches the paper (+6.64 vs +6.85 AUROC, +7.26 vs +8.08 AUPRC). So on AmazonVideo about three
+  quarters of DGP's gain over the MLP comes from fine-tuning the LLM on the review itself (T0 − MLP: +4.96 AUROC),
+  and one quarter from the graph summaries. The paper does not say how its LLM baseline was trained; a weaker recipe
+  there (e.g. no LoRA, or a different threshold) would explain the gap but cannot be checked.
+
 ## 14. Ablations
 
 ```bash
@@ -246,7 +271,9 @@ Full manifests (config, git commit, GPU, peak memory, runtime) in
 `results/tables/comparison_with_paper.md`. (The `_seed0` in the experiment name is the split seed.)
 
 **MLP baseline, AmazonVideo, 5 seeds (CPU):** Macro-F1 59.86 ± 0.51 · AUROC 68.35 ± 0.49 · AUPRC 25.14 ± 1.06, against
-the paper's 61.74 / 70.47 / 26.55 → `PARTIALLY_REPRODUCED`.
+the paper's 61.74 / 70.47 / 26.55 → `PARTIALLY_REPRODUCED`. Re-run on 2026-11-01 because its result files were missing
+(`results/raw/mlp_amazonvideo_seed*_3cc7104faa/`): 59.83 ± 0.50 · 68.33 ± 0.51 · 25.11 ± 1.09, the same within 0.03.
+The paper's target-only **LLM** baseline is in §13 (`ctl_T0`).
 
 `results/tables/main_results.md` is written only from real runs; CPU debug runs are kept in
 `results/tables/debug_runs.md` and are never compared with the paper.

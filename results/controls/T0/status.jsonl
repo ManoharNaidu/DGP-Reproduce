@@ -1,0 +1,13 @@
+{"t": "2026-11-01T14:01:53Z", "job": "T0_prompts", "event": "start"}
+{"t": "2026-11-01T14:02:05Z", "job": "T0_prompts", "event": "end"}
+{"t": "2026-11-01T14:02:05Z", "job": "T0_s0", "event": "start"}
+{"t": "2026-11-01T14:04:05Z", "job": "T0_s1", "event": "start"}
+{"t": "2026-11-01T14:49:50Z", "job": "T0_s0", "event": "end", "rc": 0, "secs": 2865}
+{"t": "2026-11-01T14:49:50Z", "job": "T0_s2", "event": "start"}
+{"t": "2026-11-01T14:54:18Z", "job": "T0_s1", "event": "end", "rc": 0, "secs": 3013}
+{"t": "2026-11-01T14:54:18Z", "job": "T0_s3", "event": "start"}
+{"t": "2026-11-01T15:29:36Z", "job": "T0_s2", "event": "end", "rc": 0, "secs": 2386}
+{"t": "2026-11-01T15:29:36Z", "job": "T0_s4", "event": "start"}
+{"t": "2026-11-01T15:34:02Z", "job": "T0_s3", "event": "end", "rc": 0, "secs": 2384}
+{"t": "2026-11-01T15:55:29Z", "job": "T0_s4", "event": "end", "rc": 0, "secs": 1553}
+{"t": "2026-11-01T15:55:29Z", "job": "queue", "event": "done"}
