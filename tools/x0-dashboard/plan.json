@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T14:15Z",
+  "updated": "2026-11-01T14:22Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -41,14 +41,14 @@
       "id": "flagcheck",
       "title": "FLAG: double-check every reported value from the raw results",
       "kind": "CPU",
-      "state": "next",
-      "detail": ""
+      "state": "done",
+      "detail": "All README \u00a711 numbers reproduce from the raw runs (45 exact, 6 differ only by unstated scope). One error: flag_finetuned keep rate 17% -> 27%, fixed in 2 docx + number log. Commit 5d129e7 (FLAG branch verification-2026-11-01)."
     },
     {
       "id": "flagctl",
       "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
       "kind": "CPU",
-      "state": "waiting",
+      "state": "next",
       "detail": ""
     },
     {
@@ -92,6 +92,13 @@
       "kind": "you",
       "state": "yours",
       "detail": "You are doing this."
+    },
+    {
+      "id": "paperpdf",
+      "title": "Download the FLAG paper PDF (ACM refuses automated download) so the 199 transcribed paper numbers can be re-checked",
+      "kind": "you",
+      "state": "yours",
+      "detail": "Put it anywhere under /workspace and tell me the path."
     }
   ]
 }
