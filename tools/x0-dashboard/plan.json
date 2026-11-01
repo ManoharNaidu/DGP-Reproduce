@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T16:20Z",
+  "updated": "2026-11-01T16:10Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -28,7 +28,7 @@
       "title": "Control: LLM on the target review only (paper's 'LLM' row)",
       "kind": "GPU",
       "state": "done",
-      "detail": "73.29 AUROC / 30.54 AUPRC on the review alone. Graph context adds +1.69 AUROC / +1.83 AUPRC (Holm p 0.011), vs +5.54 / +7.60 in the paper: our LLM baseline is much stronger than the paper's. results/controls/controls.md"
+      "detail": "73.29 AUROC / 30.54 AUPRC on the review alone. Graph context adds +1.69 AUROC / +1.83 AUPRC (Holm p 0.011), vs +5.54 / +7.60 in the paper: our LLM baseline is much stronger than the paper's. results/controls/controls.md Added to the DGP experiment log as E15 (docx rebuilt)."
     },
     {
       "id": "agg",
@@ -49,7 +49,7 @@
       "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
       "kind": "CPU",
       "state": "running",
-      "detail": "Adding the controls to the FLAG code (dual raw text, MLP, per-node scores), then CPU runs on Reddit + Instagram."
+      "detail": "Running on CPU since 16:09Z (FLAG branch flag-controls): text_dual and baseline_z on 7 GNNs, MLP on 3 inputs, and baseline/text/flag re-runs, all with per-node scores; Reddit + Instagram, 25 runs per cell. Log: FLAG-Reproduce/logs/controls/queue.log"
     },
     {
       "id": "stats",
