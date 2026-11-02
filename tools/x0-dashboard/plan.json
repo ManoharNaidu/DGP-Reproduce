@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T20:30Z",
+  "updated": "2026-11-02T20:25Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -14,7 +14,7 @@
       "title": "Reports and docx: E14, E15, E16 cards, stale refs, report 03 conclusion",
       "kind": "docs",
       "state": "done",
-      "detail": "DGP experiment log rebuilt (E14, D6 resolved, D3 updated, section refs fixed) and report 03 rebuilt; previous files in reports/rebuild/archive-2026-11-01/. 2026-11-02: E16 (YelpChi) card, index, summary, stats, timeline, Q9 and appendix C.20 added; DGP experiment log docx rebuilt (previous copy in reports/rebuild/archive-2026-11-02/preE16)."
+      "detail": "DGP experiment log rebuilt (E14, D6 resolved, D3 updated, section refs fixed) and report 03 rebuilt; previous files in reports/rebuild/archive-2026-11-01/. 2026-11-02: E16 (YelpChi) card, index, summary, stats, timeline, Q9 and appendix C.20 added; DGP experiment log docx rebuilt (previous copy in reports/rebuild/archive-2026-11-02/preE16). 2026-11-02 evening: E17 (w/o MDK) card (Tables 58-60), index, summary, stats, timeline, Q10 and appendix C.21 added; docx rebuilt (previous copy in reports/rebuild/archive-2026-11-02/preE17)."
     },
     {
       "id": "mlp",
