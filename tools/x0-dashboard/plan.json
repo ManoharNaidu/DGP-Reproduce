@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T22:50Z",
+  "updated": "2026-11-02T00:50Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -48,8 +48,8 @@
       "id": "flagctl",
       "title": "FLAG controls with per-node scores (dual raw text, baseline_z, MLP)",
       "kind": "CPU",
-      "state": "running",
-      "detail": "Runs finished except 8 slow Instagram CARE-GNN baseline runs in each of two jobs. Re-runs reproduce results/main bit for bit (CPU-stored runs). LLM text alone (flag - text_dual): Reddit +0.62 AUC, Instagram -0.94 (both Holm p<0.05); architecture alone ~0. Instagram: 42.4% of subgraphs have LLM text (the 9.1% figure counts node slots); on those nodes the LLM text costs -2.18 AUC. Analysis: FLAG results/controls/analysis/controls.md."
+      "state": "done",
+      "detail": "1,900 runs, 0 failed; FLAG commit 4f9d994 (branch flag-controls). Re-runs identical to results/main (CPU-stored). LLM text alone (flag - text_dual): Reddit +0.62 AUC, Instagram -0.94 (Holm p<0.05); architecture alone ~0. 42.4% of Instagram subgraphs have LLM text (the 9.1% counts node slots); there it costs -2.18 AUC. Per-node scores (~230 MB) are outside git: include results/controls/*/*/scores in the HF backup."
     },
     {
       "id": "stats",
@@ -63,7 +63,7 @@
       "title": "DGP on YelpChi: build graph, check edge count against Table 1, then 5 seeds",
       "kind": "GPU",
       "state": "running",
-      "detail": "Graph matches Table 1 exactly. Node summaries done (60,013). At 22:47Z the single generation process (33.6k of 162.3k metapath summaries) was restarted as 3 shards on the same cache to finish faster; training (5 seeds) follows automatically (scripts/yelp_nomdk_chain.sh)."
+      "detail": "Graph matches Table 1 exactly. Node summaries done (60,013). At 22:47Z the single generation process (33.6k of 162.3k metapath summaries) was restarted as 3 shards on the same cache to finish faster; training (5 seeds) follows automatically (scripts/yelp_nomdk_chain.sh). Measured at 22:58Z: 486 summaries/min with 3 shards (GPU at 99%), 123.6k left, so summaries end around 03:15Z, then training."
     },
     {
       "id": "nomdk",
