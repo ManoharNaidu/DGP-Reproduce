@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T20:35Z",
+  "updated": "2026-11-02T23:25Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -77,7 +77,7 @@
       "title": "Fourth cell: Qwen text + Gemma classifier",
       "kind": "GPU",
       "state": "running",
-      "detail": "gs_QG0 = dr_R0's cached Qwen text (all 35,747 node + 119,829 metapath summaries reused) + Gemma-2-9B-it classifier (11c9b309, downloaded 2026-11-02). Prompts identical to R0's except 92 long target reviews cut at 1,024 Gemma tokens (as in G0). One training lane (two Gemma runs per GPU are 2-3x slower); seed 0 started 20:25:35Z, about 1.3-1.5 h per seed. Then scripts/qg0_analysis.py: 2x2 writer x classifier with interaction (E18)."
+      "detail": "gs_QG0 = dr_R0's cached Qwen text (all 35,747 node + 119,829 metapath summaries reused) + Gemma-2-9B-it classifier (11c9b309). Prompts identical to R0's except 92 long target reviews cut at 1,024 Gemma tokens (as in G0). One training lane. Seed 0 done 22:03Z in 1.64 h (4 epochs, kept epoch 2): Macro-F1 65.29 / AUROC 76.08 / AUPRC 33.55 (R0 seed 0: 64.78 / 75.13 / 32.78; G0 seed 0: 63.63 / 76.21 / 33.96). Seed 1 started 22:04Z; all five expected about 04:30Z. Then scripts/qg0_analysis.py: 2x2 writer x classifier with interaction (E18)."
     },
     {
       "id": "hparam",

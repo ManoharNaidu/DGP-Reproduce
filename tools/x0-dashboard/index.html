@@ -9,7 +9,7 @@
   color-scheme: light;
   --bg: #f5f4f0; --surface: #fcfcfb; --surface-2: #f0efea; --border: #e1e0d9;
   --text: #0b0b0b; --text-2: #52514e; --muted: #6b6a64; --grid: #e1e0d9;
-  --s-r0: #2a78d6; --s-x0: #1baf7a; --s-g0: #eb6834;
+  --s-r0: #2a78d6; --s-x0: #1baf7a; --s-g0: #eb6834; --s-qg0: #8a5cd6;
   --good: #1a7f37; --warn: #b26a00; --bad: #c62828; --run: #2a78d6;
 }
 @media (prefers-color-scheme: dark) {
@@ -17,7 +17,7 @@
     color-scheme: dark;
     --bg: #111110; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
     --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: #33332f;
-    --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926;
+    --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926; --s-qg0: #9d74e8;
     --good: #4cc26a; --warn: #e0a23a; --bad: #ef6b6b; --run: #3987e5;
   }
 }
@@ -25,7 +25,7 @@
   color-scheme: dark;
   --bg: #111110; --surface: #1a1a19; --surface-2: #232321; --border: #33332f;
   --text: #f0efec; --text-2: #c3c2b7; --muted: #9a998f; --grid: #33332f;
-  --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926;
+  --s-r0: #3987e5; --s-x0: #199e70; --s-g0: #d95926; --s-qg0: #9d74e8;
   --good: #4cc26a; --warn: #e0a23a; --bad: #ef6b6b; --run: #3987e5;
 }
 * { box-sizing: border-box; }
@@ -120,7 +120,7 @@ const sg = (x) => (x == null || isNaN(x) ? "—" : (x >= 0 ? "+" : "−") + Math
 const dur = (s) => { if (s == null) return "—"; s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
   return h ? `${h} h ${String(m).padStart(2, "0")} min` : `${m} min`; };
 const hhmm = (t) => (t ? esc(String(t).slice(11, 16)) + " UTC" : "—");
-const COL = {dr_R0: "--s-r0", gs_X0: "--s-x0", gs_G0: "--s-g0"};
+const COL = {dr_R0: "--s-r0", gs_X0: "--s-x0", gs_G0: "--s-g0", gs_QG0: "--s-qg0"};
 const MET = [["auroc", "AUROC"], ["auprc", "AUPRC"], ["macro_f1", "Macro-F1"]];
 const STLABEL = {running: "running", done: "done", failed: "failed", queued: "queued", stopped: "stopped",
   "not started": "not started", next: "next", waiting: "waiting", deferred: "deferred", yours: "yours"};
@@ -224,6 +224,7 @@ function dotChart(cells, m, label, paper) {
 
 function renderExp4(d) {
   const E = d.exp4, cells = E.cells, el = $("exp4");
+  const full = Object.values(cells).every((c) => Object.keys(c.per_seed).length === 5);
   const legend = Object.entries(cells).map(([k, c]) => `<span><i class="sw" style="background:var(${COL[k]})"></i>${esc(c.short)} · ${esc(c.label)}</span>`).join("")
     + '<span style="color:var(--muted)">small dots = seeds · large dot and bar = mean ± std · dashed = paper</span>';
   let t = `<tr><th>Cell</th><th>Roles</th>${[0, 1, 2, 3, 4].map((x) => `<th class="num">seed ${x} AUROC / AUPRC</th>`).join("")}<th class="num">Mean AUROC</th><th class="num">Mean AUPRC</th><th class="num">Mean F1</th></tr>`;
@@ -251,7 +252,7 @@ function renderExp4(d) {
       + (E.par2_R0 && cells.dr_R0.per_seed[0] ? ` Stack drift (R0 seed 0 re-run on this machine): AUROC ${sg(E.par2_R0.auroc - cells.dr_R0.per_seed[0].auroc)}, AUPRC ${sg(E.par2_R0.auprc - cells.dr_R0.per_seed[0].auprc)}.` : "") + "</p>";
     if (E.analysis_md) an += `<p class="note"><a href="${esc(q("/files/exp4.md"))}" target="_blank" rel="noopener">Open exp4.md</a></p>`;
   }
-  el.innerHTML = `<summary><span class="grow">Exp 4 results · writer vs classifier</span>${badge(A ? "done" : "running", A ? "analysed" : "in progress")}</summary>
+  el.innerHTML = `<summary><span class="grow">Exp 4 results · writer vs classifier (2 × 2)</span>${badge(A && full ? "done" : "running", A && full ? "analysed" : "in progress")}</summary>
     <div class="inner"><div class="legend">${legend}</div><div class="charts">${MET.map(([m, l]) => dotChart(cells, m, l, E.paper[m])).join("")}</div>
     <div class="scroll" style="margin-top:14px"><table>${t}</table></div>${an}</div>`;
   el.open = isOpen("exp4", false);

@@ -6,6 +6,7 @@ control queues (scripts/ctl_queue.sh), baselines, and the overall plan.
 Plain standard library. Reads (never writes):
     tools/x0-dashboard/plan.json                   the plan and each item's state (edited by hand)
     results/gemma_swap/x0/status.jsonl             Exp 4 queue events (scripts/x0_queue.sh)
+    results/gemma_swap/qg0/status.jsonl            Exp 4 fourth cell queue events (scripts/qg0_queue.sh, one lane)
     results/controls/<NAME>/status.jsonl           control queue events (scripts/ctl_queue.sh), found automatically
     results/raw/<run>/{training_log.jsonl,metrics.json}
     logs/gemma_swap/<job>.log, logs/controls/<job>.log   tails, whitelisted job names only
@@ -36,7 +37,7 @@ CONTROLS = {"T0": ("ctl_T0", "Control · LLM on the target review only", 0.8),
 CHAINED = ("YELP", "NOMDK")
 # reference cells shown in the results tables: experiment -> (short, label)
 CELLS = {"dr_R0": ("R0", "Qwen text · Qwen classifier"), "gs_X0": ("X0", "Gemma text · Qwen classifier"),
-         "gs_G0": ("G0", "Gemma text · Gemma classifier")}
+         "gs_G0": ("G0", "Gemma text · Gemma classifier"), "gs_QG0": ("QG0", "Qwen text · Gemma classifier")}
 BASELINES = [  # short, label, experiment (ours) or None, paper values
     ("DGP", "DGP (R0 recipe, original prompt)", "dr_R0", {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}),
     ("DGP·Gemma", "DGP with Gemma-2-9B-it (G0)", "gs_G0", None),
@@ -52,7 +53,11 @@ def studies():
             "logs": os.path.join(ROOT, "logs", "gemma_swap"), "proc": "scripts/x0_queue.sh", "fallback_s": 1.8 * 3600,
             "jobs": [("x0_prompts", "prep", None, None), ("x0_s0", "A", "gs_X0", 0), ("x0_s2", "A", "gs_X0", 2),
                      ("x0_s4", "A", "gs_X0", 4), ("x0_s1", "B", "gs_X0", 1), ("x0_s3", "B", "gs_X0", 3),
-                     ("par2_R0_s0", "B", "par2_R0", 0)]}]
+                     ("par2_R0_s0", "B", "par2_R0", 0)]},
+           {"key": "qg0", "title": "Exp 4 · fourth cell: Qwen text with a Gemma classifier (QG0)",
+            "status": os.path.join(ROOT, "results", "gemma_swap", "qg0", "status.jsonl"),
+            "logs": os.path.join(ROOT, "logs", "gemma_swap"), "proc": "scripts/qg0_queue.sh", "fallback_s": 1.6 * 3600,
+            "jobs": [("qg0_prompts", "prep", None, None)] + [(f"qg0_s{s}", "A", "gs_QG0", s) for s in range(5)]}]
     for st in sorted(glob.glob(os.path.join(ROOT, "results", "controls", "*", "status.jsonl")), key=os.path.getmtime):
         name = os.path.basename(os.path.dirname(st))
         exp, title, hours = CONTROLS.get(name, ("ctl_" + name, f"Control · {name}", 1.0))
