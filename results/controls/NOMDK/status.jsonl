@@ -1,0 +1,13 @@
+{"t": "2026-11-02T14:41:06Z", "job": "NOMDK_prompts", "event": "start"}
+{"t": "2026-11-02T14:42:06Z", "job": "NOMDK_prompts", "event": "end"}
+{"t": "2026-11-02T14:42:06Z", "job": "NOMDK_s0", "event": "start"}
+{"t": "2026-11-02T14:44:06Z", "job": "NOMDK_s1", "event": "start"}
+{"t": "2026-11-02T17:06:32Z", "job": "NOMDK_s0", "event": "end", "rc": 0, "secs": 8666}
+{"t": "2026-11-02T17:06:32Z", "job": "NOMDK_s2", "event": "start"}
+{"t": "2026-11-02T17:07:05Z", "job": "NOMDK_s1", "event": "end", "rc": 0, "secs": 8579}
+{"t": "2026-11-02T17:07:05Z", "job": "NOMDK_s3", "event": "start"}
+{"t": "2026-11-02T19:06:17Z", "job": "NOMDK_s2", "event": "end", "rc": 0, "secs": 7185}
+{"t": "2026-11-02T19:06:17Z", "job": "NOMDK_s4", "event": "start"}
+{"t": "2026-11-02T19:06:47Z", "job": "NOMDK_s3", "event": "end", "rc": 0, "secs": 7182}
+{"t": "2026-11-02T20:11:02Z", "job": "NOMDK_s4", "event": "end", "rc": 0, "secs": 3885}
+{"t": "2026-11-02T20:11:02Z", "job": "queue", "event": "done"}

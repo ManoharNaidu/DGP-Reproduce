@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T14:50Z",
+  "updated": "2026-11-02T20:30Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -56,7 +56,7 @@
       "title": "One statistics standard (seed-level paired t + Holm) for E2-E14",
       "kind": "CPU",
       "state": "done",
-      "detail": "scripts/stats_standard.py: 35 comparisons (E16 YelpChi added), 105 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9. results/stats/all_comparisons.md; README §23; report §8 Table 56. Commit a07aa64."
+      "detail": "scripts/stats_standard.py: 36 comparisons (E16 YelpChi, E17 w/o MDK added), 108 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9, E16 2/3, E17 0/3. results/stats/all_comparisons.md; README §23; report §8. Commit a07aa64."
     },
     {
       "id": "yelp",
@@ -69,8 +69,8 @@
       "id": "nomdk",
       "title": "Ablation: w/o MDK (random neighbours)",
       "kind": "GPU",
-      "state": "running",
-      "detail": "Config controls/A1_without_mdk.yaml (R0 with mdk: false, M=4 random neighbours). 119,829 summaries done 2026-11-02T14:33Z; training started 14:42Z (2 lanes, 5 seeds). Then R0 - noMDK at seed level (E17)."
+      "state": "done",
+      "detail": "R0 with mdk: false (M=4 random neighbours, controls/A1_without_mdk.yaml), 5 seeds, training 14:42-20:11Z. noMDK 65.28 / 74.61 / 32.51 vs R0 64.74 / 74.97 / 32.37 (Macro-F1 / AUROC / AUPRC). R0 - noMDK: -0.53 / +0.36 / -0.14, none significant (bootstrap CIs include 0): MDK adds nothing measurable; the paper reports a decline. results/controls/nomdk.md; README §14; report E17 card."
     },
     {
       "id": "cell4",

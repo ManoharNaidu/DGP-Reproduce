@@ -50,12 +50,14 @@ What exists and works today:
   study (§21, stopped after its baseline) and the Gemma swap / zero-shot prompt study (§22).
 - **Second dataset (YelpChi, 2026-11-02)**: graph matches Table 1 exactly; DGP 61.76 / 78.38 / 31.05 vs the paper's
   69.07 / 84.28 / 48.87, MLP within 0.34 AUROC of the paper. See §11.
+- **Ablation w/o MDK (2026-11-02)**: M = 4 random neighbours instead of MDK's choice perform the same as MDK
+  (Δ R0 − noMDK: Macro-F1 −0.53, AUROC +0.36, AUPRC −0.14; none significant). The paper reports a decline. See §14.
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
 - 105 unit tests (all passing on 2026-11-01) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
 - Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
-What is outstanding: the paper's ablations / budget / task-aware studies and the hyperparameter grid search on GPU
+What is outstanding: the paper's other three ablations, the budget / task-aware studies and the hyperparameter grid search on GPU
 (compute decision pending, `research/compute_plan.md` §6), and the
 third-party GNN/LLM baselines beyond ConsisGAD and MLP.
 
@@ -271,8 +273,26 @@ python scripts/run_ablation.py --dataset amazonvideo --device cuda:0
 ```
 
 `w/o MDK`, `w/o PathSumm`, `w/o TextSumm`, `w/o NumSumm` (Figure 4). The paper prints no numbers for this figure,
-so only its stated ordering can be checked. **`w/o MDK` running since 2026-11-02** (random M neighbours instead of MDK,
-`configs/experiments/controls/A1_without_mdk.yaml`, 5 seeds, paired with dr R0); the other three not yet run on GPU.
+so only its stated ordering can be checked. The other three are not yet run on GPU.
+
+**`w/o MDK` (2026-11-02):** M = 4 random neighbours per metapath (seed 0) instead of MDK's Top-M, everything else as dr
+R0 (`configs/experiments/controls/A1_without_mdk.yaml`; the paper never says what replaces MDK, decision D4). 5 seeds,
+paired with R0; `python scripts/nomdk_analysis.py` → [`results/controls/nomdk.md`](results/controls/nomdk.md).
+
+| run | Macro-F1 | AUROC | AUPRC |
+|---|---|---|---|
+| R0 (MDK) | 64.74 ± 0.45 | 74.97 ± 0.51 | 32.37 ± 0.57 |
+| w/o MDK (random) | 65.28 ± 0.80 | 74.61 ± 0.54 | 32.51 ± 0.61 |
+| Δ R0 − noMDK (seeds better) | −0.53 (1/5) | +0.36 (4/5) | −0.14 (1/5) |
+
+- **MDK adds nothing measurable here.** No difference is significant (paired t p 0.27 / 0.07 / 0.18; Holm family ≥ 0.20);
+  the bootstrap 95% CIs over test reviews include 0 (AUROC [−0.32, +1.05], AUPRC [−1.12, +0.81]). The paper states
+  that removing MDK "leads to a performance decline" but prints no numbers.
+- **The two selections really differ.** Of the random neighbours, MDK also chose 0.3–2.4% on the cross-relation
+  metapaths, 9% on RSR, 21% on RPR and 66% on RUR (where 28% of targets have ≤ M candidates, so both keep all). The
+  predictions differ too (label agreement 94–96%, McNemar p < 0.05 in 5/5 seeds), but not in quality.
+- Cost: 762 prompt tokens on average (R0: 782), 1.96 h per run with two runs sharing the GPU, peak
+  19.6 GB. Kept epochs 1–2.
 
 ## 15. Budget sensitivity
 
@@ -612,8 +632,8 @@ Test labels are read only by the split builder and evaluation.
 
 **One statistics standard (2026-11-01).** The studies were analysed with different tools as they ran (bootstrap CIs
 over test reviews, McNemar, Holm only from Exp 4 on). `python scripts/stats_standard.py` re-tests every paired
-comparison of E2–E16 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
-the 3 metrics × the comparisons of each experiment ("family") and over all 105 tests ("global") →
+comparison of E2–E17 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
+the 3 metrics × the comparisons of each experiment ("family") and over all 108 tests ("global") →
 [`results/stats/all_comparisons.md`](results/stats/all_comparisons.md).
 
 | Experiment | Comparisons | Tests | p < 0.05 | Holm family < 0.05 | Holm global < 0.05 |
@@ -628,8 +648,9 @@ the 3 metrics × the comparisons of each experiment ("family") and over all 105 
 | E14 writer vs classifier | 3 | 9 | 6 | 3 (G0 − X0 AUROC; G0 − R0 AUROC, AUPRC) | 0 |
 | E15 target-only LLM and MLP | 3 | 9 | 7 | 7 | 4 (all vs the MLP) |
 | E16 DGP vs MLP on YelpChi | 1 | 3 | 2 | 2 (AUROC +3.72; AUPRC −2.62) | 0 |
+| E17 MDK vs random neighbours (w/o MDK) | 1 | 3 | 0 | 0 | 0 |
 
-Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep and the F0 re-run are
+Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep, the F0 re-run and the w/o MDK ablation (E17) are
 null, and Gemma's gain (E11) and the zero-shot penalty for Gemma (E13) survive in some arms but not all: they rest on
 the consistent sign across arms (E11 AUPRC better on 24 of 25 paired seeds) and on the bootstrap CIs of the studies'
 own analyses rather than on any single corrected seed-level test. Five seeds give little power: a seed-level test
@@ -663,7 +684,7 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 [`research/version_divergence.md`](research/version_divergence.md).
 
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
-paper's ablation / budget / task-aware studies on GPU (w/o MDK running since 2026-11-02), why DGP trails the paper on
+paper's other ablations (w/o PathSumm / TextSumm / NumSumm) and budget / task-aware studies on GPU, why DGP trails the paper on
 YelpChi by 18 AUPRC (§11), ConsisGAD 5-seed run and the other
 baselines. From the follow-up studies: the fourth
 writer × classifier cell (Qwen text, Gemma classifier; §22 Exp 4 answered the text-vs-classifier question for arm 0),
