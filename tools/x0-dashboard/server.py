@@ -33,6 +33,7 @@ MAX_EPOCHS, PATIENCE = 10, 2                       # configs/models/dgp.yaml (ea
 CONTROLS = {"T0": ("ctl_T0", "Control · LLM on the target review only", 0.8),
             "YELP": ("dgp_yelpchi", "DGP on YelpChi (summaries, then 5 seeds)", 1.2),
             "NOMDK": ("ctl_noMDK", "Ablation · w/o MDK (random neighbours, AmazonVideo)", 1.0)}
+CHAINED = ("YELP", "NOMDK")
 # reference cells shown in the results tables: experiment -> (short, label)
 CELLS = {"dr_R0": ("R0", "Qwen text · Qwen classifier"), "gs_X0": ("X0", "Gemma text · Qwen classifier"),
          "gs_G0": ("G0", "Gemma text · Gemma classifier")}
@@ -56,7 +57,8 @@ def studies():
         name = os.path.basename(os.path.dirname(st))
         exp, title, hours = CONTROLS.get(name, ("ctl_" + name, f"Control · {name}", 1.0))
         out.append({"key": name, "title": title, "status": st, "logs": os.path.join(ROOT, "logs", "controls"),
-                    "proc": f"ctl_queue.sh {name} ", "fallback_s": hours * 3600,
+                    # YELP and NOMDK are driven by scripts/yelp_nomdk_chain.sh, which also counts as alive
+                    "proc": f"ctl_queue.sh {name} " + ("|yelp_nomdk_chain.sh" if name in CHAINED else ""), "fallback_s": hours * 3600,
                     "jobs": [(f"{name}_prompts", "prep", None, None)] +
                             [(f"{name}_s{s}", "A" if s % 2 == 0 else "B", exp, s) for s in (0, 2, 4, 1, 3)]})
     return out
@@ -139,6 +141,8 @@ def job_rows(study, ev, now):
         j = e.get("job")
         if e.get("event") == "start":
             last[j] = {"start": e["t"]}
+        elif e.get("event") == "restarted":         # deliberately restarted in another form (e.g. as shards): still running
+            last.setdefault(j, {"start": e["t"]})
         elif j in last:
             last[j].update({"end": e["t"], "event": e["event"], "rc": e.get("rc"), "secs": e.get("secs")})
     rows = []
