@@ -48,13 +48,15 @@ What exists and works today:
   software-stack parity check, an LLM-free neighbour analysis and a DGP-vs-FLAG diffusion comparison. See §17–§18.
 - **Follow-up studies complete**: the dr study (§19), the K = 1, 2, 3 neighbour analysis (§20), the FLAG-architecture
   study (§21, stopped after its baseline) and the Gemma swap / zero-shot prompt study (§22).
+- **Second dataset (YelpChi, 2026-11-02)**: graph matches Table 1 exactly; DGP 61.76 / 78.38 / 31.05 vs the paper's
+  69.07 / 84.28 / 48.87, MLP within 0.34 AUROC of the paper. See §11.
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
 - 105 unit tests (all passing on 2026-11-01) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
 - Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
 What is outstanding: the paper's ablations / budget / task-aware studies and the hyperparameter grid search on GPU
-(compute decision pending, `research/compute_plan.md` §6), the YelpReviews data (available only by email request), and the
+(compute decision pending, `research/compute_plan.md` §6), and the
 third-party GNN/LLM baselines beyond ConsisGAD and MLP.
 
 ## 2. What is DGP?
@@ -105,7 +107,7 @@ HANDOFF_4GPU.md  hand-off note from the 2-GPU to the 4-GPU instance (now histori
 | Dataset | Status |
 |---|---|
 | AmazonVideo | **Ready.** Automatic download; graph matches Table 1 exactly |
-| YelpReviews | **Blocked.** Original YelpChi release with text, available only by email request. A user-supplied `YelpChi.mat` was rejected: it is the CARE-GNN variant and has no text |
+| YelpReviews | **Run (2026-11-02, §11).** The official release is email-gated; we use FLAG-Reproduce's release mirror, whose graph matches Table 1 exactly. (A user-supplied `YelpChi.mat` was rejected earlier: it is the CARE-GNN variant and has no text.) |
 | E-Commerce, LifeService | **Not reproducible.** Proprietary ByteDance data |
 
 Details, including two places where the data contradict the paper's prose: [`docs/datasets.md`](docs/datasets.md).
@@ -167,7 +169,7 @@ hf download microsoft/deberta-v3-base
 python scripts/prepare_data.py --dataset amazonvideo        # downloads, verifies SHA-256, validates Table 1
 ```
 
-YelpReviews: see the email template in [`docs/datasets.md`](docs/datasets.md).
+YelpReviews: the official release is email-gated (template in [`docs/datasets.md`](docs/datasets.md)); the mirror route is in §11.
 
 ## 10. Quick smoke test
 
@@ -197,7 +199,31 @@ DATASET=yelpchi bash scripts/ctl_queue.sh YELP configs/experiments/dgp_yelp.yaml
 ```
 
 Same model config as the AmazonVideo main run (`dgp_yelp.yaml` differs from `dgp_amazon.yaml` only in the dataset).
-Started 2026-11-01T16:15Z on one A100; results pending.
+
+**Results (2026-11-02, 5 seeds, one A100).** Summaries: 60,013 node and 162,296 metapath summaries, 2026-11-01T16:15Z →
+2026-11-02T03:13Z (one process to ~31k, then 3 hash shards sharing one store, `scripts/yelp_nomdk_chain.sh`). Training:
+03:14Z → 14:41Z, two lanes, 2.6–4.8 h per seed, peak 19.3 GB, mean final prompt 792 tokens (max 1,845).
+`python scripts/yelp_analysis.py` → [`results/controls/yelpchi.md`](results/controls/yelpchi.md).
+
+| Run | Macro-F1 | AUROC | AUPRC | Paper (F1 / AUROC / AUPRC) |
+|---|---|---|---|---|
+| DGP (`dgp_yelpchi`) | 61.76 ± 1.86 | 78.38 ± 0.88 | 31.05 ± 1.31 | 69.07 / 84.28 / 48.87 |
+| MLP (`mlp_yelpchi`, CPU) | 63.64 ± 0.43 | 74.66 ± 0.71 | 33.67 ± 1.01 | 62.09 / 75.00 / 32.24 |
+| DGP − MLP (paired) | −1.88 (1/5) | **+3.72** (5/5), CI [+2.36, +5.21] | **−2.62** (0/5), CI [−4.61, −0.42] | +6.98 / +9.28 / +16.63 |
+
+Per seed DGP (F1 / AUROC / AUPRC): 61.97 / 78.80 / 31.60 · 58.45 / 76.67 / 28.48 · 62.72 / 78.40 / 31.30 ·
+61.58 / 79.08 / 32.03 · 64.09 / 78.94 / 31.83. CI = paired bootstrap over the 13,479 test reviews; seed-level paired t
+with Holm in `results/stats/all_comparisons.md` (E16: AUROC Holm p = 0.004, AUPRC 0.039, Macro-F1 n.s.).
+
+- **The MLP reproduces, DGP does not.** The MLP lands within 0.34 AUROC of the paper, so data, split and graph are
+  plausible. DGP is −5.90 AUROC and −17.82 AUPRC below the paper (AmazonVideo: −2.25 / −2.30).
+- **DGP ranks better than the MLP but is worse at the top of the ranking.** AUROC is higher on every seed, AUPRC lower on
+  every seed. In the paper DGP beats the MLP by +16.63 AUPRC.
+- **Model selection is a candidate cause (not tested).** Early stopping on validation loss (patience 2, the paper's
+  rule) kept epoch 3 / 1 / 2 / 3 / 2. Validation loss rises after that while validation AUROC keeps rising: in every
+  seed the best validation AUROC is at the last epoch run (81.6 / 77.6 / 81.6 / 81.9 / 86.6 vs the kept epochs).
+  The YelpChi training set is only 1,348 reviews. Selecting on validation AUROC is a hyperparameter-search item.
+- The paper's other YelpReviews rows (ConsisGAD 82.12 AUROC, LLM-only 71.18, FLAG 73.98) were not run here.
 
 ## 12. Amazon reproduction
 
@@ -245,7 +271,8 @@ python scripts/run_ablation.py --dataset amazonvideo --device cuda:0
 ```
 
 `w/o MDK`, `w/o PathSumm`, `w/o TextSumm`, `w/o NumSumm` (Figure 4). The paper prints no numbers for this figure,
-so only its stated ordering can be checked. **Not yet run on GPU.**
+so only its stated ordering can be checked. **`w/o MDK` running since 2026-11-02** (random M neighbours instead of MDK,
+`configs/experiments/controls/A1_without_mdk.yaml`, 5 seeds, paired with dr R0); the other three not yet run on GPU.
 
 ## 15. Budget sensitivity
 
@@ -585,8 +612,8 @@ Test labels are read only by the split builder and evaluation.
 
 **One statistics standard (2026-11-01).** The studies were analysed with different tools as they ran (bootstrap CIs
 over test reviews, McNemar, Holm only from Exp 4 on). `python scripts/stats_standard.py` re-tests every paired
-comparison of E2–E15 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
-the 3 metrics × the comparisons of each experiment ("family") and over all 102 tests ("global") →
+comparison of E2–E16 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
+the 3 metrics × the comparisons of each experiment ("family") and over all 105 tests ("global") →
 [`results/stats/all_comparisons.md`](results/stats/all_comparisons.md).
 
 | Experiment | Comparisons | Tests | p < 0.05 | Holm family < 0.05 | Holm global < 0.05 |
@@ -600,6 +627,7 @@ the 3 metrics × the comparisons of each experiment ("family") and over all 102 
 | E13 zero-shot prompt, Gemma | 5 | 15 | 9 | 1 (GS2b AUPRC −2.00) | 0 |
 | E14 writer vs classifier | 3 | 9 | 6 | 3 (G0 − X0 AUROC; G0 − R0 AUROC, AUPRC) | 0 |
 | E15 target-only LLM and MLP | 3 | 9 | 7 | 7 | 4 (all vs the MLP) |
+| E16 DGP vs MLP on YelpChi | 1 | 3 | 2 | 2 (AUROC +3.72; AUPRC −2.62) | 0 |
 
 Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep and the F0 re-run are
 null, and Gemma's gain (E11) and the zero-shot penalty for Gemma (E13) survive in some arms but not all: they rest on
@@ -635,7 +663,8 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 [`research/version_divergence.md`](research/version_divergence.md).
 
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
-paper's ablation / budget / task-aware studies on GPU, YelpReviews (data access), ConsisGAD 5-seed run and the other
+paper's ablation / budget / task-aware studies on GPU (w/o MDK running since 2026-11-02), why DGP trails the paper on
+YelpChi by 18 AUPRC (§11), ConsisGAD 5-seed run and the other
 baselines. From the follow-up studies: the fourth
 writer × classifier cell (Qwen text, Gemma classifier; §22 Exp 4 answered the text-vs-classifier question for arm 0),
 which part of the zero-shot prompt hurts Gemma (§22), and why two Gemma runs sharing a GPU are so slow.

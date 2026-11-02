@@ -1,0 +1,15 @@
+{"t": "2026-11-01T16:15:53Z", "job": "YELP_prompts", "event": "start"}
+{"t": "2026-11-01T22:47:19Z", "job": "YELP_prompts", "event": "restarted", "note": "single process stopped at ~31k of 162k metapath summaries; continued as 3 shards by scripts/yelp_nomdk_chain.sh"}
+{"t": "2026-11-02T03:13:14Z", "job": "YELP_prompts", "event": "start"}
+{"t": "2026-11-02T03:14:46Z", "job": "YELP_prompts", "event": "end"}
+{"t": "2026-11-02T03:14:46Z", "job": "YELP_s0", "event": "start"}
+{"t": "2026-11-02T03:16:46Z", "job": "YELP_s1", "event": "start"}
+{"t": "2026-11-02T06:52:16Z", "job": "YELP_s1", "event": "end", "rc": 0, "secs": 12930}
+{"t": "2026-11-02T06:52:16Z", "job": "YELP_s3", "event": "start"}
+{"t": "2026-11-02T08:03:14Z", "job": "YELP_s0", "event": "end", "rc": 0, "secs": 17308}
+{"t": "2026-11-02T08:03:14Z", "job": "YELP_s2", "event": "start"}
+{"t": "2026-11-02T11:42:03Z", "job": "YELP_s3", "event": "end", "rc": 0, "secs": 17387}
+{"t": "2026-11-02T12:06:56Z", "job": "YELP_s2", "event": "end", "rc": 0, "secs": 14622}
+{"t": "2026-11-02T12:06:56Z", "job": "YELP_s4", "event": "start"}
+{"t": "2026-11-02T14:41:06Z", "job": "YELP_s4", "event": "end", "rc": 0, "secs": 9250}
+{"t": "2026-11-02T14:41:06Z", "job": "queue", "event": "done"}

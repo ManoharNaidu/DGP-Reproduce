@@ -1,5 +1,33 @@
 {
   "cells": {
+    "dgp_yelpchi": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "macro_f1": {
+        "mean": 61.762920695229624,
+        "std": 1.8627993528149327
+      },
+      "auroc": {
+        "mean": 78.37679520779452,
+        "std": 0.8830756685528593
+      },
+      "auprc": {
+        "mean": 31.04875582554818,
+        "std": 1.3086641294841177
+      },
+      "threshold_per_seed": [
+        0.3,
+        0.25,
+        0.3,
+        0.3,
+        0.15
+      ]
+    },
     "mlp_yelpchi": {
       "seeds": [
         0,
@@ -58,5 +86,124 @@
       38.45
     ]
   },
-  "cost": null
+  "dgp_minus_mlp": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "metrics": {
+      "macro_f1": {
+        "arm_mean": 61.76292069522964,
+        "arm_std": 1.8627993528149331,
+        "ref_mean": 63.64109323574369,
+        "ref_std": 0.4260744902688289,
+        "delta_mean": -1.8781725405140548,
+        "delta_per_seed": [
+          -1.499,
+          -5.32,
+          -0.187,
+          -2.558,
+          0.173
+        ],
+        "seeds_better": 1,
+        "t_p": 0.13008390655505137,
+        "wilcoxon_p": 0.125
+      },
+      "auroc": {
+        "arm_mean": 78.37679520779452,
+        "arm_std": 0.8830756685528593,
+        "ref_mean": 74.65838089559564,
+        "ref_std": 0.7092186495337856,
+        "delta_mean": 3.718414312198868,
+        "delta_per_seed": [
+          3.911,
+          2.183,
+          4.972,
+          3.505,
+          4.021
+        ],
+        "seeds_better": 5,
+        "t_p": 0.001199775195508152,
+        "wilcoxon_p": 0.0625
+      },
+      "auprc": {
+        "arm_mean": 31.048755825548188,
+        "arm_std": 1.3086641294841175,
+        "ref_mean": 33.672000373783796,
+        "ref_std": 1.0096079990355284,
+        "delta_mean": -2.62324454823561,
+        "delta_per_seed": [
+          -2.823,
+          -4.776,
+          -0.807,
+          -1.492,
+          -3.218
+        ],
+        "seeds_better": 0,
+        "t_p": 0.019340197432675284,
+        "wilcoxon_p": 0.0625
+      }
+    },
+    "bootstrap_ci95": {
+      "auroc": [
+        2.3621317133886297,
+        5.212965572288148
+      ],
+      "auprc": [
+        -4.609297346176863,
+        -0.41714844450480904
+      ]
+    },
+    "agreement": [
+      {
+        "seed": 0,
+        "spearman": 0.3764935337065447,
+        "label_agreement": 0.8370799020698865,
+        "wrong_to_right": 991,
+        "right_to_wrong": 1205,
+        "mcnemar_p": 5.397529414924404e-06
+      },
+      {
+        "seed": 1,
+        "spearman": 0.35988177600773735,
+        "label_agreement": 0.8521403664960309,
+        "wrong_to_right": 1019,
+        "right_to_wrong": 974,
+        "mcnemar_p": 0.324331887922123
+      },
+      {
+        "seed": 2,
+        "spearman": 0.3694793103613831,
+        "label_agreement": 0.8294383856369166,
+        "wrong_to_right": 1058,
+        "right_to_wrong": 1241,
+        "mcnemar_p": 0.00014608229986149971
+      },
+      {
+        "seed": 3,
+        "spearman": 0.40874766439584964,
+        "label_agreement": 0.8453149343423103,
+        "wrong_to_right": 1009,
+        "right_to_wrong": 1076,
+        "mcnemar_p": 0.14832523507360743
+      },
+      {
+        "seed": 4,
+        "spearman": 0.38105873258980605,
+        "label_agreement": 0.7912308034720676,
+        "wrong_to_right": 1095,
+        "right_to_wrong": 1719,
+        "mcnemar_p": 4.254090368603989e-32
+      }
+    ]
+  },
+  "cost": {
+    "final_prompt_tokens_mean": 792.0698608964451,
+    "final_prompt_tokens_max": 1845.0,
+    "train_hours_mean": 3.9460444444444445,
+    "peak_gpu_gb": 19.34
+  }
 }

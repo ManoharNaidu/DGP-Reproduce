@@ -1,0 +1,58 @@
+{
+  "experiment": "dgp_yelpchi",
+  "dataset": "yelpchi",
+  "mode": "GPU_REPRODUCTION",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "test": {
+    "n_seeds": 5,
+    "macro_f1_mean": 61.76292069522964,
+    "macro_f1_std": 1.8627993528149331,
+    "auroc_mean": 78.37679520779452,
+    "auroc_std": 0.8830756685528593,
+    "auprc_mean": 31.048755825548188,
+    "auprc_std": 1.3086641294841175,
+    "macro_f1_at_0.5_mean": 49.03399283606783,
+    "macro_f1_at_0.5_std": 2.5426466693209107
+  },
+  "val": {
+    "n_seeds": 5,
+    "macro_f1_mean": 62.585355375272194,
+    "macro_f1_std": 1.2224767954703775,
+    "auroc_mean": 77.81590319792568,
+    "auroc_std": 1.3114025780899392,
+    "auprc_mean": 31.74029780441709,
+    "auprc_std": 1.7183092804123874,
+    "macro_f1_at_0.5_mean": 49.45833597413032,
+    "macro_f1_at_0.5_std": 2.579753392934333
+  },
+  "token_usage": {
+    "mean_raw_target_tokens": 173.32500772797528,
+    "mean_raw_neighbor_tokens": 634950.9453477589,
+    "mean_trimmed_neighbor_raw_tokens": 8875.370819165379,
+    "mean_node_summary_tokens": 1302.807171561051,
+    "mean_metapath_summary_tokens": 425.43017001545593,
+    "mean_final_prompt_tokens": 792.0698608964451,
+    "mean_num_neighbors_full": 3512.9251313755794,
+    "mean_num_neighbors_trimmed": 38.58497681607419,
+    "nodes": 16175,
+    "average_prompt_length": 792.0698608964451,
+    "p95_prompt_length": 1146.2999999999993,
+    "max_prompt_length": 1845.0,
+    "mean_full_neighbor_prompt_tokens": 635124.2703554869,
+    "compression_ratio": 801.8538536950124,
+    "token_reduction": 0.9987528899494691,
+    "targets_truncated": 39,
+    "num_metapaths": 12,
+    "K": 2,
+    "M": 4,
+    "B_node": 10,
+    "B_meta": 10
+  },
+  "config_hash": "dc86f96483"
+}
