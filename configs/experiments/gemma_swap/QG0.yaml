@@ -1,0 +1,19 @@
+# Writer/classifier split, fourth cell (user request 2026-11-01, run 2026-11-02), arm QG0: Qwen3-8B wrote the text,
+# Gemma-2-9B-it is the LoRA classifier. Everything else is dr arm R0. With dr_R0 (Qwen/Qwen), gs_X0 (Gemma text/Qwen)
+# and gs_G0 (Gemma/Gemma) it completes the 2 x 2 design: QG0 - R0 = Gemma as classifier on Qwen's text,
+# G0 - QG0 = Gemma's text with a Gemma classifier, (G0 - QG0) - (X0 - R0) = writer x classifier interaction.
+# backend=cached reads dr_R0's Qwen summaries (metapath store b19e6c18ffa0f14f, filed under MDK key 30447a444d0aa6e2)
+# and fails on any miss, so QG0 sees exactly R0's text and no summary is generated. This run's own MDK key differs
+# only through the Gemma token counter (173d9d5c91e37c3f; identical selection, results/gemma_swap/checks/mdk_identity.md).
+defaults:
+  - configs/experiments/disc_resid/R0_baseline.yaml
+summarizer:
+  backend: cached
+  model_id: Qwen/Qwen3-8B
+  source_mdk_cache: 30447a444d0aa6e2
+classifier:
+  model_id: google/gemma-2-9b-it
+  revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819
+  attn_implementation: eager
+experiment: gs_QG0
+variant: QG0 Qwen text · Gemma classifier
