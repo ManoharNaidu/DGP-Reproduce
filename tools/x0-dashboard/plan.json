@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T10:56Z",
+  "updated": "2026-11-03T14:00Z",
   "note": "Order agreed on 2026-11-01; hyperparameter search scope agreed 2026-11-03. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -105,6 +105,12 @@
       "kind": "CPU",
       "state": "done",
       "detail": "PDF from GitHub (6. 200.pdf). 199/199 match exactly. FLAG commit e78991a."
+    },
+    {
+      "title": "Sync stale docs: research docs, README status, report 03, FLAG experiment log",
+      "kind": "docs",
+      "state": "done",
+      "detail": "2026-11-03: research/reproduction_matrix, FINAL_REPRODUCTION_REPORT, reproduction_gaps, docs/reproduction (last revised 10-14; YelpChi was still 'BLOCKED') updated with E15-E17 and the search; README status box; report 03 docx: 2026-11-03 update notes (E15, E17, E18); FLAG experiment log docx: new E14 card (controls D-008, 1,900 runs), the 2026-11-01 README re-check and 199/199 PDF check, subgraph-coverage definition (96 tables, 42 captions). Old copies in reports/rebuild/archive-2026-11-03/pre-sync/. DGP commit 5d7ee48."
     }
   ]
 }
