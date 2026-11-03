@@ -101,6 +101,23 @@ def evaluation_loss(model, prompts: list[str], labels: np.ndarray, label_tokens,
     return total / max(count, 1)
 
 
+@torch.no_grad()
+def evaluation_loss_and_predict(model, prompts: list[str], labels: np.ndarray, label_tokens,
+                                batch_size: int) -> tuple[float, np.ndarray]:
+    """evaluation_loss and predict from ONE forward pass over the prompts (2026-11-03 speed-up: the epoch loop used to
+    run the validation set through the model twice). Same batches, same logits, so both outputs are identical."""
+    _set_mode(model, False)
+    total, count, probs = 0.0, 0, []
+    for start in range(0, len(prompts), batch_size):
+        batch_labels = torch.as_tensor(labels[start:start + batch_size])
+        logits = model.last_token_logits(prompts[start:start + batch_size])
+        loss = first_token_loss(logits, batch_labels.to(logits.device), label_tokens.yes_id, label_tokens.no_id)
+        total += float(loss) * len(batch_labels)
+        count += len(batch_labels)
+        probs.append(fraud_probability(logits, label_tokens.yes_id, label_tokens.no_id).cpu())
+    return total / max(count, 1), torch.cat(probs).numpy()
+
+
 def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts: list[str], val_labels: np.ndarray,
           label_tokens, cfg: dict, seed: int, log_path: str | Path | None = None,
           aux_prompts: list[str] | None = None) -> TrainResult:
@@ -151,8 +168,7 @@ def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts
                 optimizer.step()
                 optimizer.zero_grad()
 
-        val_loss = evaluation_loss(model, val_prompts, val_labels, label_tokens, eval_batch)
-        val_prob = predict(model, val_prompts, label_tokens, eval_batch)
+        val_loss, val_prob = evaluation_loss_and_predict(model, val_prompts, val_labels, label_tokens, eval_batch)
         val_metrics = compute_metrics(val_labels, val_prob)
         record = {"epoch": epoch, "train_loss": running / max(steps, 1), "val_loss": val_loss, **{f"val_{k}": v for k, v in val_metrics.items()}}
         best.history.append(record)

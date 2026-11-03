@@ -8,7 +8,7 @@ Plain standard library. Reads (never writes):
     results/gemma_swap/x0/status.jsonl             Exp 4 queue events (scripts/x0_queue.sh)
     results/gemma_swap/qg0/status.jsonl            Exp 4 fourth cell queue events (scripts/qg0_queue.sh, one lane)
     results/controls/<NAME>/status.jsonl           control queue events (scripts/ctl_queue.sh), found automatically
-    results/sel/status.jsonl                       hyperparameter search queue (scripts/sel_queue.sh: E19 S1 + E20 S2-Y)
+    results/sel/status.jsonl                       hyperparameter search queue (scripts/sel_queue.sh, then sel_queue2.sh: E19)
     results/raw/<run>/{training_log.jsonl,metrics.json}
     logs/gemma_swap/<job>.log, logs/controls/<job>.log   tails, whitelisted job names only
     results/gemma_swap/exp4_2x2.{json,md}          Exp 4 analysis, 2 x 2 (falls back to exp4.{json,md})
@@ -54,15 +54,14 @@ PAPER = {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}
 
 
 # Hyperparameter search (2026-11-03, research/hparam_search_plan.md). Jobs: name, lane, experiment, seed, extras.
-# est = expected seconds per run while two runs share the GPU (YelpChi ~0.68 h/epoch x 10 + test passes; AmazonVideo
-# ~0.32 h/epoch x 10 + test passes); group = runs whose measured mean replaces est once one of them finishes.
-_SY = {"est": 9.2 * 3600, "group": "yelp", "test_n": "13,479"}
-_SA = {"est": 3.9 * 3600, "group": "amazon", "test_n": "7,425"}
+# E20 (YelpChi lr sweep) was dropped by the owner at 10:54Z; scripts/sel_queue2.sh runs the rest of E19.
+# est = expected seconds per run with two lanes, from the first runs' measured epochs (YelpChi 0.46 h/epoch x 10 + about
+# 2 test passes; AmazonVideo about 0.22 h/epoch); group = runs whose measured mean replaces est once one finishes.
+_SY = {"est": 6.5 * 3600, "group": "yelp", "test_n": "13,479"}
+_SA = {"est": 2.7 * 3600, "group": "amazon", "test_n": "7,425"}
 SEL_JOBS = ([("prompts_yelpchi", "prep", None, None, {}), ("prompts_amazonvideo", "prep", None, None, {})]
-            + [(f"sy_s{s}", "A", "sel_yelpchi", s, _SY) for s in (0, 2, 4)]
-            + [("ly1_s0", "A", "sel_yelp_lr1e5", 0, _SY), ("ly3_s0", "A", "sel_yelp_lr3e5", 0, _SY), ("sa_s4", "A", "sel_amazonvideo", 4, _SA)]
+            + [(f"sy_s{s}", "A", "sel_yelpchi", s, _SY) for s in (0, 2, 4)] + [("sa_s4", "A", "sel_amazonvideo", 4, _SA)]
             + [(f"sy_s{s}", "B", "sel_yelpchi", s, _SY) for s in (1, 3)]
-            + [("ly1_s1", "B", "sel_yelp_lr1e5", 1, _SY), ("ly3_s1", "B", "sel_yelp_lr3e5", 1, _SY)]
             + [(f"sa_s{s}", "B", "sel_amazonvideo", s, _SA) for s in (0, 1, 2, 3)])
 
 
@@ -83,9 +82,9 @@ def rule_epochs(hist):
 
 def studies():
     """Every queue the dashboard knows: the search queue, Exp 4, and each results/controls/<NAME>/ with a status file."""
-    out = [{"key": "sel", "title": "Hyperparameter search · epoch-selection rule (E19) + YelpChi lr sweep (E20)",
+    out = [{"key": "sel", "title": "Hyperparameter search · epoch-selection rule (E19; E20 dropped)",
             "status": os.path.join(ROOT, "results", "sel", "status.jsonl"), "logs": os.path.join(ROOT, "logs", "sel"),
-            "proc": "scripts/sel_queue.sh", "fallback_s": 9.2 * 3600, "multi_rule": True, "jobs": SEL_JOBS},
+            "proc": "scripts/sel_queue", "fallback_s": 6.5 * 3600, "multi_rule": True, "jobs": SEL_JOBS},
            {"key": "x0", "title": "Exp 4 · Gemma text with a Qwen classifier", "status": os.path.join(ROOT, "results", "gemma_swap", "x0", "status.jsonl"),
             "logs": os.path.join(ROOT, "logs", "gemma_swap"), "proc": "scripts/x0_queue.sh", "fallback_s": 1.8 * 3600,
             "jobs": [("x0_prompts", "prep", None, None), ("x0_s0", "A", "gs_X0", 0), ("x0_s2", "A", "gs_X0", 2),

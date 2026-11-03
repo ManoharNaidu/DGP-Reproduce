@@ -8,6 +8,9 @@
    runs lr ∈ {1e-5, 3e-5} at the default rank 8 (lr 1e-4 is S1), seeds 0 and 1, with the same all-epochs protocol as S1
    so every selection rule can be compared across learning rates (about 24 GPU-h instead of the 14 below).
 
+**Update 2026-11-03T10:54Z: the owner dropped S2-Y ("I don't want anything related to finetuning") to finish sooner; only
+S1 runs, via `scripts/sel_queue2.sh`. Expected finish about 2026-11-04T08:00Z.**
+
 Running: `scripts/sel_queue.sh` (configs `configs/experiments/sel/`), README §23. Approved total about 67 GPU-h, about
 52 h wall-clock on one A100 with two lanes; expected finish about 2026-11-05T13:00Z (relaunched 08:23Z after an instance restart at ~07:41Z).
 

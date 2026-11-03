@@ -6,7 +6,7 @@ import torch
 from dgp_repro.models.label_tokens import resolve_label_token_ids
 from dgp_repro.models.mock_llm import MockLLM
 from dgp_repro.training import predict, train
-from dgp_repro.training.trainer import _Rule, parse_rule
+from dgp_repro.training.trainer import _Rule, evaluation_loss, evaluation_loss_and_predict, parse_rule
 
 
 def _data(n=40, seed=0):
@@ -58,3 +58,12 @@ def test_multi_rule_reproduces_legacy_paper_rule():
     assert set(new.epoch_states) == set(new.rule_epochs.values())
     best_auroc = max(new.history, key=lambda r: r["val_auroc"])["val_auroc"]
     assert new.history[new.rule_epochs["auroc_all"] - 1]["val_auroc"] == best_auroc
+
+
+def test_single_validation_pass_matches_the_two_passes():
+    model = MockLLM(seed=3)
+    labels = resolve_label_token_ids(model.tokenizer)
+    vp, vy = _data(23, 4)                                   # 23: last batch is partial
+    loss, probs = evaluation_loss_and_predict(model, vp, vy, labels, 8)
+    assert loss == evaluation_loss(model, vp, vy, labels, 8)
+    np.testing.assert_array_equal(probs, predict(model, vp, labels, 8))
