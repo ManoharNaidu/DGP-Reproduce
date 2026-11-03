@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T07:20Z",
+  "updated": "2026-11-03T08:25Z",
   "note": "Order agreed on 2026-11-01; hyperparameter search scope agreed 2026-11-03. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -84,7 +84,7 @@
       "title": "Hyperparameter search: epoch-selection rule (E19) + YelpChi lr sweep (E20)",
       "kind": "GPU",
       "state": "running",
-      "detail": "Owner decision 2026-11-03: S1 (epoch-selection rule, both datasets, 5 seeds) + S2-Y (YelpChi lr 1e-5 and 3e-5 at rank 8, 2 seeds); rank grid, confirmation and M sweep not run. Log mining of all 178 runs: on YelpChi the best-val-AUROC epoch was never kept (+4.02 val AUROC / +6.67 AUPRC), on AmazonVideo +0.4. Every run trains 10 epochs; test scored at each rule's epoch. 14 runs, ~67 GPU-h, queue scripts/sel_queue.sh started 07:13Z 11-03, expected finish ~11-05. research/hparam_search_plan.md, README §23."
+      "detail": "Owner decision 2026-11-03: S1 (epoch-selection rule, both datasets, 5 seeds) + S2-Y (YelpChi lr 1e-5 and 3e-5 at rank 8, 2 seeds); rank grid, confirmation and M sweep not run. Log mining of all 178 runs: on YelpChi the best-val-AUROC epoch was never kept (+4.02 val AUROC / +6.67 AUPRC), on AmazonVideo +0.4. Every run trains 10 epochs; test scored at each rule's epoch. 14 runs, ~67 GPU-h, queue scripts/sel_queue.sh started 07:13Z 11-03; the instance restarted ~07:41Z and killed the first two runs in epoch 1 (no output), relaunched 08:23Z. Expected finish ~13:00Z Thu 11-05 (live ETA on the queue card). research/hparam_search_plan.md, README §23."
     },
     {
       "title": "Reports and docx: hyperparameter search plan, log mining, E19-E20 in progress",

@@ -185,6 +185,10 @@ def job_rows(study, ev, now):
             last[j] = {"start": e["t"]}
         elif e.get("event") == "restarted":         # deliberately restarted in another form (e.g. as shards): still running
             last.setdefault(j, {"start": e["t"]})
+        elif e.get("event") == "instance_restart":  # the machine restarted: every open job died with it
+            for x in last.values():
+                if "end" not in x:
+                    x.update({"end": e["t"], "event": "interrupted"})
         elif j in last:
             last[j].update({"end": e["t"], "event": e["event"], "rc": e.get("rc"), "secs": e.get("secs")})
     rows = []
@@ -192,7 +196,8 @@ def job_rows(study, ev, now):
         extra = extra[0] if extra else {}
         x = last.get(name, {})
         st = ("queued" if not x else "running" if "end" not in x else
-              "done" if x.get("event") == "end" and (x.get("rc") or 0) == 0 else "failed")
+              "done" if x.get("event") == "end" and (x.get("rc") or 0) == 0 else
+              "stopped" if x.get("event") == "interrupted" else "failed")
         r = {"job": name, "lane": lane, "experiment": exp, "seed": seed, "state": st, "start": x.get("start"),
              "end": x.get("end"), "rc": x.get("rc"),
              "elapsed_s": (x.get("secs") or (epoch_of(x.get("end")) or now) - epoch_of(x["start"])) if x.get("start") else None,

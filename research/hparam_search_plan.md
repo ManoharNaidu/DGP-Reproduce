@@ -9,7 +9,7 @@
    so every selection rule can be compared across learning rates (about 24 GPU-h instead of the 14 below).
 
 Running: `scripts/sel_queue.sh` (configs `configs/experiments/sel/`), README §23. Approved total about 67 GPU-h, about
-52 h wall-clock on one A100 with two lanes; expected finish about 2026-11-05.
+52 h wall-clock on one A100 with two lanes; expected finish about 2026-11-05T13:00Z (relaunched 08:23Z after an instance restart at ~07:41Z).
 
 The proposal as written for the decision follows. It takes option A of `compute_plan.md` §6 (the staged search) and
 rebuilds it from the measured costs and the findings so far.

@@ -687,7 +687,9 @@ paper's stated "early stopping on validation loss" and is reported as a recorded
 uses the test set. E19 (rule vs paper rule, per dataset) and E20 (lr vs 1e-4 on YelpChi) will enter
 `scripts/stats_standard.py` as their own families.
 
-**Status.** Started 2026-11-03T07:13Z; expected to finish about 2026-11-05 (live ETA on the dashboard). Results go here
+**Status.** Started 2026-11-03T07:13Z; the instance restarted at about 07:41Z and killed the first two runs in epoch 1
+(no output lost beyond them), so the queue was relaunched at 08:23Z. Expected to finish about 2026-11-05T13:00Z (live ETA
+on the dashboard). Results go here
 and into the report as E19–E20.
 
 ## 24. Reproducibility
