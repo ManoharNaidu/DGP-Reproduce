@@ -2,6 +2,17 @@
 
 Subagent G. Compiled 2026-09-13. **Rule applied: every claim below is backed by a URL that was actually fetched. Anything not found is marked NOT FOUND.**
 
+> **Status update 2026-11-03 (this register is the 2026-09-13 research record; the items below changed since).**
+> - **#3 YelpChi with raw text: resolved for use.** A mirror of the 67,395-review release, downloaded for
+>   FLAG-Reproduce, reproduces Table 1 exactly (67,395 nodes, 17,486,608 edges, 8,919 frauds) with RSR = same
+>   product + star and RTR = same product + month. Its text join is supported statistically, not proven; the
+>   email-gated original would confirm it. DGP and MLP were run there (README §11).
+> - **#6–#9 selected K / M / B / LoRA values:** still unpublished. K was swept (README §17, flat); the owner approved
+>   only an epoch-selection-rule search (E19, running since 2026-11-03, README §23).
+> - **#17 baselines:** the MLP (both datasets) and the target-only LLM (AmazonVideo) have run; the other third-party
+>   baselines have not.
+> - Current status of everything: `reproduction_matrix.md`, `FINAL_REPRODUCTION_REPORT.md`.
+
 Paper: *DGP: A Dual-Granularity Prompting Framework for Fraud Detection with Graph-Enhanced LLMs* — Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He (NUS), Cheng Chen (ByteDance).
 
 ---
@@ -206,7 +217,7 @@ fields: reviewerID, asin, reviewerName, helpful, reviewText, overall, summary, u
 
 **Exact hit, first try, unique among plausible rules.** The "fraud" (unhelpful) label is: *a review that received at least one helpfulness vote and whose helpful-vote ratio is below 50%.* 23,993 of the 37,126 reviews have zero votes and are therefore **unlabeled** — which is exactly why the paper says "the sum of the dataset split sizes ... can be smaller than the total number of nodes." Labeled pool = **13,133**.
 
-### 3.5 YelpReviews (67,395) — **SOLVED in identity, gated in access**
+### 3.5 YelpReviews (67,395) — **SOLVED in identity, gated in access** (2026-11-01: used via a mirror, see the status update at the top)
 **https://shebuti.com/yelpchi-dataset/** (Shebuti Rayana's own page) states: **67,395 reviews, 38,063 reviewers, 201 hotels and restaurants, 13.23% filtered (fake) reviews**, and confirms plaintext reviews are included.
 
 DGP reports **8,919 frauds of 67,395 = 13.2339%** — matches the stated 13.23% exactly.
@@ -278,7 +289,7 @@ Severity key: **BLOCKER** = cannot proceed / cannot compare numbers · **HIGH** 
 - **MEDIUM: 7** · **LOW: 4** · **Removed: 1** (DeBERTa)
 
 ### Recommended sequencing
-1. **Today:** email srayana@cs.stonybrook.edu for YelpChi with ground truth (longest lead time, gates ~half the reproduction).
+1. **Today:** email srayana@cs.stonybrook.edu for YelpChi with ground truth (longest lead time, gates ~half the reproduction). *(2026-11-01: superseded by the mirror; the email would still confirm the text join.)*
 2. **Immediately, in parallel:** build AmazonVideo from `reviews_Amazon_Instant_Video_5.json.gz` using the verified label rule. It is 100% reproducible and unblocks everything else.
 3. Implement DGP with **B=10, K=2, M=8** as the center point; sweep K and M around it.
 4. Report a **hyperparameter sensitivity surface instead of a single number.** Given that the selected K/M/LoRA values were never published, a point estimate cannot be claimed to reproduce the paper — a curve that brackets the reported value is the defensible result.

@@ -4,7 +4,8 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 (Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He, Cheng Chen — AAAI 2026;
 [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/38541) · [arXiv:2507.21653](https://arxiv.org/abs/2507.21653)).
 
-> **Status (2026-10-30): DGP reproduced on AmazonVideo; five follow-up studies finished (§17–§22).**
+> **Status (2026-11-03): DGP reproduced on AmazonVideo, run on YelpChi (deviates); follow-up studies finished (§11–§22);
+> hyperparameter search running (§23).**
 > The official repository ([Xtra-Computing/DGP](https://github.com/Xtra-Computing/DGP)) contains only a README —
 > code release is pending industry-partner approval — so **every DGP component here is a `PAPER_RECONSTRUCTION`**,
 > built from both paper versions and traced to evidence in [`research/`](research/).
@@ -32,6 +33,10 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 > - **Hyperparameter search, running** (2026-11-03 →, §23): the epoch-selection rule (E19, both datasets, 5 seeds); the
 >   YelpChi learning-rate sweep (E20) was dropped. The 178 existing training logs show that on YelpChi the epoch with the
 >   best validation AUROC was never the one kept (+4.0 val AUROC, +6.7 val AUPRC given up); on AmazonVideo it barely matters.
+> - **YelpChi** (2026-11-01 → 11-02, §11): the graph matches Table 1 exactly and the MLP lands within 0.34 AUROC of the
+>   paper, but DGP reaches 61.76 / 78.38 / 31.05 against the paper's 69.07 / 84.28 / 48.87 (−5.9 AUROC, −17.8 AUPRC).
+> - **Ablation w/o MDK** (2026-11-02, §14): random neighbours instead of MDK's change nothing measurable (none of the
+>   three metrics significant); the paper reports a decline.
 > - **Target-only LLM control** (2026-11-01, §13): the same fine-tuned Qwen3-8B on the review alone reaches 73.29 AUROC /
 >   30.54 AUPRC; **the graph context adds +1.7 AUROC / +1.8 AUPRC** (significant), against +5.5 / +7.6 in the paper.
 >

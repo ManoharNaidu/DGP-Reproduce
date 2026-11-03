@@ -1,11 +1,14 @@
 # DGP Reproduction Report
 
-**Version:** 2026-09-17 — reissued after the first GPU run; DGP's main result is now reproduced on AmazonVideo.
+**Version:** 2026-11-03 — updated with YelpReviews, the target-only LLM baseline, the w/o MDK ablation and the running
+hyperparameter search. Previous version 2026-09-17 (first GPU run). Follow-up studies are in README §17–§23 and the
+DGP experiment log (`reports/2026-10-23-DGP-experiment-log.docx`, E1–E19).
 **Paper:** Li, Hu, Hooi, He, Chen. *DGP: A Dual-Granularity Prompting Framework for Fraud Detection with Graph-Enhanced LLMs.* AAAI 2026.
 
 > The GPU run this report was waiting on is done: 5 real Qwen3-8B + LoRA seeds on AmazonVideo, on a rented
-> 2× A100-SXM4-80GB instance. Ablations, the budget sweep, the task-aware study, YelpReviews and the
-> hyperparameter grid search still have not been run (§12, §13, §16). No numbers below are model results
+> 2× A100-SXM4-80GB instance. Since then (2026-11-01 → 11-03): YelpReviews was run (§11), the target-only LLM
+> baseline (§15) and the w/o MDK ablation (§12) were run, and a reduced hyperparameter search (the epoch-selection
+> rule) is running (§16). The other three ablations, the budget sweep and the task-aware study have not been run. No numbers below are model results
 > unless explicitly marked MEASURED, and none are paper numbers presented as ours.
 
 ## 1. Executive summary
@@ -25,10 +28,16 @@
 - **The full DGP pipeline is implemented and now GPU-verified**, not just CPU-smoke-tested: 77 unit tests, a
   14-check CPU smoke test (including the real Qwen3 tokenizer), and an end-to-end real run — 119,829 real
   Qwen3-8B metapath summaries plus 35,747 node summaries generated and consumed by 5 real LoRA training runs.
-- **Still blocked:** the hyperparameter grid search (≈60–90 GPU-hours for the staged option, `compute_plan.md`
-  §6 — needs an owner decision), the YelpReviews data (email-gated, blocking Yelp entirely and the ablation/
-  budget/task-aware studies which were only planned for AmazonVideo's paired dataset comparison), and further
-  third-party baselines beyond MLP and ConsisGAD's smoke test.
+- **YelpReviews (2026-11-02): data reproduced, DGP not.** From a release mirror the graph matches Table 1 exactly
+  and the MLP lands within 0.34 AUROC of the paper, but DGP reaches 61.76 / 78.38 / 31.05 against the paper's
+  69.07 / 84.28 / 48.87 (§11). Leading candidate: the validation-loss stopping rule ends training while
+  validation AUROC is still rising (all 5 seeds); under test since 2026-11-03 (§16).
+- **Target-only LLM and w/o MDK (2026-11-01 → 11-02).** The LLM on the review alone is stronger than the paper's
+  LLM row, so DGP − LLM is +1.69 AUROC here against +5.54 in the paper (§15). Random neighbours instead of MDK's
+  change nothing measurable; the paper reports a decline (§12).
+- **Not done:** the rest of the hyperparameter grid (the owner approved only the epoch-selection rule), the
+  PathSumm / TextSumm / NumSumm ablations, the budget and task-aware studies, and third-party baselines beyond MLP
+  and ConsisGAD's smoke test.
 - **Not reproducible:** E-Commerce and LifeService (proprietary ByteDance data).
 
 ## 2. What we reproduced
@@ -40,7 +49,12 @@
 | Paper's complexity formulas | Implemented and evaluated at MEASURED L and D |
 | MLP baseline, AmazonVideo, 5 seeds | **PARTIALLY_REPRODUCED**: Macro-F1 59.86±0.51 vs 61.74 (CLOSE), AUROC 68.35±0.49 vs 70.47 (DEVIATES, −2.12), AUPRC 25.14±1.06 vs 26.55 (MATCH) |
 | **DGP main result, AmazonVideo, 5 seeds** | **REPRODUCED (CLOSE on Macro-F1, DEVIATES on AUROC/AUPRC)**: see §11 |
-| Ablations, budget sweep, task-aware study | Not yet run (§12, §13) |
+| MLP baseline, YelpReviews, 5 seeds | **REPRODUCED**: 63.64±0.43 / 74.66±0.71 / 33.67±1.01 vs 62.09 / 75.00 / 32.24 |
+| YelpReviews graph (mirror): nodes, edges, frauds | **Exact match** with Table 1 (67,395 · 17,486,608 · 8,919) |
+| DGP, YelpReviews, 5 seeds | **DEVIATES**: see §11 |
+| LLM (target only) baseline, AmazonVideo, 5 seeds | **Above the paper**: 73.29 vs 71.78 AUROC (§15) |
+| Ablation w/o MDK, AmazonVideo, 5 seeds | Run: no significant change; the paper reports a decline (§12) |
+| PathSumm / TextSumm / NumSumm ablations, budget sweep, task-aware study | Not yet run (§12, §13) |
 
 ## 3. What matched the paper
 
@@ -76,6 +90,9 @@ identical AmazonVideo graph and the identical LoRA grid.
 
 AmazonVideo: `reviews_Amazon_Instant_Video_5.json.gz`, SNAP, SHA-256 `7816bf30c235…2b48c4f54`. YelpReviews: the
 original Rayana & Akoglu release (67,395 reviews, 13.23% filtered), not the widely used 45,954-node `YelpChi.mat`.
+The release itself is email-gated; since 2026-11-01 a mirror of it (downloaded for FLAG-Reproduce, converted by
+`scripts/convert_yelpchi_mirror.py`) is used. Its row-to-text join is supported statistically, not proven; with
+RSR = same product + star and RTR = same product + month it reproduces Table 1's edge count exactly.
 Details: `dataset_provenance.md`, `docs/datasets.md`.
 
 ## 8. Model provenance
@@ -121,11 +138,29 @@ than a pipeline defect, given Macro-F1 alone lands within 2.6% of the paper. Bes
 10-epoch budget across seeds, consistent with early stopping on validation loss reacting to seed noise on a
 config that was not tuned for it.
 
+**YelpReviews (2026-11-02, 5 seeds, same configuration as AmazonVideo):**
+
+| Dataset | Method | Macro-F1 | AUROC | AUPRC |
+|---|---|---|---|---|
+| YelpReviews | MLP (ours, CPU) | 63.64 ± 0.43 | 74.66 ± 0.71 | 33.67 ± 1.01 |
+| YelpReviews | MLP (paper) | 62.09 | 75.00 | 32.24 |
+| **YelpReviews** | **DGP (ours)** | **61.76 ± 1.86** | **78.38 ± 0.88** | **31.05 ± 1.31** |
+| YelpReviews | DGP (paper) | 69.07 | 84.28 | 48.87 |
+
+DGP **DEVIATES** on all three (−7.31, −5.90, −17.82), two to eight times its AmazonVideo distance, while the MLP
+matches the paper. DGP beats the MLP on AUROC (+3.72, 5/5 seeds) but not on AUPRC (−2.62, 0/5); in the paper it
+leads by +16.63 AUPRC. README §11, `results/controls/yelpchi.md`.
+
 MLP status unchanged: Macro-F1 CLOSE, AUROC DEVIATES (−2.12), AUPRC MATCH. The gap may come from unstated MLP input features, architecture grid or DeBERTa pooling; none can be checked against the paper. The run independently supports two earlier decisions: the benign reading of unvoted reviews (AUPRC lands near the paper's), and a non-0.5 Macro-F1 threshold (0.5 gives 49.65, far from the paper's 61.74).
 
 ## 12. Ablation results
 
-**Not yet available.** The paper's Figure 4 prints no numbers, so only its stated ordering can be compared.
+**w/o MDK (2026-11-02, AmazonVideo, 5 seeds).** The paper does not say what replaces MDK; here M = 4 random
+neighbours per metapath at the same budget. Result 65.28 ± 0.80 / 74.61 ± 0.54 / 32.51 ± 0.61 against R0's 64.74 /
+74.97 / 32.37: R0 − noMDK is −0.53 / +0.36 / −0.14, none significant, both bootstrap CIs include 0. The paper's
+Figure 4 (no printed numbers) shows a decline without MDK. README §14.
+
+PathSumm / TextSumm / NumSumm: **not yet run.**
 
 ## 13. Sensitivity results
 
@@ -139,20 +174,26 @@ per-metapath neighbourhood sizes and raw token volumes in `results/complexity/me
 versus a mean full-neighbour prompt of ~1.50M tokens — a **1922× compression ratio, 99.9% token reduction**
 (`results/token_usage/token_usage_dgp_amazonvideo_seed0.json`). This is higher than the ~236-token estimate
 an earlier version of this report derived from the paper's formula at B=10 — the formula evidently undercounts
-what real Qwen3-8B summaries and the numeric/path-summary overhead actually cost in tokens.
+what real Qwen3-8B summaries and the numeric/path-summary overhead actually cost in tokens. YelpReviews: mean final
+prompt 792 tokens (max 1,845).
 
 ## 15. Baseline results
 
-MLP on AmazonVideo: see §11. ConsisGAD: official code runs unmodified on our graph and split (adapter verified); full 5-seed training still deferred (CPU cost alone is ≈35 GPU/CPU-hours for 5 seeds; GPU run not yet done). PMP requires CUDA and has not been run. Remaining official baselines not yet adapted.
+MLP: see §11. **LLM (target only), AmazonVideo, 2026-11-01:** the same Qwen3-8B + LoRA classifier and recipe as DGP
+with only the target review in the prompt, 5 seeds: 63.35 ± 2.84 / 73.29 ± 0.36 / 30.54 ± 0.60 (paper 59.90 / 71.78 /
+27.03). The graph context adds +1.69 AUROC and +1.83 AUPRC (both significant), against +5.54 / +7.60 in the paper:
+our target-only LLM is far stronger than the paper's, while DGP − MLP matches the paper. README §13. ConsisGAD: official code runs unmodified on our graph and split (adapter verified); full 5-seed training still deferred (CPU cost alone is ≈35 GPU/CPU-hours for 5 seeds; GPU run not yet done). PMP requires CUDA and has not been run. Remaining official baselines not yet adapted.
 
 ## 16. Unresolved issues
 
-1. Selected hyperparameters (only the grid is published) — needs a search decision; §11's reproduction used
-   reconstructed defaults and no search, which is the leading suspect for the remaining AUROC/AUPRC gap.
+1. Selected hyperparameters (only the grid is published). The owner approved only the epoch-selection rule
+   (E19: validation loss, the paper's rule, vs validation AUROC; both datasets, 5 seeds), running since 2026-11-03,
+   expected to finish about 2026-11-04; a YelpReviews learning-rate sweep was approved and then dropped. Re-reading
+   all 178 existing training logs: on YelpReviews the best-validation-AUROC epoch was never the one kept (+4.02
+   validation AUROC given up), on AmazonVideo +0.4. `hparam_search_plan.md`, README §23.
 2. Exact final classification and metapath-summary prompts — reconstructed.
 3. Split sampling procedure — reconstructed (stratified, fixed split seed).
-4. YelpReviews raw-file format — unseen; converter to be written on arrival; relation scoping to be probed
-   against 17,486,608 edges.
+4. YelpReviews: resolved at the data level via a mirror (§7); the 17.8-point AUPRC gap to the paper is open.
 5. Node features for the GNN/MLP baselines on these text graphs — unstated.
 6. Swapping GraphGPT/HiGPT to a Qwen3-8B backbone — substantial adaptation.
 
@@ -164,12 +205,12 @@ data were generated.
 
 ## 18. Recommended next actions
 
-1. Request the YelpChi release (email template in `docs/datasets.md`) — lead time of days to weeks.
-2. Decide on a hyperparameter-search budget (`compute_plan.md` §6, staged option ≈60–90 GPU-hours) to close
-   the AUROC/AUPRC gap in §11, or accept the current reconstructed-default result as final for AmazonVideo.
-3. Run the ablation, budget-sweep and task-aware studies on AmazonVideo now that the main pipeline is verified
-   on real hardware (§12, §13).
-4. Once YelpReviews data arrives, repeat the main result there — expect ~1.6× the AmazonVideo compute per
-   `compute_plan.md` §4.
+1. Done 2026-11-01 → 11-02: YelpReviews via a mirror, main result and MLP run there (§11). Requesting the official
+   release (email template in `docs/datasets.md`) would still confirm the mirror's text join.
+2. Running: the epoch-selection rule (E19); analyse it when it finishes and decide whether the YelpReviews gap needs
+   more of the grid.
+3. Run the remaining ablations (PathSumm / TextSumm / NumSumm), the budget sweep and the task-aware study (§12, §13);
+   w/o MDK is done.
+4. Run the target-only LLM baseline on YelpReviews, as on AmazonVideo (§15).
 5. Finish adapting ConsisGAD (full 5-seed GPU run) and PMP, then the LLM baselines (GraphGPT/HiGPT need a
    Vicuna→Qwen3 backbone swap first).

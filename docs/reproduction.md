@@ -38,6 +38,11 @@ python scripts/train.py --dataset amazonvideo --device cuda:0 --seeds 0 \
 Select by **mean validation AUROC** (the paper's criterion): `results/aggregated/<experiment>.json → val.auroc_mean`.
 Never select on test metrics.
 
+**Epoch selection (2026-11-03).** `training.selection_rules: [loss_es2, auroc_all, auroc_es2, auroc_es3]` trains all
+`max_epochs` and scores the test set at the epoch each rule keeps (`metrics.json → selection`); `primary_rule` sets the
+top-level metrics. Unset, training early-stops on validation loss as before. Used by E19
+(`configs/experiments/sel/`, `scripts/sel_queue2.sh`, README §23).
+
 ## 3. Main result (Table 2 row "DGP"), AmazonVideo
 
 ```bash
@@ -106,8 +111,17 @@ epochs ≈ 7 h per seed, ≈ 35 h for five seeds. Run it on the GPU machine.
 
 ## 5. YelpReviews
 
-Blocked until the dataset is obtained (`docs/datasets.md`). Afterwards the same commands work with
-`--dataset yelpchi`.
+Unblocked 2026-11-01 via the release mirror downloaded for FLAG-Reproduce (README §11):
+
+```bash
+python scripts/convert_yelpchi_mirror.py                     # -> datasets/raw/yelpchi/reviews.jsonl
+python scripts/prepare_data.py --dataset yelpchi --probe     # edge count must equal 17,486,608
+python scripts/prepare_data.py --dataset yelpchi
+DATASET=yelpchi bash scripts/ctl_queue.sh YELP configs/experiments/dgp_yelp.yaml dgp_yelpchi
+```
+
+Summary generation took about 11 h on one A100 (60,013 node + 162,296 metapath summaries); one training seed
+2.6–4.8 h with two lanes.
 
 ## 6. Per-run records
 
