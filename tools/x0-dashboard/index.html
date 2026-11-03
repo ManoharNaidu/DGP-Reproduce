@@ -139,7 +139,7 @@ document.addEventListener("mousemove", (e) => { const t = e.target.closest("[dat
 document.addEventListener("toggle", (e) => { const d = e.target; if (d.dataset && d.dataset.key) openState[d.dataset.key] = d.open; }, true);
 const isOpen = (key, dflt) => (key in openState ? openState[key] : dflt);
 
-function epochChart(h, best) {
+function epochChart(h, best, alt) {
   if (!h || !h.length) return '<span class="small">—</span>';
   const W = 150, H = 34, n = 10, v = h.map((x) => x.val_auroc), lo = Math.min(...v) - 0.4, hi = Math.max(...v) + 0.4;
   const X = (i) => 6 + i * (W - 12) / (n - 1), Y = (y) => H - 5 - (y - lo) / (hi - lo) * (H - 10);
@@ -148,8 +148,9 @@ function epochChart(h, best) {
   s += `<line x1="6" x2="${W - 6}" y1="${H - 2}" y2="${H - 2}" stroke="var(--grid)"/>`;
   s += `<polyline points="${pts}" fill="none" stroke="var(--run)" stroke-width="2" stroke-linejoin="round"/>`;
   h.forEach((x, i) => {
-    const t = `Epoch ${Number(x.epoch)}<br>val loss ${Number(x.val_loss).toFixed(4)}<br>val AUROC ${f2(x.val_auroc)} · AUPRC ${f2(x.val_auprc)}<br>val Macro-F1 ${f2(x.val_macro_f1)}${x.epoch === best ? "<br><b>best so far</b>" : ""}`;
+    const t = `Epoch ${Number(x.epoch)}<br>val loss ${Number(x.val_loss).toFixed(4)}<br>val AUROC ${f2(x.val_auroc)} · AUPRC ${f2(x.val_auprc)}<br>val Macro-F1 ${f2(x.val_macro_f1)}${x.epoch === best ? "<br><b>kept by the paper rule (val loss)</b>" : ""}${alt && x.epoch === alt ? "<br><b>best val AUROC</b>" : ""}`;
     s += `<circle cx="${X(i)}" cy="${Y(x.val_auroc)}" r="${x.epoch === best ? 4.5 : 2.6}" fill="${x.epoch === best ? "var(--surface)" : "var(--run)"}" stroke="var(--run)" stroke-width="2"/>`;
+    if (alt && x.epoch === alt && alt !== best) s += `<rect x="${X(i) - 4}" y="${Y(x.val_auroc) - 4}" width="8" height="8" fill="var(--run)" stroke="var(--surface)" stroke-width="1.5"/>`;
     s += `<rect x="${X(i) - 7}" y="0" width="14" height="${H}" fill="transparent" data-tip="${esc(t)}"/>`;
   });
   return s + "</svg>";
@@ -159,25 +160,27 @@ function queueCard(Q) {
   const runs = Q.jobs.filter((r) => r.experiment), done = runs.filter((r) => r.state === "done").length;
   const sumr = `<span class="grow">${esc(Q.title)}</span>${badge(Q.state)}<span class="small">${done} / ${runs.length} runs · ${
     Q.state === "done" ? `finished ${hhmm(Q.ended)} after ${dur(Q.elapsed_s)}` : Q.state === "running" ? `expected finish ${esc(Q.eta.finish || "—")}` : `started ${hhmm(Q.started)}`}</span>`;
+  const M = Q.multi_rule;
   let s = `<tr><th>Lane</th><th>Job</th><th>State</th><th>Now</th><th class="num">Elapsed</th><th>Val AUROC by epoch</th>
-           <th class="num">Best ep.</th><th class="num">Test AUROC</th><th class="num">Test AUPRC</th><th class="num">Test F1</th><th></th></tr>`;
+           <th class="num">${M ? "Kept ep. (loss · AUROC)" : "Best ep."}</th>${M ? `<th class="num">Test AUROC (loss · AUROC rule)</th><th class="num">Test AUPRC (loss · AUROC rule)</th>` : `<th class="num">Test AUROC</th><th class="num">Test AUPRC</th>`}<th class="num">Test F1</th><th></th></tr>`;
   for (const r of Q.jobs) {
     const name = r.experiment ? `${r.experiment} · seed ${r.seed}` : "Build prompts";
     const now = r.state === "running" ? esc(r.phase || "running") + (r.phase_note ? `<div class="small">${esc(r.phase_note)}</div>` : "")
               : r.state === "done" ? `<span class="small">${hhmm(r.start)} → ${hhmm(r.end)}</span>`
               : r.state === "failed" ? `<span class="err">exit code ${esc(r.rc)}</span>` : '<span class="small">waiting</span>';
-    const t = r.test || {};
+    const t = r.test || {}, u = r.test_auroc_rule || {};
+    const pair = (m) => M ? `${f2(t[m])} · ${f2(u[m])}` : f2(t[m]);
     s += `<tr><td class="lane">${esc(r.lane)}</td><td>${esc(name)}${r.experiment === "par2_R0" ? '<div class="small">R0 re-run: stack drift</div>' : ""}</td>
       <td>${badge(r.state)}</td><td>${now}</td><td class="num">${dur(r.elapsed_s)}</td>
-      <td>${r.experiment ? epochChart(r.history, r.best_epoch) : ""}</td>
-      <td class="num">${esc(r.best_epoch ?? "—")}${r.history && r.history.length ? `<span class="small"> / ${r.history.length}</span>` : ""}</td>
-      <td class="num">${f2(t.auroc)}</td><td class="num">${f2(t.auprc)}</td><td class="num">${f2(t.macro_f1)}</td>
+      <td>${r.experiment ? epochChart(r.history, r.best_epoch, M ? r.auroc_epoch : null) : ""}</td>
+      <td class="num">${esc(r.best_epoch ?? "—")}${M && r.auroc_epoch ? ` · ${esc(r.auroc_epoch)}` : ""}${r.history && r.history.length ? `<span class="small"> / ${r.history.length}</span>` : ""}</td>
+      <td class="num">${pair("auroc")}</td><td class="num">${pair("auprc")}</td><td class="num">${f2(t.macro_f1)}</td>
       <td>${r.state !== "queued" ? `<button data-q="${esc(Q.key)}" data-log="${esc(r.job)}">${openLog[Q.key] === r.job ? "Hide log" : "Log"}</button>` : ""}</td></tr>`;
   }
   const open = isOpen("q-" + Q.key, Q.state === "running" || Q.state === "failed");
   return `<details class="card" data-key="q-${esc(Q.key)}"${open ? " open" : ""}><summary>${sumr}</summary><div class="inner">
     <div class="scroll"><table>${s}</table></div>
-    <p class="note">${Q.state === "running" ? `≈ ${dur(Q.eta.remaining_s)} left · ${Q.eta.measured ? "measured" : "estimated"} ${dur(Q.eta.per_run_s)} per run (two runs share the GPU). ` : ""}Early stopping on validation loss, patience 2, at most 10 epochs. Ring = best epoch.</p>
+    <p class="note">${Q.state === "running" ? `≈ ${dur(Q.eta.remaining_s)} left · ${Q.eta.measured ? "measured" : "estimated"} ${dur(Q.eta.per_run_s)} per run (two runs share the GPU). ` : ""}${M ? "Every run trains all 10 epochs. Ring = epoch the paper rule keeps (early stopping on val loss, patience 2); square = best val AUROC. The test set is scored at each rule's epoch; F1 is the paper rule's. ETA uses measured YelpChi and AmazonVideo run times separately once one of each finishes." : "Early stopping on validation loss, patience 2, at most 10 epochs. Ring = best epoch."}</p>
     <div id="logbox-${esc(Q.key)}"></div></div></details>`;
 }
 
@@ -283,7 +286,7 @@ function render(d) {
   $("qbadge").innerHTML = active ? badge(active.state, (active.state === "running" ? "Running: " : "Failed: ") + active.title) : badge("done", "No queue running");
   const P = (d.plan && d.plan.items) || [], pd = P.filter((x) => x.state === "done").length;
   const runs = active ? active.jobs.filter((r) => r.experiment) : [], done = runs.filter((r) => r.state === "done").length;
-  const frac = active ? runs.reduce((a, r) => a + (r.state === "done" ? 1 : r.state === "running" ? Math.min(0.95, (r.elapsed_s || 0) / active.eta.per_run_s) : 0), 0) / runs.length : 0;
+  const frac = active ? runs.reduce((a, r) => a + (r.state === "done" ? 1 : r.state === "running" ? Math.min(0.95, (r.elapsed_s || 0) / (r.est || active.eta.per_run_s)) : 0), 0) / runs.length : 0;
   const g = d.gpu[0];
   $("tiles").innerHTML = `
     <div class="tile"><div class="k">Plan</div><div class="v">${pd} / ${P.length} done</div><div class="bar"><i style="width:${(100 * pd / Math.max(P.length, 1)).toFixed(1)}%"></i></div><div class="n">${P.filter((x) => x.state === "running").length} running</div></div>

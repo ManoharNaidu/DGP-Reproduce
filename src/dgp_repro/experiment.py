@@ -139,21 +139,46 @@ def run_one_seed(cfg: dict, prompt_set: PromptSet, graph, split, seed: int, devi
                                     {k: v for k, v in ft_cfg.items() if k != "enabled"}, seed,
                                     log_path=run_dir / "training_log.jsonl")
     batch = cfg["training"].get("eval_batch_size", 8)
-    probs = {name: predict(model, text[name], label_tokens, batch) for name in ("val", "test")}
+
+    def write_predictions(path, probs):
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["node", "split", "label", "p_fraud"])
+            for name in ("val", "test"):
+                for node, y, p in zip(ids[name], labels[name], probs[name]):
+                    writer.writerow([int(node), name, int(y), f"{p:.6f}"])
+
+    selection = None
+    if result.rule_epochs:
+        if fa_finetune:
+            raise ValueError("training.selection_rules cannot be combined with flag_arch.finetune")
+        # Selection-rule study (E19): one test pass per distinct epoch some rule kept; validation probabilities come
+        # from the trainer's own pass at that epoch. Top-level val/test = the primary rule (result.best_epoch).
+        per_epoch = {}
+        for epoch in sorted(set(result.rule_epochs.values())):
+            model.load_checkpoint_state(result.epoch_states[epoch])
+            eprobs = {"val": result.epoch_val_probs[epoch], "test": predict(model, text["test"], label_tokens, batch)}
+            per_epoch[epoch] = (eprobs, evaluate_split(labels["val"], eprobs["val"], labels["test"], eprobs["test"]))
+            write_predictions(run_dir / f"predictions_epoch{epoch}.csv", eprobs)
+        selection = {rule: {"epoch": e, **per_epoch[e][1]} for rule, e in result.rule_epochs.items()}
+        probs = per_epoch[result.best_epoch][0]
+        model.load_checkpoint_state(result.epoch_states[result.best_epoch])
+        result.epoch_states.clear()
+    else:
+        probs = {name: predict(model, text[name], label_tokens, batch) for name in ("val", "test")}
     metrics = {"seed": seed, "best_epoch": result.best_epoch,
                **evaluate_split(labels["val"], probs["val"], labels["test"], probs["test"])}
+    if selection is not None:
+        metrics["selection"] = selection
+        metrics["primary_rule"] = cfg["training"].get("primary_rule", cfg["training"]["selection_rules"][0])
 
-    with open(run_dir / "predictions.csv", "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["node", "split", "label", "p_fraud"])
-        for name in ("val", "test"):
-            for node, y, p in zip(ids[name], labels[name], probs[name]):
-                writer.writerow([int(node), name, int(y), f"{p:.6f}"])
+    write_predictions(run_dir / "predictions.csv", probs)
     (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     write_manifest(run_dir, cfg, {
         "run_id": run_id, "experiment": experiment, "seed": seed, "mode": cfg.get("mode", "GPU_REPRODUCTION"),
         "device": device, "runtime_seconds": round(time.time() - started, 1), "train_seconds": round(result.train_seconds, 1),
-        "best_epoch": result.best_epoch, "label_tokens": label_tokens.report, "peak_memory": peak_memory_gb(),
+        "best_epoch": result.best_epoch, **({"rule_epochs": result.rule_epochs} if result.rule_epochs else {}),
+        "label_tokens": label_tokens.report, "peak_memory": peak_memory_gb(),
         "prompt_metadata": prompt_set.metadata, "dataset_summary": graph.summary(),
         "split_sizes": split.sizes(), "split_seed": split.seed,
         **({"flag_finetune": {k: v for k, v in fa_finetune.items() if k != "history"}} if fa_finetune else {}),

@@ -29,6 +29,9 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 >   11-03, §22 Exp 4): about three quarters of that gain comes from Gemma as the classifier, whichever role is swapped
 >   first; Gemma's text adds 0.2–0.6 points (not significant) and the two roles add up (interaction ≈ 0).
 >
+> - **Hyperparameter search, running** (2026-11-03 →, §23): the epoch-selection rule (E19, both datasets, 5 seeds) and
+>   YelpChi's own learning-rate sweep (E20). The 178 existing training logs show that on YelpChi the epoch with the
+>   best validation AUROC was never the one kept (+4.0 val AUROC, +6.7 val AUPRC given up); on AmazonVideo it barely matters.
 > - **Target-only LLM control** (2026-11-01, §13): the same fine-tuned Qwen3-8B on the review alone reaches 73.29 AUROC /
 >   30.54 AUPRC; **the graph context adds +1.7 AUROC / +1.8 AUPRC** (significant), against +5.5 / +7.6 in the paper.
 >
@@ -56,11 +59,11 @@ What exists and works today:
   (Δ R0 − noMDK: Macro-F1 −0.53, AUROC +0.36, AUPRC −0.14; none significant). The paper reports a decline. See §14.
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
-- 105 unit tests (all passing on 2026-11-01) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
+- 108 unit tests (all passing on 2026-11-03) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
 - Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
-What is outstanding: the paper's other three ablations, the budget / task-aware studies and the hyperparameter grid search on GPU
-(compute decision pending, `research/compute_plan.md` §6), and the
+What is outstanding: the paper's other three ablations, the budget / task-aware studies, the rest of the hyperparameter
+grid (the owner chose the epoch-selection rule and a YelpChi learning-rate sweep, running since 2026-11-03, §23), and the
 third-party GNN/LLM baselines beyond ConsisGAD and MLP.
 
 ## 2. What is DGP?
@@ -223,7 +226,7 @@ with Holm in `results/stats/all_comparisons.md` (E16: AUROC Holm p = 0.004, AUPR
   plausible. DGP is −5.90 AUROC and −17.82 AUPRC below the paper (AmazonVideo: −2.25 / −2.30).
 - **DGP ranks better than the MLP but is worse at the top of the ranking.** AUROC is higher on every seed, AUPRC lower on
   every seed. In the paper DGP beats the MLP by +16.63 AUPRC.
-- **Model selection is a candidate cause (not tested).** Early stopping on validation loss (patience 2, the paper's
+- **Model selection is a candidate cause (being tested as E19, §23).** Early stopping on validation loss (patience 2, the paper's
   rule) kept epoch 3 / 1 / 2 / 3 / 2. Validation loss rises after that while validation AUROC keeps rising: in every
   seed the best validation AUROC is at the last epoch run (81.6 / 77.6 / 81.6 / 81.9 / 86.6 vs the kept epochs).
   The YelpChi training set is only 1,348 reviews. Selecting on validation AUROC is a hyperparameter-search item.
@@ -639,7 +642,55 @@ The queue uses `HF_HOME=/workspace/hf_cache` (override with `HF_HOME_DGP`) becau
 cache was damaged; it holds Qwen3-8B `b968826` (the revision R0 used) and DeBERTa-v3-base. Write-up: experiment E14 in
 the DGP report; the fourth cell is E18.
 
-## 23. Reproducibility
+## 23. Hyperparameter search (E19–E20, running since 2026-11-03)
+
+**Scope (owner decision, 2026-11-03).** The paper tunes B × K × M × LoRA rank × dropout × lr (1,728 points per dataset,
+arXiv v1 §5.1), selects by mean validation AUROC and reports none of the chosen values. The proposal
+([`research/hparam_search_plan.md`](research/hparam_search_plan.md)) staged it; the owner approved:
+
+| Stage | What runs | Runs | GPU-h (est.) |
+|---|---|---|---|
+| **S1 = E19** epoch-selection rule | default configuration, seeds 0–4, YelpChi and AmazonVideo | 10 | ~43 |
+| **S2-Y = E20** YelpChi learning-rate sweep | lr ∈ {1e-5, 3e-5} (1e-4 = S1), LoRA rank 8 / dropout 0.05 unchanged, seeds 0–1 | 4 | ~24 |
+| not run (owner decision) | S2 rank × lr grid on AmazonVideo, S3 confirmation, M sweep, dropout | — | — |
+
+K was already swept (§17, flat) and B is the budget study (§15).
+
+**Why the epoch rule first.** All 178 existing training logs were re-read (no GPU): on each, the epoch kept by the
+paper's rule (lowest validation loss, early stopping with patience 2) was compared with the epoch of best validation AUROC.
+
+| Runs | n | Best val-AUROC epoch ≠ kept epoch | Mean Δ val AUROC | Mean Δ val AUPRC | Best val AUROC at the last epoch run |
+|---|---|---|---|---|---|
+| AmazonVideo, Qwen3-8B classifier | 118 | 56 (47%) | +0.40 | +0.60 | 5 |
+| AmazonVideo, Gemma-2-9B classifier | 55 | 33 (60%) | +0.41 | +0.21 | 5 |
+| **YelpChi, Qwen3-8B classifier** | **5** | **5 (100%)** | **+4.02** | **+6.67** | **5** |
+
+On YelpChi training stopped while validation AUROC was still rising in every seed. These are validation numbers on
+the set that picks the epoch, so they overstate any test gain; the test set decides it in E19.
+
+**Protocol.** `training.selection_rules` (new, `src/dgp_repro/training/trainer.py`) trains all 10 epochs and tracks several
+rules on one trajectory: `loss_es2` (the paper's rule as reconstructed, = every earlier result), `auroc_all` (best val
+AUROC over 10 epochs), `auroc_es2` / `auroc_es3` (early stopping on val AUROC). The adapter state of each kept epoch is
+held in memory; the test set is scored once per distinct kept epoch (`predictions_epoch<e>.csv`), and `metrics.json`
+holds every rule under `selection`. Top-level metrics stay the paper rule's, so E19 runs remain comparable with
+everything above. With `selection_rules` unset training is unchanged (unit test: the paper rule reproduces the legacy
+run's epoch, history and predictions exactly; 108 tests pass). Configs `configs/experiments/sel/`; queue
+`scripts/sel_queue.sh` (one A100, two lanes, YelpChi first); events `results/sel/status.jsonl`; dashboard
+`tools/x0-dashboard/` (queue "Hyperparameter search").
+
+```bash
+setsid nohup bash scripts/sel_queue.sh > /dev/null 2>&1 < /dev/null &      # resumable
+```
+
+**Reporting.** The paper-rule numbers stay the reproduction result; validation-AUROC epoch selection departs from the
+paper's stated "early stopping on validation loss" and is reported as a recorded deviation (decision D14). No choice
+uses the test set. E19 (rule vs paper rule, per dataset) and E20 (lr vs 1e-4 on YelpChi) will enter
+`scripts/stats_standard.py` as their own families.
+
+**Status.** Started 2026-11-03T07:13Z; expected to finish about 2026-11-05 (live ETA on the dashboard). Results go here
+and into the report as E19–E20.
+
+## 24. Reproducibility
 
 Every run writes `results/raw/<run_id>/run_manifest.json` (git commit, versions, GPU, full config, prompt version,
 K, M, budgets, LoRA settings, seed, runtime, peak memory) and `predictions.csv`, from which `scripts/evaluate.py`
@@ -675,7 +726,7 @@ own analyses rather than on any single corrected seed-level test. Five seeds giv
 detects only differences several times the seed-to-seed std of the difference. Seed-level tests leave out test-set
 sampling noise, which the bootstrap CIs include, so the two answer different questions and both are reported.
 
-## 24. Decisions and known gaps
+## 25. Decisions and known gaps
 
 Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](research/evidence_matrix.md),
 [`research/reproduction_gaps.md`](research/reproduction_gaps.md) and
@@ -696,18 +747,19 @@ Reconstruction decisions (full evidence in [`research/evidence_matrix.md`](resea
 | D11 | Gemma-2 with eager attention runs out of memory on batches of long reviews (§22) | Length-capped batches (`max_batch_tokens_sq`); greedy decoding, so only padding changes |
 | D12 | DGP reads the first answer token; the prototype zero-shot prompt asked for `<label>…</label>` (§22) | The zero-shot prompt asks for one word, `Yes` or `No` |
 | D13 | Exp 4 must reuse G0's Gemma text exactly, but cache keys include the classifier's tokenizer (§22) | Read-only `cached` summarizer backend that fails on a miss; `source_mdk_cache` reuses G0's trimming cache (neighbours checked identical) |
+| D14 | The paper early-stops on validation loss but selects hyperparameters by validation AUROC, and gives no patience (§23) | Paper rule (patience 2) stays primary; E19 adds validation-AUROC epoch selection as a recorded deviation, on the same training runs |
 
 The paper also never states LoRA alpha, the maximum sequence length, the metapath-summary or final classification
 prompts, or how the split was sampled. The two paper versions differ in method details:
 [`research/version_divergence.md`](research/version_divergence.md).
 
-**Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
+**Still open:** the hyperparameter search is running (E19–E20, §23; the rest of the grid was not approved), the
 paper's other ablations (w/o PathSumm / TextSumm / NumSumm) and budget / task-aware studies on GPU, why DGP trails the paper on
-YelpChi by 18 AUPRC (§11), ConsisGAD 5-seed run and the other
+YelpChi by 18 AUPRC (§11; E19 tests the first candidate), ConsisGAD 5-seed run and the other
 baselines. From the follow-up studies:
 which part of the zero-shot prompt hurts Gemma (§22), and why two Gemma runs sharing a GPU are so slow.
 
-## 25. Citation
+## 26. Citation
 
 ```bibtex
 @inproceedings{li2026dgp,

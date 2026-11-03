@@ -1,0 +1,11 @@
+# E20 / S2-Y (2026-11-03): YelpChi's own learning-rate sweep, lr = 3e-5 (paper grid {1e-5, 3e-5, 1e-4}; 1e-4 = S1).
+# LoRA rank 8 / alpha 16 / dropout 0.05 unchanged (S2, the rank sweep, not run by owner decision). Seeds 0 and 1.
+# Same multi-rule protocol as S1, so every rule can be compared across learning rates. Selection by val AUROC only.
+defaults:
+  - configs/experiments/sel/S1_yelp.yaml
+experiment: sel_yelp_lr3e5
+training:
+  max_epochs: 10                # PAPER: up to 10 epochs. Multi-rule mode always runs all 10
+  selection_rules: [loss_es2, auroc_all, auroc_es2, auroc_es3]
+  primary_rule: loss_es2        # PAPER rule (early stopping on val loss, patience 2): top-level metrics stay comparable
+  learning_rate: 3.0e-5

@@ -1,0 +1,9 @@
+# E19 / S1 (2026-11-03): epoch-selection rule on YelpChi (main configuration dgp_yelpchi, cached summaries).
+# See S1_amazon.yaml. Motivation: in all 5 dgp_yelpchi seeds val AUROC peaked at the last epoch run (README §11).
+defaults:
+  - configs/experiments/dgp_yelp.yaml
+experiment: sel_yelpchi
+training:
+  max_epochs: 10                # PAPER: up to 10 epochs. Multi-rule mode always runs all 10
+  selection_rules: [loss_es2, auroc_all, auroc_es2, auroc_es3]
+  primary_rule: loss_es2        # PAPER rule (early stopping on val loss, patience 2): top-level metrics stay comparable

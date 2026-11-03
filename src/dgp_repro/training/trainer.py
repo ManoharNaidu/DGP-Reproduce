@@ -35,6 +35,39 @@ class TrainResult:
     val_metrics: dict
     history: list[dict] = field(default_factory=list)
     train_seconds: float = 0.0
+    # Multi-rule mode only (training.selection_rules set): {rule: kept epoch}, and the adapter state and validation
+    # probabilities of every epoch some rule kept, so the caller can score the test set once per distinct epoch.
+    rule_epochs: dict = field(default_factory=dict)
+    epoch_states: dict = field(default_factory=dict)
+    epoch_val_probs: dict = field(default_factory=dict)
+
+
+def parse_rule(rule: str) -> tuple[str, int | None]:
+    """'loss_es2' -> ('val_loss', 2): early stopping on val loss with patience 2, keep the best epoch up to the stop.
+    'auroc_all' -> ('val_auroc', None): best epoch over every epoch run. Metrics: loss (lower is better), auroc, auprc."""
+    metric, _, stop = rule.partition("_")
+    if metric not in ("loss", "auroc", "auprc") or not (stop == "all" or (stop.startswith("es") and stop[2:].isdigit())):
+        raise ValueError(f"unknown selection rule {rule!r}; expected e.g. loss_es2, auroc_es3, auroc_all")
+    return f"val_{metric}", (None if stop == "all" else int(stop[2:]))
+
+
+class _Rule:
+    def __init__(self, rule: str):
+        self.name, (self.key, self.patience) = rule, parse_rule(rule)
+        self.lower = self.key == "val_loss"
+        self.best_epoch, self.best = -1, (math.inf if self.lower else -math.inf)
+        self.wait, self.stopped = 0, False
+
+    def update(self, epoch: int, record: dict) -> None:
+        if self.stopped:
+            return
+        value = record[self.key]
+        if (value < self.best) if self.lower else (value > self.best):
+            self.best_epoch, self.best, self.wait = epoch, value, 0
+        else:
+            self.wait += 1
+            if self.patience is not None and self.wait >= self.patience:
+                self.stopped = True
 
 
 def _set_mode(model, training: bool) -> None:
@@ -79,6 +112,9 @@ def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts
     batch_size = cfg.get("batch_size", 4)
     accumulation = cfg.get("gradient_accumulation", 1)
     patience = cfg.get("early_stopping_patience", 2)
+    # Selection-rule study (E19): train every epoch, track several epoch-selection rules on one trajectory. With
+    # selection_rules unset the loop below is the original one (early stopping on val loss), bit for bit.
+    rules = [_Rule(r) for r in (cfg.get("selection_rules") or [])]
     eval_batch = cfg.get("eval_batch_size", batch_size)
     train_labels = np.asarray(train_labels)
     val_labels = np.asarray(val_labels)
@@ -124,6 +160,17 @@ def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts
             with open(log_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(record) + "\n")
 
+        if rules:
+            for rule in rules:
+                rule.update(epoch, record)
+            kept = {rule.best_epoch for rule in rules}
+            if epoch in kept:
+                best.epoch_states[epoch] = model.state_for_checkpoint()
+                best.epoch_val_probs[epoch] = val_prob
+            for old in [e for e in best.epoch_states if e not in kept]:
+                del best.epoch_states[old], best.epoch_val_probs[old]
+            continue
+
         if val_loss < best.best_val_loss:
             best.best_epoch, best.best_val_loss, best.val_metrics = epoch, val_loss, val_metrics
             best_state = model.state_for_checkpoint()
@@ -133,6 +180,14 @@ def train(model, train_prompts: list[str], train_labels: np.ndarray, val_prompts
             if epochs_without_improvement >= patience:
                 break
 
+    if rules:
+        best.rule_epochs = {rule.name: rule.best_epoch for rule in rules}
+        primary = cfg.get("primary_rule", rules[0].name)
+        best.best_epoch = best.rule_epochs[primary]
+        record = best.history[best.best_epoch - 1]
+        best.best_val_loss = record["val_loss"]
+        best.val_metrics = {k[4:]: v for k, v in record.items() if k.startswith("val_") and k != "val_loss"}
+        best_state = best.epoch_states[best.best_epoch]
     if best_state is not None:
         model.load_checkpoint_state(best_state)  # restore the early-stopping checkpoint
     best.train_seconds = time.time() - start_time

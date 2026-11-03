@@ -8,6 +8,7 @@ Plain standard library. Reads (never writes):
     results/gemma_swap/x0/status.jsonl             Exp 4 queue events (scripts/x0_queue.sh)
     results/gemma_swap/qg0/status.jsonl            Exp 4 fourth cell queue events (scripts/qg0_queue.sh, one lane)
     results/controls/<NAME>/status.jsonl           control queue events (scripts/ctl_queue.sh), found automatically
+    results/sel/status.jsonl                       hyperparameter search queue (scripts/sel_queue.sh: E19 S1 + E20 S2-Y)
     results/raw/<run>/{training_log.jsonl,metrics.json}
     logs/gemma_swap/<job>.log, logs/controls/<job>.log   tails, whitelisted job names only
     results/gemma_swap/exp4_2x2.{json,md}          Exp 4 analysis, 2 x 2 (falls back to exp4.{json,md})
@@ -52,9 +53,40 @@ BASELINES = [  # short, label, experiment (ours) or None, paper values
 PAPER = {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}
 
 
+# Hyperparameter search (2026-11-03, research/hparam_search_plan.md). Jobs: name, lane, experiment, seed, extras.
+# est = expected seconds per run while two runs share the GPU (YelpChi ~0.68 h/epoch x 10 + test passes; AmazonVideo
+# ~0.32 h/epoch x 10 + test passes); group = runs whose measured mean replaces est once one of them finishes.
+_SY = {"est": 9.2 * 3600, "group": "yelp", "test_n": "13,479"}
+_SA = {"est": 3.9 * 3600, "group": "amazon", "test_n": "7,425"}
+SEL_JOBS = ([("prompts_yelpchi", "prep", None, None, {}), ("prompts_amazonvideo", "prep", None, None, {})]
+            + [(f"sy_s{s}", "A", "sel_yelpchi", s, _SY) for s in (0, 2, 4)]
+            + [("ly1_s0", "A", "sel_yelp_lr1e5", 0, _SY), ("ly3_s0", "A", "sel_yelp_lr3e5", 0, _SY), ("sa_s4", "A", "sel_amazonvideo", 4, _SA)]
+            + [(f"sy_s{s}", "B", "sel_yelpchi", s, _SY) for s in (1, 3)]
+            + [("ly1_s1", "B", "sel_yelp_lr1e5", 1, _SY), ("ly3_s1", "B", "sel_yelp_lr3e5", 1, _SY)]
+            + [(f"sa_s{s}", "B", "sel_amazonvideo", s, _SA) for s in (0, 1, 2, 3)])
+
+
+def rule_epochs(hist):
+    """Epoch kept by the paper rule (val loss, patience 2) and by best val AUROC so far (trainer.parse_rule)."""
+    if not hist:
+        return None, None
+    best, wait = 0, 0
+    for i in range(1, len(hist)):
+        if hist[i]["val_loss"] < hist[best]["val_loss"]:
+            best, wait = i, 0
+        else:
+            wait += 1
+            if wait >= PATIENCE:
+                break
+    return hist[best]["epoch"], max(hist, key=lambda h: h["val_auroc"])["epoch"]
+
+
 def studies():
-    """Every queue the dashboard knows: Exp 4 plus each results/controls/<NAME>/ that has a status file."""
-    out = [{"key": "x0", "title": "Exp 4 · Gemma text with a Qwen classifier", "status": os.path.join(ROOT, "results", "gemma_swap", "x0", "status.jsonl"),
+    """Every queue the dashboard knows: the search queue, Exp 4, and each results/controls/<NAME>/ with a status file."""
+    out = [{"key": "sel", "title": "Hyperparameter search · epoch-selection rule (E19) + YelpChi lr sweep (E20)",
+            "status": os.path.join(ROOT, "results", "sel", "status.jsonl"), "logs": os.path.join(ROOT, "logs", "sel"),
+            "proc": "scripts/sel_queue.sh", "fallback_s": 9.2 * 3600, "multi_rule": True, "jobs": SEL_JOBS},
+           {"key": "x0", "title": "Exp 4 · Gemma text with a Qwen classifier", "status": os.path.join(ROOT, "results", "gemma_swap", "x0", "status.jsonl"),
             "logs": os.path.join(ROOT, "logs", "gemma_swap"), "proc": "scripts/x0_queue.sh", "fallback_s": 1.8 * 3600,
             "jobs": [("x0_prompts", "prep", None, None), ("x0_s0", "A", "gs_X0", 0), ("x0_s2", "A", "gs_X0", 2),
                      ("x0_s4", "A", "gs_X0", 4), ("x0_s1", "B", "gs_X0", 1), ("x0_s3", "B", "gs_X0", 3),
@@ -156,13 +188,15 @@ def job_rows(study, ev, now):
         elif j in last:
             last[j].update({"end": e["t"], "event": e["event"], "rc": e.get("rc"), "secs": e.get("secs")})
     rows = []
-    for name, lane, exp, seed in study["jobs"]:
+    for name, lane, exp, seed, *extra in study["jobs"]:
+        extra = extra[0] if extra else {}
         x = last.get(name, {})
         st = ("queued" if not x else "running" if "end" not in x else
               "done" if x.get("event") == "end" and (x.get("rc") or 0) == 0 else "failed")
         r = {"job": name, "lane": lane, "experiment": exp, "seed": seed, "state": st, "start": x.get("start"),
              "end": x.get("end"), "rc": x.get("rc"),
-             "elapsed_s": (x.get("secs") or (epoch_of(x.get("end")) or now) - epoch_of(x["start"])) if x.get("start") else None}
+             "elapsed_s": (x.get("secs") or (epoch_of(x.get("end")) or now) - epoch_of(x["start"])) if x.get("start") else None,
+             "est": extra.get("est"), "group": extra.get("group")}
         if exp:
             d = run_dir(exp, seed) if st != "queued" else None
             hist = jsonl(os.path.join(d, "training_log.jsonl")) if d else []
@@ -172,7 +206,17 @@ def job_rows(study, ev, now):
             r["best_epoch"] = hist[best]["epoch"] if hist else None
             since = len(hist) - 1 - best if hist else 0
             r["test"], _ = test_metrics(exp, seed)
-            if st == "running":
+            if study.get("multi_rule"):                # every epoch runs; show the paper rule and the val-AUROC rule
+                r["best_epoch"], r["auroc_epoch"] = rule_epochs(hist)
+                m = read_json(os.path.join(d, "metrics.json")) if d else None
+                sel = ((m or {}).get("selection") or {}).get("auroc_all")
+                r["test_auroc_rule"] = {k: sel["test"][k] for k in METRICS} if sel else None
+                if st == "running":
+                    r["phase"] = (f"testing on {extra.get('test_n', 'the test set')} reviews" if len(hist) >= MAX_EPOCHS
+                                  else f"training epoch {len(hist) + 1} of {MAX_EPOCHS}" if hist or (r["elapsed_s"] or 0) > 600
+                                  else "loading model / epoch 1")
+                    r["phase_note"] = None
+            elif st == "running":
                 r["phase"] = (("testing on 7,425 reviews" if hist and (since >= PATIENCE or len(hist) >= MAX_EPOCHS)
                                else f"training epoch {len(hist) + 1}") if hist or (r["elapsed_s"] or 0) > 600
                               else "loading model / epoch 1")
@@ -185,15 +229,22 @@ def job_rows(study, ev, now):
 def eta(rows, now, fallback_s):
     done = [r["elapsed_s"] for r in rows if r["experiment"] and r["state"] == "done" and r["elapsed_s"]]
     per = sum(done) / len(done) if done else fallback_s
+    by_group = {}
+    for r in rows:                                 # per-group measured means (search queue: YelpChi vs AmazonVideo)
+        if r.get("group") and r["state"] == "done" and r["elapsed_s"]:
+            by_group.setdefault(r["group"], []).append(r["elapsed_s"])
     lanes = {}
     for r in rows:
         if r["lane"] not in ("A", "B") or r["state"] in ("done", "failed"):
             continue
-        left = max(per - (r["elapsed_s"] or 0), 120) if r["state"] == "running" else per
+        g = by_group.get(r.get("group"))
+        expect = sum(g) / len(g) if g else (r.get("est") or per)
+        left = max(expect - (r["elapsed_s"] or 0), 120) if r["state"] == "running" else expect
         lanes[r["lane"]] = lanes.get(r["lane"], 0) + left
     secs = max(lanes.values()) if lanes else 0
+    fmt = "%a %d %b %H:%M UTC" if secs > 20 * 3600 else "%H:%M UTC"
     return {"per_run_s": per, "measured": bool(done), "remaining_s": secs,
-            "finish": datetime.fromtimestamp(now + secs, timezone.utc).strftime("%H:%M UTC") if secs else None}
+            "finish": datetime.fromtimestamp(now + secs, timezone.utc).strftime(fmt) if secs else None}
 
 
 def queue_state(study, now):
@@ -205,7 +256,7 @@ def queue_state(study, now):
           "running" if q_alive else "stopped" if ev else "not started")
     first = epoch_of(ev[0]["t"]) if ev else None
     end = epoch_of(ev[-1]["t"]) if st == "done" else now
-    return {"key": study["key"], "title": study["title"], "state": st, "alive": q_alive,
+    return {"key": study["key"], "title": study["title"], "state": st, "alive": q_alive, "multi_rule": bool(study.get("multi_rule")),
             "started": ev[0]["t"] if ev else None, "ended": ev[-1]["t"] if st == "done" else None,
             "elapsed_s": end - first if first else None, "jobs": rows, "eta": eta(rows, now, study["fallback_s"]),
             "events": [{**e, "queue": study["key"]} for e in ev[-14:]]}

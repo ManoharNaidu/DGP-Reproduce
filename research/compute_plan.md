@@ -116,3 +116,7 @@ Options:
 | C. No search | Reconstructed defaults (K=2, M=4, B=10, r=8, dropout=0.05, lr=1e-4) | 0 | Cheapest; results depend on unverified defaults and are harder to interpret against the paper |
 
 No grid choice is hard-coded until the owner decides.
+
+**Update 2026-11-03.** The owner approved a reduced search: the epoch-selection rule on both datasets (5 seeds) and a
+YelpChi learning-rate sweep (2 seeds). Plan, measured unit costs and decision: [`hparam_search_plan.md`](hparam_search_plan.md);
+results: README §23.

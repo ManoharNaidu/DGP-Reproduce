@@ -1,0 +1,11 @@
+# E19 / S1 (2026-11-03): epoch-selection rule on AmazonVideo. Main configuration (dgp_amazonvideo, cached summaries);
+# only the epoch-selection bookkeeping changes. Rules (trainer.parse_rule): loss_es2 = the paper's rule as reconstructed
+# (today's numbers), auroc_all = best val AUROC over 10 epochs, auroc_es2/es3 = early stopping on val AUROC.
+# One trajectory per seed; the test set is scored once per distinct kept epoch. research/hparam_search_plan.md.
+defaults:
+  - configs/experiments/dgp_amazon.yaml
+experiment: sel_amazonvideo
+training:
+  max_epochs: 10                # PAPER: up to 10 epochs. Multi-rule mode always runs all 10
+  selection_rules: [loss_es2, auroc_all, auroc_es2, auroc_es3]
+  primary_rule: loss_es2        # PAPER rule (early stopping on val loss, patience 2): top-level metrics stay comparable
