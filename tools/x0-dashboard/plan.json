@@ -90,7 +90,7 @@
       "title": "Reports and docx: hyperparameter search plan, log mining, E19-E20 in progress",
       "kind": "docs",
       "state": "running",
-      "detail": "README §23, report card E19-E20 (running), appendix entries, docx rebuild; results added when the queue finishes."
+      "detail": "2026-11-03: README §23 + D14; report card E19-E20 (running) with Table 65 (log mining of 178 runs), index rows, exec summary, E16 decision, Q9, limitations, timeline; appendix A82-A84, B19, C.23; docx rebuilt (113 tables, 72 captions). Pre-E19 copies in reports/rebuild/archive-2026-11-03/preE19/. Results get added when the queue finishes."
     },
     {
       "id": "backup",
