@@ -1,0 +1,13 @@
+{"t": "2026-11-02T20:24:35Z", "job": "qg0_prompts", "event": "start"}
+{"t": "2026-11-02T20:25:35Z", "job": "qg0_prompts", "event": "end"}
+{"t": "2026-11-02T20:25:35Z", "job": "qg0_s0", "event": "start"}
+{"t": "2026-11-02T22:03:54Z", "job": "qg0_s0", "event": "end", "rc": 0, "secs": 5899}
+{"t": "2026-11-02T22:03:54Z", "job": "qg0_s1", "event": "start"}
+{"t": "2026-11-02T23:42:21Z", "job": "qg0_s1", "event": "end", "rc": 0, "secs": 5907}
+{"t": "2026-11-02T23:42:21Z", "job": "qg0_s2", "event": "start"}
+{"t": "2026-11-03T01:02:04Z", "job": "qg0_s2", "event": "end", "rc": 0, "secs": 4783}
+{"t": "2026-11-03T01:02:04Z", "job": "qg0_s3", "event": "start"}
+{"t": "2026-11-03T02:21:50Z", "job": "qg0_s3", "event": "end", "rc": 0, "secs": 4786}
+{"t": "2026-11-03T02:21:50Z", "job": "qg0_s4", "event": "start"}
+{"t": "2026-11-03T04:00:08Z", "job": "qg0_s4", "event": "end", "rc": 0, "secs": 5898}
+{"t": "2026-11-03T04:00:08Z", "job": "queue", "event": "done"}

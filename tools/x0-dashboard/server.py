@@ -10,7 +10,7 @@ Plain standard library. Reads (never writes):
     results/controls/<NAME>/status.jsonl           control queue events (scripts/ctl_queue.sh), found automatically
     results/raw/<run>/{training_log.jsonl,metrics.json}
     logs/gemma_swap/<job>.log, logs/controls/<job>.log   tails, whitelisted job names only
-    results/gemma_swap/exp4.{json,md}              Exp 4 analysis
+    results/gemma_swap/exp4_2x2.{json,md}          Exp 4 analysis, 2 x 2 (falls back to exp4.{json,md})
     nvidia-smi                                     GPU load
 """
 import glob
@@ -26,7 +26,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 RAW = os.path.join(ROOT, "results", "raw")
-EXP4 = os.path.join(ROOT, "results", "gemma_swap", "exp4")
+EXP4_3 = os.path.join(ROOT, "results", "gemma_swap", "exp4")          # three cells (x0_analysis.py)
+EXP4_2X2 = os.path.join(ROOT, "results", "gemma_swap", "exp4_2x2")    # all four cells (qg0_analysis.py), preferred
+
+
+def exp4_base():
+    return EXP4_2X2 if os.path.exists(EXP4_2X2 + ".json") else EXP4_3
 CONTROLS_MD = os.path.join(ROOT, "results", "controls", "controls.md")
 METRICS = ("macro_f1", "auroc", "auprc")
 MAX_EPOCHS, PATIENCE = 10, 2                       # configs/models/dgp.yaml (early stopping on val loss)
@@ -225,8 +230,8 @@ def state():
     return {"now": datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
             "plan": read_json(os.path.join(HERE, "plan.json")), "queues": queues,
             "exp4": {"cells": {k: {"short": v[0], "label": v[1], "per_seed": per_seed(k)} for k, v in CELLS.items()},
-                     "paper": PAPER, "par2_R0": par, "analysis": read_json(EXP4 + ".json"),
-                     "analysis_md": os.path.exists(EXP4 + ".md")},
+                     "paper": PAPER, "par2_R0": par, "analysis": read_json(exp4_base() + ".json"),
+                     "analysis_md": os.path.exists(exp4_base() + ".md")},
             "baselines": baselines(), "gpu": gpu(), "events": events}
 
 
@@ -268,8 +273,8 @@ class H(BaseHTTPRequestHandler):
                 self.send(200, ("\n".join(lines) or "(log is empty)").encode(), "text/plain; charset=utf-8")
             except OSError:
                 self.send(200, b"(no log yet)", "text/plain; charset=utf-8")
-        elif path == "/files/exp4.md" and os.path.exists(EXP4 + ".md"):
-            with open(EXP4 + ".md", "rb") as f:
+        elif path == "/files/exp4.md" and os.path.exists(exp4_base() + ".md"):
+            with open(exp4_base() + ".md", "rb") as f:
                 self.send(200, f.read(), "text/plain; charset=utf-8")
         elif path == "/files/controls.md" and os.path.exists(CONTROLS_MD):
             with open(CONTROLS_MD, "rb") as f:

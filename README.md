@@ -25,7 +25,9 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 >   subgraphs with Qwen3-8B; stopped after its baseline.
 > - **Gemma swap / zero-shot prompt** (2026-10-29 → 10-30, §22): **Gemma-2-9B-it instead of Qwen3-8B raises AUPRC by
 >   about 2 points in every arm** (95% CIs exclude 0) — the largest gain found. A structured zero-shot classification
->   prompt does nothing for Qwen and costs Gemma about 2 AUPRC.
+>   prompt does nothing for Qwen and costs Gemma about 2 AUPRC. **The 2 × 2 writer × classifier design** (2026-11-01 →
+>   11-03, §22 Exp 4): about three quarters of that gain comes from Gemma as the classifier, whichever role is swapped
+>   first; Gemma's text adds 0.2–0.6 points (not significant) and the two roles add up (interaction ≈ 0).
 >
 > - **Target-only LLM control** (2026-11-01, §13): the same fine-tuned Qwen3-8B on the review alone reaches 73.29 AUROC /
 >   30.54 AUPRC; **the graph context adds +1.7 AUROC / +1.8 AUPRC** (significant), against +5.5 / +7.6 in the paper.
@@ -583,44 +585,59 @@ with figures: `reports/2026-10-23-DGP-experiment-log.docx` (experiments E11–E1
 
 ### Exp 4: Gemma's text with the Qwen classifier (writer vs classifier, 2026-11-01)
 
-Exp 1 swapped Gemma into both roles at once. Exp 4 adds the missing cell for arm 0 (original prompt): **X0 = Gemma's
-text + Qwen3-8B classifier**, 5 seeds, paired with R0 (Qwen writes and classifies) and G0 (Gemma writes and classifies).
-X0 − R0 is the effect of Gemma's text and G0 − X0 the effect of Gemma as the classifier; they add up to G0 − R0.
+Exp 1 swapped Gemma into both roles at once. Exp 4 adds the two missing cells for arm 0 (original prompt): **X0 =
+Gemma's text + Qwen3-8B classifier** (2026-11-01) and **QG0 = Qwen's text + Gemma-2-9B-it classifier** (2026-11-02 →
+11-03), 5 seeds each, paired with R0 (Qwen writes and classifies) and G0 (Gemma writes and classifies). Each role's
+effect is then measured twice, once with each model in the other role, and the interaction
+(G0 − QG0) − (X0 − R0) tests whether the two effects add up.
 
 - **Same text as G0, word for word.** `configs/experiments/gemma_swap/X0.yaml` = R0 + `summarizer.backend: cached`, a
   read-only backend (`CachedOnlySummarizer`) that serves G0's cached Gemma summaries, never loads Gemma and stops on any
   cache miss. The neighbour-trimming cache key includes the classifier's tokenizer, which changes only the stored raw-token
   counts (neighbours identical for all 12 metapaths), so `summarizer.source_mdk_cache` points X0 at G0's trimming cache.
   9,931 of 10,023 X0 prompts equal G0's; the other 92 differ only where the target review is cut at 1,024 tokens.
+- **Same text as R0, word for word (QG0).** `configs/experiments/gemma_swap/QG0.yaml` = R0 with the cached backend
+  pointed at R0's Qwen summaries (`source_mdk_cache: 30447a444d0aa6e2`) and Gemma (`11c9b30`, eager attention) as the
+  classifier. All 35,747 node and 119,829 metapath summaries came from cache; 9,931 of 10,023 prompts equal R0's, the
+  other 92 differ only where the target review is cut at 1,024 Gemma tokens (as in G0). One training lane: two Gemma
+  runs sharing the GPU are 2–3× slower.
 - **Stack drift.** The new 1-GPU instance runs torch 2.14.1 (R0: 2.14.0), so R0 seed 0 was re-run as `par2_R0`.
 
 | Cell | Writer | Classifier | Macro-F1 | AUROC | AUPRC |
 |---|---|---|---|---|---|
 | R0 | Qwen | Qwen | 64.74 ± 0.45 | 74.97 ± 0.51 | 32.37 ± 0.57 |
+| QG0 | Qwen | Gemma | 64.70 ± 1.35 | 76.18 ± 0.34 | 33.74 ± 0.44 |
 | X0 | Gemma | Qwen | 65.30 ± 0.51 | 75.37 ± 0.35 | 32.86 ± 0.37 |
 | G0 | Gemma | Gemma | 65.04 ± 1.01 | **76.38** ± 0.34 | **34.31** ± 1.00 |
 
 | Comparison | Δ AUROC [95% CI] · Holm p | Δ AUPRC [95% CI] · Holm p | Share of G0 − R0 (AUROC / AUPRC) |
 |---|---|---|---|
-| X0 − R0 (Gemma's text) | +0.39 [−0.10, +0.91] · 0.062 | +0.49 [−0.34, +1.30] · 0.180 | 28% / 25% |
-| G0 − X0 (Gemma as classifier) | +1.02 [+0.45, +1.59] · 0.010 | +1.44 [+0.39, +2.45] · 0.169 | 72% / 75% |
-| G0 − R0 (both, Exp 1) | +1.41 [+0.68, +2.14] · 0.009 | +1.94 [+0.70, +3.10] · 0.035 | |
+| QG0 − R0 (Gemma as classifier, Qwen's text) | +1.21 [+0.53, +1.92] · 0.074 | +1.37 [+0.25, +2.41] · 0.115 | 86% / 71% |
+| G0 − X0 (Gemma as classifier, Gemma's text) | +1.02 [+0.45, +1.59] · 0.015 | +1.44 [+0.39, +2.45] · 0.270 | 72% / 75% |
+| X0 − R0 (Gemma's text, Qwen classifier) | +0.39 [−0.10, +0.91] · 0.104 | +0.49 [−0.34, +1.30] · 0.315 | 28% / 25% |
+| G0 − QG0 (Gemma's text, Gemma classifier) | +0.20 [−0.19, +0.60] · 1.000 | +0.57 [−0.04, +1.15] · 1.000 | 14% / 29% |
+| G0 − R0 (both, Exp 1) | +1.41 [+0.68, +2.14] | +1.94 [+0.70, +3.10] | |
+| Interaction (G0 − QG0) − (X0 − R0) | −0.19 (1/5 seeds > 0) · t p 0.43 | +0.08 (2/5) · t p 0.89 | |
 
-**What it shows.** About three quarters of Gemma's gain comes from Gemma as the classifier. Gemma's text raises AUROC and
-AUPRC on all five seeds, but by under half a point and with CIs that include 0. It also gives Qwen 33% shorter prompts
-(521 vs 782 tokens) at no loss. Stack drift on seed 0: Macro-F1 +0.51, AUROC −0.03, AUPRC −0.19. The fourth cell (Qwen
-text, Gemma classifier) was not run, so the split depends on the order of the swaps. Holm = paired-t p over 3
-comparisons × 3 metrics; CIs are paired bootstrap over the 7,425 test reviews.
+**What it shows.** About three quarters of Gemma's gain comes from Gemma as the classifier, in both orders: +1.02 to
++1.21 AUROC and +1.37 to +1.44 AUPRC, better on 5/5 seeds in AUROC and both CIs above 0. Gemma's text adds +0.20 to
++0.39 AUROC and +0.49 to +0.57 AUPRC, with CIs that include 0. The interaction is near zero (p 0.43 / 0.89), so the two
+roles add up and the order of the swaps barely matters. Macro-F1 separates none of the cells. Gemma's text also gives
+Qwen 33% shorter prompts (521 vs 782 tokens) at no loss. Stack drift on seed 0: Macro-F1 +0.51, AUROC −0.03, AUPRC
+−0.19. Holm = paired-t p over the 4 role comparisons × 3 metrics; CIs are paired bootstrap over the 7,425 test reviews.
+QG0 trained alone in 1.5 h per run (peak 27.5 GB).
 
 ```bash
 nohup bash scripts/x0_queue.sh >> logs/gemma_swap/x0_queue.log 2>&1 &   # 5 X0 seeds + par2_R0 seed 0, 2 lanes on 1 GPU
 (cd scripts && ../../envs/dgp-fa/bin/python x0_analysis.py)              # -> results/gemma_swap/exp4.{md,json}
+setsid nohup bash scripts/qg0_queue.sh > /dev/null 2>&1 < /dev/null &     # QG0: prompt build + 5 seeds, one lane
+(cd scripts && ../../envs/dgp-fa/bin/python qg0_analysis.py)             # -> results/gemma_swap/exp4_2x2.{md,json}
 python tools/x0-dashboard/server.py 18790                                 # read-only progress page (127.0.0.1)
 ```
 
 The queue uses `HF_HOME=/workspace/hf_cache` (override with `HF_HOME_DGP`) because the instance's default Hugging Face
 cache was damaged; it holds Qwen3-8B `b968826` (the revision R0 used) and DeBERTa-v3-base. Write-up: experiment E14 in
-the DGP report.
+the DGP report; the fourth cell is E18.
 
 ## 23. Reproducibility
 
@@ -632,8 +649,8 @@ Test labels are read only by the split builder and evaluation.
 
 **One statistics standard (2026-11-01).** The studies were analysed with different tools as they ran (bootstrap CIs
 over test reviews, McNemar, Holm only from Exp 4 on). `python scripts/stats_standard.py` re-tests every paired
-comparison of E2–E17 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
-the 3 metrics × the comparisons of each experiment ("family") and over all 108 tests ("global") →
+comparison of E2–E18 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
+the 3 metrics × the comparisons of each experiment ("family") and over all 114 tests ("global") →
 [`results/stats/all_comparisons.md`](results/stats/all_comparisons.md).
 
 | Experiment | Comparisons | Tests | p < 0.05 | Holm family < 0.05 | Holm global < 0.05 |
@@ -649,6 +666,7 @@ the 3 metrics × the comparisons of each experiment ("family") and over all 108 
 | E15 target-only LLM and MLP | 3 | 9 | 7 | 7 | 4 (all vs the MLP) |
 | E16 DGP vs MLP on YelpChi | 1 | 3 | 2 | 2 (AUROC +3.72; AUPRC −2.62) | 0 |
 | E17 MDK vs random neighbours (w/o MDK) | 1 | 3 | 0 | 0 | 0 |
+| E18 fourth writer × classifier cell (QG0) | 2 | 6 | 2 | 1 (QG0 − R0 AUROC +1.21) | 0 |
 
 Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep, the F0 re-run and the w/o MDK ablation (E17) are
 null, and Gemma's gain (E11) and the zero-shot penalty for Gemma (E13) survive in some arms but not all: they rest on
@@ -686,8 +704,7 @@ prompts, or how the split was sampled. The two paper versions differ in method d
 **Still open:** hyperparameter grid search (≈60–90 GPU-hours, staged option in `research/compute_plan.md` §6), the
 paper's other ablations (w/o PathSumm / TextSumm / NumSumm) and budget / task-aware studies on GPU, why DGP trails the paper on
 YelpChi by 18 AUPRC (§11), ConsisGAD 5-seed run and the other
-baselines. From the follow-up studies: the fourth
-writer × classifier cell (Qwen text, Gemma classifier; §22 Exp 4 answered the text-vs-classifier question for arm 0),
+baselines. From the follow-up studies:
 which part of the zero-shot prompt hurts Gemma (§22), and why two Gemma runs sharing a GPU are so slow.
 
 ## 25. Citation

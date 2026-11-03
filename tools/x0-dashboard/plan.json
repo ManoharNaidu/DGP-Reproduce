@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T23:25Z",
+  "updated": "2026-11-03T04:25Z",
   "note": "Order agreed on 2026-11-01. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -56,7 +56,7 @@
       "title": "One statistics standard (seed-level paired t + Holm) for E2-E14",
       "kind": "CPU",
       "state": "done",
-      "detail": "scripts/stats_standard.py: 36 comparisons (E16 YelpChi, E17 w/o MDK added), 108 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9, E16 2/3, E17 0/3. results/stats/all_comparisons.md; README §23; report §8. Commit a07aa64."
+      "detail": "scripts/stats_standard.py: 38 comparisons (E16 YelpChi, E17 w/o MDK, E18 QG0 added), 114 seed-level paired t-tests, Holm per experiment and global. No prompt-side effect (E2, E8, E12) survives; E11 3/15, E13 1/15, E14 3/9, E15 7/9, E16 2/3, E17 0/3, E18 1/6 (QG0 - R0 AUROC); global survivors still the 4 E15-vs-MLP tests. results/stats/all_comparisons.md; README §23; report §8. Commit a07aa64"
     },
     {
       "id": "yelp",
@@ -76,8 +76,8 @@
       "id": "cell4",
       "title": "Fourth cell: Qwen text + Gemma classifier",
       "kind": "GPU",
-      "state": "running",
-      "detail": "gs_QG0 = dr_R0's cached Qwen text (all 35,747 node + 119,829 metapath summaries reused) + Gemma-2-9B-it classifier (11c9b309). Prompts identical to R0's except 92 long target reviews cut at 1,024 Gemma tokens (as in G0). One training lane. Seed 0 done 22:03Z in 1.64 h (4 epochs, kept epoch 2): Macro-F1 65.29 / AUROC 76.08 / AUPRC 33.55 (R0 seed 0: 64.78 / 75.13 / 32.78; G0 seed 0: 63.63 / 76.21 / 33.96). Seed 1 started 22:04Z; all five expected about 04:30Z. Then scripts/qg0_analysis.py: 2x2 writer x classifier with interaction (E18)."
+      "state": "done",
+      "detail": "QG0 = R0's Qwen text + Gemma-2-9B-it classifier, 5 seeds (20:25Z 11-02 -> 04:00Z 11-03, all rc 0, 1.5 h/run alone, 27.5 GB). QG0 64.70 / 76.18 / 33.74. Gemma as classifier: +1.21 AUROC / +1.37 AUPRC on Qwen's text (5/5 seeds, CIs above 0), +1.02 / +1.44 on Gemma's text. Gemma's text: +0.20 / +0.57 with Gemma classifier, +0.39 / +0.49 with Qwen (CIs include 0). Interaction -0.19 AUROC (p 0.43), +0.08 AUPRC (p 0.89): the roles add up. results/gemma_swap/exp4_2x2.md; E18."
     },
     {
       "id": "hparam",

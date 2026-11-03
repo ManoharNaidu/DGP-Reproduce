@@ -237,7 +237,7 @@ function renderExp4(d) {
   let an = "";
   const A = E.analysis;
   if (A && A.comparisons && Object.keys(A.comparisons).length) {
-    an = `<h2 style="margin-top:16px">Paired comparisons (scripts/x0_analysis.py)</h2><div class="scroll"><table><tr><th>Comparison</th><th>What changes</th>`
+    an = `<h2 style="margin-top:16px">Paired comparisons</h2><div class="scroll"><table><tr><th>Comparison</th><th>What changes</th>`
       + MET.map(([, l]) => `<th class="num">Δ ${l}</th><th class="num">Holm p</th>`).join("") + `<th class="num">95% CI Δ AUROC</th><th class="num">95% CI Δ AUPRC</th></tr>`;
     for (const [k, c] of Object.entries(A.comparisons)) {
       const ci = c.bootstrap_ci95 || {};
@@ -250,7 +250,9 @@ function renderExp4(d) {
     const D = A.decomposition;
     if (D) an += `<p class="note">Writer share of Gemma's gain: AUROC ${D.auroc && D.auroc.writer_share != null ? Math.round(100 * D.auroc.writer_share) + "%" : "—"}, AUPRC ${D.auprc && D.auprc.writer_share != null ? Math.round(100 * D.auprc.writer_share) + "%" : "—"}; the rest comes from Gemma as the classifier.`
       + (E.par2_R0 && cells.dr_R0.per_seed[0] ? ` Stack drift (R0 seed 0 re-run on this machine): AUROC ${sg(E.par2_R0.auroc - cells.dr_R0.per_seed[0].auroc)}, AUPRC ${sg(E.par2_R0.auprc - cells.dr_R0.per_seed[0].auprc)}.` : "") + "</p>";
-    if (E.analysis_md) an += `<p class="note"><a href="${esc(q("/files/exp4.md"))}" target="_blank" rel="noopener">Open exp4.md</a></p>`;
+    const I = A.interaction;
+    if (I && I.auroc) an += `<p class="note">Interaction (G0 − QG0) − (X0 − R0), paired over seeds: AUROC ${sg(I.auroc.interaction_mean)} (p ${I.auroc.t_p == null ? "—" : Number(I.auroc.t_p).toFixed(2)}), AUPRC ${sg(I.auprc.interaction_mean)} (p ${I.auprc.t_p == null ? "—" : Number(I.auprc.t_p).toFixed(2)}); 0 means the writer and classifier effects add up.</p>`;
+    if (E.analysis_md) an += `<p class="note"><a href="${esc(q("/files/exp4.md"))}" target="_blank" rel="noopener">Open the analysis</a></p>`;
   }
   el.innerHTML = `<summary><span class="grow">Exp 4 results · writer vs classifier (2 × 2)</span>${badge(A && full ? "done" : "running", A && full ? "analysed" : "in progress")}</summary>
     <div class="inner"><div class="legend">${legend}</div><div class="charts">${MET.map(([m, l]) => dotChart(cells, m, l, E.paper[m])).join("")}</div>

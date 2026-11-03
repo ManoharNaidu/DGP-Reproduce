@@ -1,4 +1,4 @@
-"""One statistics standard for every paired comparison in the DGP follow-up experiments (E2-E17).
+"""One statistics standard for every paired comparison in the DGP follow-up experiments (E2-E18).
 
     python scripts/stats_standard.py        # CPU, seconds; reads results/raw/*/metrics.json only
                                             # writes results/stats/all_comparisons.{md,json}
@@ -51,6 +51,8 @@ COMPARISONS = [
     ("E15", "R0 − MLP", "dr_R0", "mlp_amazonvideo", "DGP vs MLP"),
     ("E16", "DGP − MLP (YelpChi)", "dgp_yelpchi", "mlp_yelpchi", "DGP vs MLP on a second dataset"),
     ("E17", "R0 − noMDK", "dr_R0", "ctl_noMDK", "MDK vs random neighbours"),
+    ("E18", "QG0 − R0", "gs_QG0", "dr_R0", "Gemma as classifier, Qwen's text"),
+    ("E18", "G0 − QG0", "gs_G0", "gs_QG0", "Gemma's text, Gemma classifier"),
 ]
 LABEL = {"macro_f1": "Macro-F1", "auroc": "AUROC", "auprc": "AUPRC"}
 
@@ -91,7 +93,7 @@ def main():
     for i, r in enumerate(rows):
         r["holm_family"], r["holm_global"] = fam.get(i), glob.get(i)
 
-    L = ["# One statistics standard for E2-E17", "",
+    L = ["# One statistics standard for E2-E18", "",
          "Every paired comparison of the DGP follow-up experiments, re-tested the same way (`scripts/stats_standard.py`). "
          "Test set, AmazonVideo (E16: YelpChi), seeds 0-4. Δ = mean paired difference arm − reference in pp; 'better' = seeds where the "
          "arm is higher; CI = 95% t-interval of the mean seed difference; p = two-sided paired t over seeds (df 4). Holm "
