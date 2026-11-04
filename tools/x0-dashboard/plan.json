@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T14:00Z",
+  "updated": "2026-11-04T03:35Z",
   "note": "Order agreed on 2026-11-01; hyperparameter search scope agreed 2026-11-03. Edited by hand as items move; the dashboard only reads it.",
   "items": [
     {
@@ -84,7 +84,7 @@
       "title": "Hyperparameter search: epoch-selection rule (E19); E20 lr sweep dropped",
       "kind": "GPU",
       "state": "running",
-      "detail": "Owner decisions 2026-11-03: S1 = E19 (epoch-selection rule, both datasets, 5 seeds); S2-Y (YelpChi lr sweep) approved, then dropped at 10:54Z to finish sooner. Log mining of all 178 runs: on YelpChi the best-val-AUROC epoch was never kept (+4.02 val AUROC / +6.67 AUPRC), on AmazonVideo +0.4. Every run trains 10 epochs; test scored at each rule's epoch. Instance restart ~07:41Z killed the first 2 runs in epoch 1 (relaunched 08:23Z). From 10:54Z scripts/sel_queue2.sh (adopted the 2 running seeds) with a single validation pass per epoch (identical numbers). Measured 0.46 h/epoch on YelpChi with two lanes. 10 runs, expected finish ~08:00Z Wed 11-04. research/hparam_search_plan.md, README §23."
+      "detail": "Owner decisions 2026-11-03: S1 = E19 (epoch-selection rule, both datasets, 5 seeds); S2-Y (YelpChi lr sweep) approved, then dropped at 10:54Z to finish sooner. Log mining of all 178 runs: on YelpChi the best-val-AUROC epoch was never kept (+4.02 val AUROC / +6.67 AUPRC), on AmazonVideo +0.4. Every run trains 10 epochs; test scored at each rule's epoch. Instance restart ~07:41Z killed the first 2 runs in epoch 1 (relaunched 08:23Z). From 10:54Z scripts/sel_queue2.sh (adopted the 2 running seeds) with a single validation pass per epoch (identical numbers). Measured 0.46 h/epoch on YelpChi with two lanes. Progress 03:30Z 11-04: 4/5 YelpChi + 1/5 AmazonVideo done (all rc 0); AmazonVideo runs take ~4.3 h with two lanes (estimate was 2.7 h), so expected finish ~13:50Z Wed 11-04. Preliminary YelpChi (4 seeds): best-val-AUROC epoch vs paper rule +2.75 AUROC / +11.5 AUPRC on the test set (see the E19 results panel). research/hparam_search_plan.md, README §23."
     },
     {
       "title": "Reports and docx: hyperparameter search plan, log mining, E19-E20 in progress",

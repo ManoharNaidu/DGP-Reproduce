@@ -58,7 +58,7 @@ PAPER = {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}
 # est = expected seconds per run with two lanes, from the first runs' measured epochs (YelpChi 0.46 h/epoch x 10 + about
 # 2 test passes; AmazonVideo about 0.22 h/epoch); group = runs whose measured mean replaces est once one finishes.
 _SY = {"est": 6.5 * 3600, "group": "yelp", "test_n": "13,479"}
-_SA = {"est": 2.7 * 3600, "group": "amazon", "test_n": "7,425"}
+_SA = {"est": 4.3 * 3600, "group": "amazon", "test_n": "7,425"}
 SEL_JOBS = ([("prompts_yelpchi", "prep", None, None, {}), ("prompts_amazonvideo", "prep", None, None, {})]
             + [(f"sy_s{s}", "A", "sel_yelpchi", s, _SY) for s in (0, 2, 4)] + [("sa_s4", "A", "sel_amazonvideo", 4, _SA)]
             + [(f"sy_s{s}", "B", "sel_yelpchi", s, _SY) for s in (1, 3)]
@@ -266,6 +266,26 @@ def queue_state(study, now):
             "events": [{**e, "queue": study["key"]} for e in ev[-14:]]}
 
 
+# E19 results panel: every rule's test metrics per finished seed (metrics.json "selection"), next to the paper.
+SEL_PAPER = {"sel_yelpchi": {"macro_f1": 69.07, "auroc": 84.28, "auprc": 48.87},
+             "sel_amazonvideo": {"macro_f1": 66.91, "auroc": 77.32, "auprc": 34.63}}
+SEL_RULES = ("loss_es2", "auroc_all", "auroc_es2", "auroc_es3")
+
+
+def sel_results():
+    out = {}
+    for exp, paper in SEL_PAPER.items():
+        seeds = {}
+        for s in range(5):
+            d = run_dir(exp, s)
+            m = read_json(os.path.join(d, "metrics.json")) if d else None
+            if m and m.get("selection"):
+                seeds[s] = {r: {"epoch": v["epoch"], **{k: v["test"][k] for k in METRICS}}
+                            for r, v in m["selection"].items() if r in SEL_RULES}
+        out[exp] = {"paper": paper, "seeds": seeds}
+    return out
+
+
 def baselines():
     out = []
     for short, label, exp, paper in BASELINES:
@@ -287,7 +307,7 @@ def state():
             "exp4": {"cells": {k: {"short": v[0], "label": v[1], "per_seed": per_seed(k)} for k, v in CELLS.items()},
                      "paper": PAPER, "par2_R0": par, "analysis": read_json(exp4_base() + ".json"),
                      "analysis_md": os.path.exists(exp4_base() + ".md")},
-            "baselines": baselines(), "gpu": gpu(), "events": events}
+            "baselines": baselines(), "sel": sel_results(), "gpu": gpu(), "events": events}
 
 
 def log_path(job):

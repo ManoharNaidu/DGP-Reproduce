@@ -101,6 +101,7 @@ svg text { fill: var(--muted); font-size: 11px; }
   <div class="tiles" id="tiles"></div>
   <div class="card"><h2>Plan</h2><div class="scroll"><table id="plan"></table></div><p class="note" id="plannote"></p></div>
   <div id="queues"></div>
+  <details class="card" data-key="sel" id="selres"></details>
   <details class="card" data-key="baselines" id="baselines"></details>
   <details class="card" data-key="exp4" id="exp4"></details>
   <div class="two">
@@ -281,6 +282,35 @@ function renderBaselines(d) {
   el.open = isOpen("baselines", true);
 }
 
+const RULES = [["loss_es2", "Paper rule", "lowest val loss, early stop (patience 2)"],
+  ["auroc_all", "Best val AUROC", "over all 10 epochs"], ["auroc_es2", "AUROC, patience 2", "early stop on val AUROC"],
+  ["auroc_es3", "AUROC, patience 3", "early stop on val AUROC"]];
+function renderSel(d) {
+  const S = d.sel, el = $("selres"); if (!S) return;
+  const names = {sel_yelpchi: "YelpChi", sel_amazonvideo: "AmazonVideo"};
+  let body = "", total = 0;
+  for (const [exp, X] of Object.entries(S)) {
+    const seeds = Object.keys(X.seeds).map(Number).sort(), n = seeds.length; total += n;
+    let t = `<tr><th>Rule</th>${seeds.map((s) => `<th class="num">seed ${s}<div class="small">ep · AUROC / AUPRC</div></th>`).join("")}`
+      + MET.map(([, l]) => `<th class="num">Mean ${l}</th>`).join("") + `<th class="num">Δ AUROC vs paper rule</th><th class="num">Δ AUPRC vs paper rule</th></tr>`;
+    for (const [r, label, note] of RULES) {
+      const v = (m) => seeds.map((s) => X.seeds[s][r][m]), dl = (m) => seeds.map((s) => X.seeds[s][r][m] - X.seeds[s].loss_es2[m]);
+      const better = (m) => dl(m).filter((x) => x > 0).length;
+      t += `<tr><td>${esc(label)}<div class="small">${esc(note)}</div></td>`
+        + seeds.map((s) => { const c = X.seeds[s][r]; return `<td class="num">${esc(c.epoch)} · ${f2(c.auroc)} / ${f2(c.auprc)}</td>`; }).join("")
+        + MET.map(([m]) => `<td class="num">${n ? f2(mean(v(m))) : "—"}</td>`).join("")
+        + (r === "loss_es2" ? `<td class="num">—</td><td class="num">—</td>` : ["auroc", "auprc"].map((m) => {
+            const x = n ? mean(dl(m)) : null;
+            return `<td class="num ${x > 0 ? "pos" : x < 0 ? "neg" : ""}">${n ? `${sg(x)} <span class="small">(${better(m)}/${n})</span>` : "—"}</td>`; }).join("")) + "</tr>";
+    }
+    t += `<tr><td class="small">Paper (Table 2)</td>${seeds.map(() => "<td></td>").join("")}` + MET.map(([m]) => `<td class="num small">${f2(X.paper[m])}</td>`).join("") + "<td></td><td></td></tr>";
+    body += `<h2 style="margin-top:12px">${esc(names[exp] || exp)} <span class="small">${n} / 5 seeds finished</span></h2><div class="scroll"><table>${t}</table></div>`;
+  }
+  el.innerHTML = `<summary><span class="grow">E19 results · epoch-selection rule (test set)</span>${badge(total === 10 ? "done" : "running", total === 10 ? "all seeds in" : `preliminary · ${total} / 10 runs`)}</summary>
+    <div class="inner">${body}<p class="note">Each rule picks an epoch on the validation set from the same 10-epoch run; the cells are that epoch's test metrics. Δ = rule − paper rule on the same seed (seeds better in brackets). Preliminary until all seeds finish: no significance tests yet, and the paper rule here can differ from the original E16 runs by GPU non-determinism.</p></div>`;
+  el.open = isOpen("sel", true);
+}
+
 function render(d) {
   const Q = d.queues, active = Q.find((x) => x.state === "running") || Q.find((x) => x.state === "failed");
   $("qbadge").innerHTML = active ? badge(active.state, (active.state === "running" ? "Running: " : "Failed: ") + active.title) : badge("done", "No queue running");
@@ -297,7 +327,7 @@ function render(d) {
     `<tr><td class="lane">${i + 1}</td><td class="wrap">${esc(x.title)}</td><td><span class="kind">${esc(x.kind)}</span></td><td>${badge(x.state)}</td><td class="wrap small">${esc(x.detail)}</td></tr>`).join("");
   $("plannote").textContent = d.plan ? `Plan updated ${d.plan.updated}. ${d.plan.note}` : "plan.json not found";
   $("queues").innerHTML = Q.slice().reverse().map(queueCard).join("");
-  renderBaselines(d); renderExp4(d);
+  renderBaselines(d); renderExp4(d); renderSel(d);
   $("gpu").innerHTML = d.gpu.length ? d.gpu.map((x) => `<div>${esc(x.name)}</div>
       <div class="small" style="margin-top:8px">Utilisation ${Math.round(x.util)}%</div><div class="bar"><i style="width:${Number(x.util)}%"></i></div>
       <div class="small" style="margin-top:8px">Memory ${(x.mem_used / 1024).toFixed(1)} / ${(x.mem_total / 1024).toFixed(0)} GB</div><div class="bar"><i style="width:${(100 * x.mem_used / x.mem_total).toFixed(1)}%"></i></div>
