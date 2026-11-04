@@ -1,0 +1,26 @@
+# Reddit from FLAG-Reproduce (2026-11-04): converted by scripts/convert_flag_datasets.py with FLAG's exact nodes, labels,
+# text and split, so DGP is comparable with FLAG's backbone results. Label 1 = Popular Users. Not a DGP-paper dataset.
+name: reddit
+display_name: Reddit
+reproducibility: NOT_IN_PAPER
+processed_dir: datasets/processed/reddit
+
+graph:
+  relations: [URU]
+
+relation_labels:
+  URU: Reply
+
+expected:                      # FLAG benchmark as converted
+  nodes: 18389
+  edges: 42824
+  edge_types: 1
+  frauds: 1672
+
+split:
+  sizes: {train: 1839, val: 1839, test: 14711}   # FLAG's split, read from split.json
+  seed: 0
+  stratify: true
+
+task:
+  question: Is this a popular user?

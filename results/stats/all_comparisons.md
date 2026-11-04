@@ -1,6 +1,6 @@
-# One statistics standard for E2-E18
+# One statistics standard for E2-E19
 
-Every paired comparison of the DGP follow-up experiments, re-tested the same way (`scripts/stats_standard.py`). Test set, AmazonVideo (E16: YelpChi), seeds 0-4. Δ = mean paired difference arm − reference in pp; 'better' = seeds where the arm is higher; CI = 95% t-interval of the mean seed difference; p = two-sided paired t over seeds (df 4). Holm (family) corrects over 3 metrics × the comparisons of one experiment; Holm (global) over all 114 tests. Bold = Holm (family) < 0.05. Seed-level only: test-set sampling noise is not included (see each study's bootstrap CIs).
+Every paired comparison of the DGP follow-up experiments, re-tested the same way (`scripts/stats_standard.py`). Test set, AmazonVideo (E16, E19: YelpChi), seeds 0-4. Δ = mean paired difference arm − reference in pp; 'better' = seeds where the arm is higher; CI = 95% t-interval of the mean seed difference; p = two-sided paired t over seeds (df 4). Holm (family) corrects over 3 metrics × the comparisons of one experiment; Holm (global) over all 123 tests. Bold = Holm (family) < 0.05. Seed-level only: test-set sampling noise is not included (see each study's bootstrap CIs).
 
 ## E2
 
@@ -14,7 +14,7 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | arm C − Sept. baseline | AUPRC | -0.53 (0/5) | [-0.95, -0.10] | 0.0267 | 0.3772 | 1.0000 |
 | arm BC − Sept. baseline | Macro-F1 | +0.47 (3/5) | [-0.60, +1.54] | 0.2901 | 1.0000 | 1.0000 |
 | arm BC − Sept. baseline | AUROC | -0.21 (2/5) | [-0.72, +0.30] | 0.3243 | 1.0000 | 1.0000 |
-| arm BC − Sept. baseline | AUPRC | +0.99 (5/5) | [+0.51, +1.48] | 0.0048 | 0.0859 | 0.4773 |
+| arm BC − Sept. baseline | AUPRC | +0.99 (5/5) | [+0.51, +1.48] | 0.0048 | 0.0859 | 0.5203 |
 | arm D − Sept. baseline | Macro-F1 | -0.52 (2/5) | [-1.96, +0.91] | 0.3689 | 1.0000 | 1.0000 |
 | arm D − Sept. baseline | AUROC | +0.02 (2/5) | [-0.39, +0.44] | 0.8846 | 1.0000 | 1.0000 |
 | arm D − Sept. baseline | AUPRC | -0.71 (0/5) | [-1.22, -0.20] | 0.0176 | 0.2818 | 1.0000 |
@@ -41,10 +41,10 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | R1 − R0 | Macro-F1 | +0.04 (4/5) | [-1.91, +1.99] | 0.9556 | 1.0000 | 1.0000 |
-| R1 − R0 | AUROC | +0.21 (5/5) | [+0.10, +0.31] | 0.0052 | 0.0629 | 0.5083 |
+| R1 − R0 | AUROC | +0.21 (5/5) | [+0.10, +0.31] | 0.0052 | 0.0629 | 0.5555 |
 | R1 − R0 | AUPRC | +0.05 (3/5) | [-0.93, +1.03] | 0.8932 | 1.0000 | 1.0000 |
 | R1b − R0 | Macro-F1 | +0.58 (4/5) | [-0.61, +1.77] | 0.2450 | 1.0000 | 1.0000 |
-| R1b − R0 | AUROC | +0.45 (5/5) | [+0.18, +0.72] | 0.0102 | 0.1119 | 0.9356 |
+| R1b − R0 | AUROC | +0.45 (5/5) | [+0.18, +0.72] | 0.0102 | 0.1119 | 1.0000 |
 | R1b − R0 | AUPRC | +0.04 (4/5) | [-0.43, +0.52] | 0.8044 | 1.0000 | 1.0000 |
 | R2 − R0 | Macro-F1 | -0.47 (4/5) | [-4.20, +3.26] | 0.7464 | 1.0000 | 1.0000 |
 | R2 − R0 | AUROC | +0.25 (5/5) | [-0.11, +0.61] | 0.1268 | 1.0000 | 1.0000 |
@@ -66,20 +66,20 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | G0 − R0 | Macro-F1 | +0.30 (3/5) | [-1.45, +2.06] | 0.6593 | 1.0000 | 1.0000 |
-| G0 − R0 | AUROC | **+1.41** (5/5) | [+0.95, +1.87] | 0.0011 | 0.0158 | 0.1161 |
-| G0 − R0 | AUPRC | +1.94 (5/5) | [+0.97, +2.90] | 0.0050 | 0.0605 | 0.4994 |
+| G0 − R0 | AUROC | **+1.41** (5/5) | [+0.95, +1.87] | 0.0011 | 0.0158 | 0.1256 |
+| G0 − R0 | AUPRC | +1.94 (5/5) | [+0.97, +2.90] | 0.0050 | 0.0605 | 0.5448 |
 | G1 − R1 | Macro-F1 | +0.86 (5/5) | [+0.20, +1.53] | 0.0225 | 0.1801 | 1.0000 |
 | G1 − R1 | AUROC | +0.82 (5/5) | [+0.28, +1.35] | 0.0136 | 0.1364 | 1.0000 |
-| G1 − R1 | AUPRC | +1.88 (5/5) | [+0.88, +2.88] | 0.0064 | 0.0708 | 0.6117 |
+| G1 − R1 | AUPRC | +1.88 (5/5) | [+0.88, +2.88] | 0.0064 | 0.0708 | 0.6696 |
 | G1b − R1b | Macro-F1 | +0.27 (4/5) | [-1.03, +1.57] | 0.5970 | 1.0000 | 1.0000 |
 | G1b − R1b | AUROC | +0.40 (4/5) | [-0.44, +1.24] | 0.2598 | 1.0000 | 1.0000 |
-| G1b − R1b | AUPRC | **+2.10** (5/5) | [+1.20, +3.01] | 0.0030 | 0.0389 | 0.3054 |
+| G1b − R1b | AUPRC | **+2.10** (5/5) | [+1.20, +3.01] | 0.0030 | 0.0389 | 0.3324 |
 | G2 − R2 | Macro-F1 | +1.15 (4/5) | [-2.14, +4.44] | 0.3865 | 1.0000 | 1.0000 |
 | G2 − R2 | AUROC | +1.13 (5/5) | [+0.29, +1.96] | 0.0198 | 0.1783 | 1.0000 |
 | G2 − R2 | AUPRC | +1.68 (4/5) | [-0.41, +3.77] | 0.0894 | 0.5362 | 1.0000 |
 | G2b − R2b | Macro-F1 | +1.20 (4/5) | [-1.52, +3.91] | 0.2880 | 1.0000 | 1.0000 |
 | G2b − R2b | AUROC | +0.74 (5/5) | [-0.05, +1.54] | 0.0608 | 0.4254 | 1.0000 |
-| G2b − R2b | AUPRC | **+1.87** (5/5) | [+1.16, +2.59] | 0.0019 | 0.0263 | 0.1974 |
+| G2b − R2b | AUPRC | **+1.87** (5/5) | [+1.16, +2.59] | 0.0019 | 0.0263 | 0.2144 |
 
 ## E12
 
@@ -106,10 +106,10 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | GS0 − G0 | Macro-F1 | +0.25 (2/5) | [-0.98, +1.49] | 0.6011 | 1.0000 | 1.0000 |
-| GS0 − G0 | AUROC | -1.01 (0/5) | [-1.62, -0.41] | 0.0097 | 0.1267 | 0.9065 |
+| GS0 − G0 | AUROC | -1.01 (0/5) | [-1.62, -0.41] | 0.0097 | 0.1267 | 0.9747 |
 | GS0 − G0 | AUPRC | -1.39 (1/5) | [-3.16, +0.38] | 0.0945 | 0.4725 | 1.0000 |
 | GS1 − G1 | Macro-F1 | -0.74 (2/5) | [-3.65, +2.17] | 0.5205 | 1.0000 | 1.0000 |
-| GS1 − G1 | AUROC | -0.95 (0/5) | [-1.44, -0.47] | 0.0056 | 0.0780 | 0.5350 |
+| GS1 − G1 | AUROC | -0.95 (0/5) | [-1.44, -0.47] | 0.0056 | 0.0780 | 0.5851 |
 | GS1 − G1 | AUPRC | -2.00 (0/5) | [-3.48, -0.52] | 0.0201 | 0.2207 | 1.0000 |
 | GS1b − G1b | Macro-F1 | -0.22 (2/5) | [-1.53, +1.10] | 0.6733 | 1.0000 | 1.0000 |
 | GS1b − G1b | AUROC | -0.48 (1/5) | [-1.21, +0.25] | 0.1399 | 0.5597 | 1.0000 |
@@ -119,42 +119,42 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | GS2 − G2 | AUPRC | -2.29 (1/5) | [-4.52, -0.06] | 0.0464 | 0.3755 | 1.0000 |
 | GS2b − G2b | Macro-F1 | -1.33 (1/5) | [-2.63, -0.03] | 0.0473 | 0.3755 | 1.0000 |
 | GS2b − G2b | AUROC | -0.97 (0/5) | [-1.83, -0.11] | 0.0346 | 0.3461 | 1.0000 |
-| GS2b − G2b | AUPRC | **-2.00** (0/5) | [-2.68, -1.32] | 0.0012 | 0.0181 | 0.1296 |
+| GS2b − G2b | AUPRC | **-2.00** (0/5) | [-2.68, -1.32] | 0.0012 | 0.0181 | 0.1404 |
 
 ## E14
 
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | X0 − R0 | Macro-F1 | +0.55 (4/5) | [-0.32, +1.43] | 0.1554 | 0.4662 | 1.0000 |
-| X0 − R0 | AUROC | +0.39 (5/5) | [+0.15, +0.63] | 0.0104 | 0.0622 | 0.9433 |
+| X0 − R0 | AUROC | +0.39 (5/5) | [+0.15, +0.63] | 0.0104 | 0.0622 | 1.0000 |
 | X0 − R0 | AUPRC | +0.49 (5/5) | [+0.02, +0.97] | 0.0450 | 0.1802 | 1.0000 |
 | G0 − X0 | Macro-F1 | -0.25 (2/5) | [-1.82, +1.31] | 0.6789 | 1.0000 | 1.0000 |
-| G0 − X0 | AUROC | **+1.02** (5/5) | [+0.67, +1.36] | 0.0013 | 0.0102 | 0.1349 |
+| G0 − X0 | AUROC | **+1.02** (5/5) | [+0.67, +1.36] | 0.0013 | 0.0102 | 0.1464 |
 | G0 − X0 | AUPRC | +1.44 (4/5) | [+0.18, +2.71] | 0.0338 | 0.1690 | 1.0000 |
 | G0 − R0 | Macro-F1 | +0.30 (3/5) | [-1.45, +2.06] | 0.6593 | 1.0000 | 1.0000 |
-| G0 − R0 | AUROC | **+1.41** (5/5) | [+0.95, +1.87] | 0.0011 | 0.0095 | 0.1161 |
-| G0 − R0 | AUPRC | **+1.94** (5/5) | [+0.97, +2.90] | 0.0050 | 0.0353 | 0.4994 |
+| G0 − R0 | AUROC | **+1.41** (5/5) | [+0.95, +1.87] | 0.0011 | 0.0095 | 0.1256 |
+| G0 − R0 | AUPRC | **+1.94** (5/5) | [+0.97, +2.90] | 0.0050 | 0.0353 | 0.5448 |
 
 ## E15
 
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | R0 − T0 | Macro-F1 | +1.40 (2/5) | [-2.77, +5.56] | 0.4050 | 0.4050 | 1.0000 |
-| R0 − T0 | AUROC | **+1.69** (5/5) | [+0.98, +2.40] | 0.0027 | 0.0113 | 0.2802 |
-| R0 − T0 | AUPRC | **+1.83** (5/5) | [+1.00, +2.65] | 0.0036 | 0.0113 | 0.3631 |
+| R0 − T0 | AUROC | **+1.69** (5/5) | [+0.98, +2.40] | 0.0027 | 0.0113 | 0.3046 |
+| R0 − T0 | AUPRC | **+1.83** (5/5) | [+1.00, +2.65] | 0.0036 | 0.0113 | 0.3954 |
 | T0 − MLP | Macro-F1 | +3.52 (4/5) | [-0.58, +7.62] | 0.0757 | 0.1513 | 1.0000 |
-| T0 − MLP | AUROC | **+4.96** (5/5) | [+3.85, +6.06] | 0.0002 | 0.0017 | 0.0269 |
-| T0 − MLP | AUPRC | **+5.43** (5/5) | [+3.26, +7.60] | 0.0023 | 0.0113 | 0.2342 |
-| R0 − MLP | Macro-F1 | **+4.92** (5/5) | [+4.14, +5.69] | 0.0001 | 0.0005 | 0.0069 |
-| R0 − MLP | AUROC | **+6.64** (5/5) | [+5.45, +7.84] | 0.0001 | 0.0008 | 0.0117 |
-| R0 − MLP | AUPRC | **+7.26** (5/5) | [+5.51, +9.01] | 0.0003 | 0.0020 | 0.0362 |
+| T0 − MLP | AUROC | **+4.96** (5/5) | [+3.85, +6.06] | 0.0002 | 0.0017 | 0.0291 |
+| T0 − MLP | AUPRC | **+5.43** (5/5) | [+3.26, +7.60] | 0.0023 | 0.0113 | 0.2545 |
+| R0 − MLP | Macro-F1 | **+4.92** (5/5) | [+4.14, +5.69] | 0.0001 | 0.0005 | 0.0074 |
+| R0 − MLP | AUROC | **+6.64** (5/5) | [+5.45, +7.84] | 0.0001 | 0.0008 | 0.0127 |
+| R0 − MLP | AUPRC | **+7.26** (5/5) | [+5.51, +9.01] | 0.0003 | 0.0020 | 0.0391 |
 
 ## E16
 
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | DGP − MLP (YelpChi) | Macro-F1 | -1.88 (1/5) | [-4.62, +0.86] | 0.1301 | 0.1301 | 1.0000 |
-| DGP − MLP (YelpChi) | AUROC | **+3.72** (5/5) | [+2.46, +4.98] | 0.0012 | 0.0036 | 0.1296 |
+| DGP − MLP (YelpChi) | AUROC | **+3.72** (5/5) | [+2.46, +4.98] | 0.0012 | 0.0036 | 0.1404 |
 | DGP − MLP (YelpChi) | AUPRC | **-2.62** (0/5) | [-4.55, -0.70] | 0.0193 | 0.0387 | 1.0000 |
 
 ## E17
@@ -170,18 +170,32 @@ Every paired comparison of the DGP follow-up experiments, re-tested the same way
 | comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
 |---|---|---|---|---|---|---|
 | QG0 − R0 | Macro-F1 | -0.04 (3/5) | [-2.41, +2.33] | 0.9652 | 1.0000 | 1.0000 |
-| QG0 − R0 | AUROC | **+1.21** (5/5) | [+0.56, +1.86] | 0.0067 | 0.0405 | 0.6343 |
+| QG0 − R0 | AUROC | **+1.21** (5/5) | [+0.56, +1.86] | 0.0067 | 0.0405 | 0.6951 |
 | QG0 − R0 | AUPRC | +1.37 (5/5) | [+0.48, +2.25] | 0.0128 | 0.0638 | 1.0000 |
 | G0 − QG0 | Macro-F1 | +0.34 (3/5) | [-1.41, +2.09] | 0.6177 | 1.0000 | 1.0000 |
 | G0 − QG0 | AUROC | +0.20 (4/5) | [-0.28, +0.68] | 0.3046 | 0.9139 | 1.0000 |
 | G0 − QG0 | AUPRC | +0.57 (4/5) | [-0.49, +1.64] | 0.2106 | 0.8423 | 1.0000 |
 
+## E19
+
+| comparison | metric | Δ (better) | 95% CI | p | Holm family | Holm global |
+|---|---|---|---|---|---|---|
+| best val AUROC − paper rule (YelpChi) | Macro-F1 | +4.18 (4/5) | [+0.41, +7.95] | 0.0371 | 0.2598 | 1.0000 |
+| best val AUROC − paper rule (YelpChi) | AUROC | +3.24 (4/5) | [+0.02, +6.47] | 0.0492 | 0.2598 | 1.0000 |
+| best val AUROC − paper rule (YelpChi) | AUPRC | +12.96 (5/5) | [+5.43, +20.49] | 0.0088 | 0.0791 | 0.8967 |
+| AUROC patience 2 − paper rule (YelpChi) | Macro-F1 | +2.17 (3/5) | [-5.42, +9.75] | 0.4720 | 0.4720 | 1.0000 |
+| AUROC patience 2 − paper rule (YelpChi) | AUROC | +2.96 (4/5) | [-0.46, +6.38] | 0.0742 | 0.2598 | 1.0000 |
+| AUROC patience 2 − paper rule (YelpChi) | AUPRC | +10.20 (4/5) | [-1.48, +21.88] | 0.0724 | 0.2598 | 1.0000 |
+| AUROC patience 3 − paper rule (YelpChi) | Macro-F1 | +4.18 (4/5) | [+0.41, +7.95] | 0.0371 | 0.2598 | 1.0000 |
+| AUROC patience 3 − paper rule (YelpChi) | AUROC | +3.24 (4/5) | [+0.02, +6.47] | 0.0492 | 0.2598 | 1.0000 |
+| AUROC patience 3 − paper rule (YelpChi) | AUPRC | +12.96 (5/5) | [+5.43, +20.49] | 0.0088 | 0.0791 | 0.8967 |
+
 ## Survives the global Holm correction
 
 | experiment | comparison | metric | Δ | Holm global |
 |---|---|---|---|---|
-| E15 | T0 − MLP | AUROC | +4.96 | 0.0269 |
-| E15 | R0 − MLP | Macro-F1 | +4.92 | 0.0069 |
-| E15 | R0 − MLP | AUROC | +6.64 | 0.0117 |
-| E15 | R0 − MLP | AUPRC | +7.26 | 0.0362 |
+| E15 | T0 − MLP | AUROC | +4.96 | 0.0291 |
+| E15 | R0 − MLP | Macro-F1 | +4.92 | 0.0074 |
+| E15 | R0 − MLP | AUROC | +6.64 | 0.0127 |
+| E15 | R0 − MLP | AUPRC | +7.26 | 0.0391 |
 

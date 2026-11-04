@@ -53,6 +53,11 @@ COMPARISONS = [
     ("E17", "R0 − noMDK", "dr_R0", "ctl_noMDK", "MDK vs random neighbours"),
     ("E18", "QG0 − R0", "gs_QG0", "dr_R0", "Gemma as classifier, Qwen's text"),
     ("E18", "G0 − QG0", "gs_G0", "gs_QG0", "Gemma's text, Gemma classifier"),
+    # E19 (2026-11-04): epoch-selection rules on one trajectory per seed; "<exp>@<rule>" reads metrics.json "selection".
+    # YelpChi only: AmazonVideo has one complete seed (the search was stopped by the owner).
+    ("E19", "best val AUROC − paper rule (YelpChi)", "sel_yelpchi@auroc_all", "sel_yelpchi@loss_es2", "epoch = best val AUROC of 10"),
+    ("E19", "AUROC patience 2 − paper rule (YelpChi)", "sel_yelpchi@auroc_es2", "sel_yelpchi@loss_es2", "early stop on val AUROC, patience 2"),
+    ("E19", "AUROC patience 3 − paper rule (YelpChi)", "sel_yelpchi@auroc_es3", "sel_yelpchi@loss_es2", "early stop on val AUROC, patience 3"),
 ]
 LABEL = {"macro_f1": "Macro-F1", "auroc": "AUROC", "auprc": "AUPRC"}
 
@@ -67,6 +72,13 @@ def holm(p: dict) -> dict:
 
 
 def test_metrics(prefix: str) -> dict[int, dict]:
+    if "@" in prefix:                                   # E19: one selection rule of a multi-rule run
+        exp, rule = prefix.split("@")
+        out = {}
+        for s, d in runs(exp).items():
+            m = json.loads((d / "metrics.json").read_text())
+            out[s] = m["selection"][rule]["test"]
+        return out
     return {s: json.loads((d / "metrics.json").read_text())["test"] for s, d in runs(prefix).items()}
 
 
@@ -93,9 +105,9 @@ def main():
     for i, r in enumerate(rows):
         r["holm_family"], r["holm_global"] = fam.get(i), glob.get(i)
 
-    L = ["# One statistics standard for E2-E18", "",
+    L = ["# One statistics standard for E2-E19", "",
          "Every paired comparison of the DGP follow-up experiments, re-tested the same way (`scripts/stats_standard.py`). "
-         "Test set, AmazonVideo (E16: YelpChi), seeds 0-4. Δ = mean paired difference arm − reference in pp; 'better' = seeds where the "
+         "Test set, AmazonVideo (E16, E19: YelpChi), seeds 0-4. Δ = mean paired difference arm − reference in pp; 'better' = seeds where the "
          "arm is higher; CI = 95% t-interval of the mean seed difference; p = two-sided paired t over seeds (df 4). Holm "
          "(family) corrects over 3 metrics × the comparisons of one experiment; Holm (global) over all "
          f"{len(glob)} tests. Bold = Holm (family) < 0.05. Seed-level only: test-set sampling noise is not included "

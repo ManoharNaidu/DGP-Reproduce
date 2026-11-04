@@ -1,6 +1,6 @@
 {
-  "updated": "2026-11-04T03:35Z",
-  "note": "Order agreed on 2026-11-01; hyperparameter search scope agreed 2026-11-03. Edited by hand as items move; the dashboard only reads it.",
+  "updated": "2026-11-04T05:50Z",
+  "note": "Order agreed on 2026-11-01; search scope 2026-11-03; everything stopped by the owner 2026-11-04T05:25Z. Edited by hand; the dashboard only reads it.",
   "items": [
     {
       "id": "exp4",
@@ -81,16 +81,16 @@
     },
     {
       "id": "hparam",
-      "title": "Hyperparameter search: epoch-selection rule (E19); E20 lr sweep dropped",
+      "title": "Hyperparameter search: epoch-selection rule (E19, stopped by owner); E20 dropped",
       "kind": "GPU",
-      "state": "running",
-      "detail": "Owner decisions 2026-11-03: S1 = E19 (epoch-selection rule, both datasets, 5 seeds); S2-Y (YelpChi lr sweep) approved, then dropped at 10:54Z to finish sooner. Log mining of all 178 runs: on YelpChi the best-val-AUROC epoch was never kept (+4.02 val AUROC / +6.67 AUPRC), on AmazonVideo +0.4. Every run trains 10 epochs; test scored at each rule's epoch. Instance restart ~07:41Z killed the first 2 runs in epoch 1 (relaunched 08:23Z). From 10:54Z scripts/sel_queue2.sh (adopted the 2 running seeds) with a single validation pass per epoch (identical numbers). Measured 0.46 h/epoch on YelpChi with two lanes. Progress 03:30Z 11-04: 4/5 YelpChi + 1/5 AmazonVideo done (all rc 0); AmazonVideo runs take ~4.3 h with two lanes (estimate was 2.7 h), so expected finish ~13:50Z Wed 11-04. Preliminary YelpChi (4 seeds): best-val-AUROC epoch vs paper rule +2.75 AUROC / +11.5 AUPRC on the test set (see the E19 results panel). research/hparam_search_plan.md, README §23."
+      "state": "done",
+      "detail": "Stopped by the owner 2026-11-04T05:25Z after YelpChi seeds 0-4 and AmazonVideo seed 0 (seed 1 stopped in its last test pass, seed 4 in epoch 1, seeds 2-3 not run). YelpChi, best val AUROC of 10 epochs vs paper rule: 67.30 / 82.00 / 44.58 vs 63.12 / 78.76 / 31.62 (paper 69.07 / 84.28 / 48.87); AUROC +3.24 (4/5), AUPRC +12.96 (5/5), bootstrap CIs [+2.52,+4.02] / [+11.40,+14.50]; seed-level Holm n.s. (AUPRC 0.079). AmazonVideo seed 0: all rules keep epoch 2. results/sel/e19.md, README §23, stats E19 family (123 tests)."
     },
     {
       "title": "Reports and docx: hyperparameter search plan, log mining, E19-E20 in progress",
       "kind": "docs",
-      "state": "running",
-      "detail": "2026-11-03: README §23 + D14; report card E19-E20 (running) with Table 65 (log mining of 178 runs), index rows, exec summary, E16 decision, Q9, limitations, timeline; appendix A82-A84, B19, C.23; docx rebuilt (113 tables, 72 captions). Pre-E19 copies in reports/rebuild/archive-2026-11-03/preE19/. Updated 10:55Z for the E20 drop and new ETA. Results get added when the queue finishes."
+      "state": "done",
+      "detail": "2026-11-03: README §23 + D14; report card E19-E20 (running) with Table 65 (log mining of 178 runs), index rows, exec summary, E16 decision, Q9, limitations, timeline; appendix A82-A84, B19, C.23; docx rebuilt (113 tables, 72 captions). Pre-E19 copies in reports/rebuild/archive-2026-11-03/preE19/. Updated 10:55Z for the E20 drop and new ETA. Results get added when the queue finishes. 2026-11-04: E19 results filled in (Tables 66-67, C.24, A85); docx rebuilt (116 tables, 74 captions); archive reports/rebuild/archive-2026-11-04/preE19results/."
     },
     {
       "id": "backup",
@@ -111,6 +111,12 @@
       "kind": "docs",
       "state": "done",
       "detail": "2026-11-03: research/reproduction_matrix, FINAL_REPRODUCTION_REPORT, reproduction_gaps, docs/reproduction (last revised 10-14; YelpChi was still 'BLOCKED') updated with E15-E17 and the search; README status box; report 03 docx: 2026-11-03 update notes (E15, E17, E18); FLAG experiment log docx: new E14 card (controls D-008, 1,900 runs), the 2026-11-01 README re-check and 199/199 PDF check, subgraph-coverage definition (96 tables, 42 captions). Old copies in reports/rebuild/archive-2026-11-03/pre-sync/. DGP commit 5d7ee48."
+    },
+    {
+      "title": "DGP base framework on FLAG's datasets (Reddit, Instagram, Amazon Musical Instruments)",
+      "kind": "GPU",
+      "state": "stopped",
+      "detail": "2026-11-04: graphs converted with FLAG's exact nodes, labels, text and splits (scripts/convert_flag_datasets.py; Reddit 18,389 nodes 1839/1839/14711, Instagram 7,946 794/794/6358, Amazon 11,944 nodes 3 relations 2591/864/5184) and configs written (configs/experiments/flagdata/). Stopped by the owner before any GPU run."
     }
   ]
 }

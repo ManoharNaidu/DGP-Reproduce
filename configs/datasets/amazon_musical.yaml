@@ -1,0 +1,28 @@
+# AmazonInstrument from FLAG-Reproduce (2026-11-04): converted by scripts/convert_flag_datasets.py with FLAG's exact nodes, labels,
+# text and split, so DGP is comparable with FLAG's backbone results. Label 1 = fraudulent user (CARE-GNN label). Not a DGP-paper dataset.
+name: amazon_musical
+display_name: AmazonInstrument
+reproducibility: NOT_IN_PAPER
+processed_dir: datasets/processed/amazon_musical
+
+graph:
+  relations: [UPU, USU, UVU]
+
+relation_labels:
+  UPU: Same Product
+  USU: Same Star Rating
+  UVU: Similar Text
+
+expected:                      # FLAG benchmark as converted
+  nodes: 11944
+  edges: 9557648
+  edge_types: 3
+  frauds: 821
+
+split:
+  sizes: {train: 2591, val: 864, test: 5184}   # FLAG's split, read from split.json
+  seed: 0
+  stratify: true
+
+task:
+  question: Is this fraud?

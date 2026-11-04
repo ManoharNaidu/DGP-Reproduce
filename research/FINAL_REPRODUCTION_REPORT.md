@@ -31,7 +31,8 @@ DGP experiment log (`reports/2026-10-23-DGP-experiment-log.docx`, E1–E19).
 - **YelpReviews (2026-11-02): data reproduced, DGP not.** From a release mirror the graph matches Table 1 exactly
   and the MLP lands within 0.34 AUROC of the paper, but DGP reaches 61.76 / 78.38 / 31.05 against the paper's
   69.07 / 84.28 / 48.87 (§11). Leading candidate: the validation-loss stopping rule ends training while
-  validation AUROC is still rising (all 5 seeds); under test since 2026-11-03 (§16).
+  validation AUROC is still rising (all 5 seeds). Confirmed 2026-11-04 (E19): with the epoch chosen by validation AUROC
+  DGP reaches 67.30 / 82.00 / 44.58 (−2.28 AUROC, −4.29 AUPRC from the paper), a recorded deviation (§16).
 - **Target-only LLM and w/o MDK (2026-11-01 → 11-02).** The LLM on the review alone is stronger than the paper's
   LLM row, so DGP − LLM is +1.69 AUROC here against +5.54 in the paper (§15). Random neighbours instead of MDK's
   change nothing measurable; the paper reports a decline (§12).
@@ -187,8 +188,10 @@ our target-only LLM is far stronger than the paper's, while DGP − MLP matches 
 ## 16. Unresolved issues
 
 1. Selected hyperparameters (only the grid is published). The owner approved only the epoch-selection rule
-   (E19: validation loss, the paper's rule, vs validation AUROC; both datasets, 5 seeds), running since 2026-11-03,
-   expected to finish about 2026-11-04; a YelpReviews learning-rate sweep was approved and then dropped. Re-reading
+   (E19: validation loss, the paper's rule, vs validation AUROC). Stopped by the owner on 2026-11-04 after 5 YelpReviews
+   seeds and 1 AmazonVideo seed: on YelpReviews the best-validation-AUROC epoch gives +3.24 AUROC and +12.96 AUPRC on the
+   test set (bootstrap CIs exclude 0; not significant after Holm), on AmazonVideo seed 0 nothing changes. A YelpReviews
+   learning-rate sweep was approved and then dropped. Re-reading
    all 178 existing training logs: on YelpReviews the best-validation-AUROC epoch was never the one kept (+4.02
    validation AUROC given up), on AmazonVideo +0.4. `hparam_search_plan.md`, README §23.
 2. Exact final classification and metapath-summary prompts — reconstructed.
@@ -207,8 +210,8 @@ data were generated.
 
 1. Done 2026-11-01 → 11-02: YelpReviews via a mirror, main result and MLP run there (§11). Requesting the official
    release (email template in `docs/datasets.md`) would still confirm the mirror's text join.
-2. Running: the epoch-selection rule (E19); analyse it when it finishes and decide whether the YelpReviews gap needs
-   more of the grid.
+2. Done in part (E19): finish its AmazonVideo seeds 1–4, and decide whether the remaining YelpReviews gap
+   (−2.3 AUROC, −4.3 AUPRC with AUROC epoch selection) needs more of the grid.
 3. Run the remaining ablations (PathSumm / TextSumm / NumSumm), the budget sweep and the task-aware study (§12, §13);
    w/o MDK is done.
 4. Run the target-only LLM baseline on YelpReviews, as on AmazonVideo (§15).

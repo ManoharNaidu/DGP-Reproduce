@@ -11,6 +11,9 @@
 **Update 2026-11-03T10:54Z: the owner dropped S2-Y ("I don't want anything related to finetuning") to finish sooner; only
 S1 runs, via `scripts/sel_queue2.sh`. Expected finish about 2026-11-04T08:00Z.**
 
+**Result (2026-11-04): stopped by the owner after the 5 YelpChi seeds and AmazonVideo seed 0. YelpChi, best val AUROC vs
+paper rule: AUROC +3.24, AUPRC +12.96 (CIs exclude 0). README §23, `results/sel/e19.md`.**
+
 Running: `scripts/sel_queue.sh` (configs `configs/experiments/sel/`), README §23. Approved total about 67 GPU-h, about
 52 h wall-clock on one A100 with two lanes; expected finish about 2026-11-05T13:00Z (relaunched 08:23Z after an instance restart at ~07:41Z).
 

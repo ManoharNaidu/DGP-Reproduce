@@ -15,6 +15,9 @@ from dgp_repro.utils.device import resolve_device  # noqa: E402
 MAIN_CONFIGS = {
     ("amazonvideo", "gpu"): "configs/experiments/dgp_amazon.yaml",
     ("yelpchi", "gpu"): "configs/experiments/dgp_yelp.yaml",
+    ("reddit", "gpu"): "configs/experiments/flagdata/reddit.yaml",
+    ("instagram", "gpu"): "configs/experiments/flagdata/instagram.yaml",
+    ("amazon_musical", "gpu"): "configs/experiments/flagdata/amazon_musical.yaml",
     ("amazonvideo", "smoke"): "configs/experiments/cpu_debug_amazon.yaml",
     ("synthetic", "smoke"): "configs/experiments/smoke.yaml",
 }
@@ -22,7 +25,7 @@ MAIN_CONFIGS = {
 
 def base_parser(description: str) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--dataset", default="amazonvideo", choices=["amazonvideo", "yelpchi", "synthetic"])
+    parser.add_argument("--dataset", default="amazonvideo", choices=["amazonvideo", "yelpchi", "synthetic", "reddit", "instagram", "amazon_musical"])
     parser.add_argument("--mode", default="gpu", choices=["gpu", "smoke"],
                         help="gpu = GPU_REPRODUCTION (Qwen3-8B); smoke = CPU_DEBUG (mock models)")
     parser.add_argument("--config", help="experiment config; default chosen from --dataset and --mode")

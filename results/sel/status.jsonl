@@ -1,0 +1,30 @@
+{"t": "2026-11-03T07:13:53Z", "job": "prompts_yelpchi", "event": "start"}
+{"t": "2026-11-03T07:15:24Z", "job": "prompts_yelpchi", "event": "end"}
+{"t": "2026-11-03T07:15:24Z", "job": "prompts_amazonvideo", "event": "start"}
+{"t": "2026-11-03T07:16:28Z", "job": "prompts_amazonvideo", "event": "end"}
+{"t": "2026-11-03T07:16:28Z", "job": "sy_s0", "event": "start"}
+{"t": "2026-11-03T07:19:28Z", "job": "sy_s1", "event": "start"}
+{"t": "2026-11-03T08:23:30Z", "job": "queue", "event": "instance_restart", "note": "instance restarted ~07:41Z; sy_s0 and sy_s1 killed in epoch 1, no output; queue relaunched"}
+{"t": "2026-11-03T08:23:30Z", "job": "prompts_yelpchi", "event": "start"}
+{"t": "2026-11-03T08:25:06Z", "job": "prompts_yelpchi", "event": "end"}
+{"t": "2026-11-03T08:25:06Z", "job": "prompts_amazonvideo", "event": "start"}
+{"t": "2026-11-03T08:26:08Z", "job": "prompts_amazonvideo", "event": "end"}
+{"t": "2026-11-03T08:26:08Z", "job": "sy_s0", "event": "start"}
+{"t": "2026-11-03T08:29:08Z", "job": "sy_s1", "event": "start"}
+{"t": "2026-11-03T10:54:12Z", "job": "queue", "event": "switched", "note": "E20 dropped by owner; sel_queue2.sh adopts sy_s0 (pid 2437) and sy_s1 (pid 2907)"}
+{"t": "2026-11-03T15:00:48Z", "job": "sy_s1", "event": "end", "rc": 0, "secs": 23500}
+{"t": "2026-11-03T15:00:48Z", "job": "sy_s3", "event": "start"}
+{"t": "2026-11-03T15:45:43Z", "job": "sy_s0", "event": "end", "rc": 0, "secs": 26375}
+{"t": "2026-11-03T15:45:43Z", "job": "sy_s2", "event": "start"}
+{"t": "2026-11-03T20:39:41Z", "job": "sy_s3", "event": "end", "rc": 0, "secs": 20333}
+{"t": "2026-11-03T20:39:41Z", "job": "sa_s0", "event": "start"}
+{"t": "2026-11-03T22:32:14Z", "job": "sy_s2", "event": "end", "rc": 0, "secs": 24391}
+{"t": "2026-11-03T22:32:14Z", "job": "sy_s4", "event": "start"}
+{"t": "2026-11-04T00:57:00Z", "job": "sa_s0", "event": "end", "rc": 0, "secs": 15439}
+{"t": "2026-11-04T00:57:00Z", "job": "sa_s1", "event": "start"}
+{"t": "2026-11-04T04:07:59Z", "job": "sy_s4", "event": "end", "rc": 0, "secs": 20145}
+{"t": "2026-11-04T04:07:59Z", "job": "sa_s4", "event": "start"}
+{"t": "2026-11-04T05:15:38Z", "job": "sa_s4", "event": "interrupted"}
+{"t": "2026-11-04T05:15:38Z", "job": "queue", "event": "stopping", "note": "owner: stop E19 after sel_amazonvideo seed 1; sa_s4 cancelled at start, sa_s2 and sa_s3 not run"}
+{"t": "2026-11-04T05:25:06Z", "job": "sa_s1", "event": "interrupted"}
+{"t": "2026-11-04T05:25:06Z", "job": "queue", "event": "done", "note": "stopped by owner 05:25Z 11-04 during sa_s1's second test pass; no metrics for AmazonVideo seed 1"}

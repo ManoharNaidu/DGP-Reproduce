@@ -286,7 +286,7 @@
       "t": 5.669634004023119,
       "p": 0.0047734318886657095,
       "holm_family": 0.08592177399598278,
-      "holm_global": 0.47734318886657096
+      "holm_global": 0.5203040758645623
     },
     {
       "experiment": "E2",
@@ -830,7 +830,7 @@
       "t": 5.525381619432016,
       "p": 0.005240293648639601,
       "holm_family": 0.06288352378367522,
-      "holm_global": 0.5083084839180413
+      "holm_global": 0.5554711267557977
     },
     {
       "experiment": "E8",
@@ -926,7 +926,7 @@
       "t": 4.581754220369144,
       "p": 0.010169961190032582,
       "holm_family": 0.1118695730903584,
-      "holm_global": 0.9356364294829975
+      "holm_global": 1.0
     },
     {
       "experiment": "E8",
@@ -1310,7 +1310,7 @@
       "t": 8.489598547124407,
       "p": 0.0010555094183669455,
       "holm_family": 0.015832641275504183,
-      "holm_global": 0.11610603602036401
+      "holm_global": 0.1256056207856665
     },
     {
       "experiment": "E11",
@@ -1342,7 +1342,7 @@
       "t": 5.583785849214218,
       "p": 0.005044819798132038,
       "holm_family": 0.06053783757758445,
-      "holm_global": 0.4994371600150717
+      "holm_global": 0.5448405381982601
     },
     {
       "experiment": "E11",
@@ -1438,7 +1438,7 @@
       "t": 5.217482759444543,
       "p": 0.006438549223566373,
       "holm_family": 0.0708240414592301,
-      "holm_global": 0.6116621762388055
+      "holm_global": 0.6696091192509028
     },
     {
       "experiment": "E11",
@@ -1534,7 +1534,7 @@
       "t": 6.438185495127995,
       "p": 0.002994242170312787,
       "holm_family": 0.03892514821406623,
-      "holm_global": 0.3054127013719043
+      "holm_global": 0.3323608809047194
     },
     {
       "experiment": "E11",
@@ -1726,7 +1726,7 @@
       "t": 7.291792822238256,
       "p": 0.0018803212606717053,
       "holm_family": 0.026324497649403873,
-      "holm_global": 0.19743373237052905
+      "holm_global": 0.2143566237165744
     },
     {
       "experiment": "E12",
@@ -2270,7 +2270,7 @@
       "t": -4.6382354439121265,
       "p": 0.009746874325147408,
       "holm_family": 0.1267093662269163,
-      "holm_global": 0.9064593122387089
+      "holm_global": 0.9746874325147408
     },
     {
       "experiment": "E13",
@@ -2366,7 +2366,7 @@
       "t": -5.4319512683176505,
       "p": 0.005572660839315196,
       "holm_family": 0.07801725175041274,
-      "holm_global": 0.5349754405742588
+      "holm_global": 0.5851293881280956
     },
     {
       "experiment": "E13",
@@ -2686,7 +2686,7 @@
       "t": -8.19666936987501,
       "p": 0.0012069547142061706,
       "holm_family": 0.01810432071309256,
-      "holm_global": 0.12957572111488042
+      "holm_global": 0.14037369787445378
     },
     {
       "experiment": "E14",
@@ -2750,7 +2750,7 @@
       "t": 4.556578781321242,
       "p": 0.01036570686985409,
       "holm_family": 0.06219424121912454,
-      "holm_global": 0.9432793251567222
+      "holm_global": 1.0
     },
     {
       "experiment": "E14",
@@ -2846,7 +2846,7 @@
       "t": 8.082975070048821,
       "p": 0.0012729212570629586,
       "holm_family": 0.010183370056503669,
-      "holm_global": 0.13492965324867362
+      "holm_global": 0.14638594456224024
     },
     {
       "experiment": "E14",
@@ -2942,7 +2942,7 @@
       "t": 8.489598547124407,
       "p": 0.0010555094183669455,
       "holm_family": 0.009499584765302509,
-      "holm_global": 0.11610603602036401
+      "holm_global": 0.1256056207856665
     },
     {
       "experiment": "E14",
@@ -2974,7 +2974,7 @@
       "t": 5.583785849214218,
       "p": 0.005044819798132038,
       "holm_family": 0.03531373858692426,
-      "holm_global": 0.4994371600150717
+      "holm_global": 0.5448405381982601
     },
     {
       "experiment": "E15",
@@ -3038,7 +3038,7 @@
       "t": 6.607007374581981,
       "p": 0.0027199119558185113,
       "holm_family": 0.011260700407915046,
-      "holm_global": 0.2801509314493067
+      "holm_global": 0.30463013905167324
     },
     {
       "experiment": "E15",
@@ -3070,7 +3070,7 @@
       "t": 6.127222122212883,
       "p": 0.0035946760951961246,
       "holm_family": 0.011260700407915046,
-      "holm_global": 0.3630622856148086
+      "holm_global": 0.3954143704715737
     },
     {
       "experiment": "E15",
@@ -3134,7 +3134,7 @@
       "t": 12.436168834303373,
       "p": 0.00024038776597133606,
       "holm_family": 0.0016827143617993523,
-      "holm_global": 0.026923429788789636
+      "holm_global": 0.029086919682531662
     },
     {
       "experiment": "E15",
@@ -3166,7 +3166,7 @@
       "t": 6.949712723292901,
       "p": 0.002252140081583009,
       "holm_family": 0.011260700407915046,
-      "holm_global": 0.23422256848463296
+      "holm_global": 0.25449182921888003
     },
     {
       "experiment": "E15",
@@ -3198,7 +3198,7 @@
       "t": 17.669099298383202,
       "p": 6.0266521933889366e-05,
       "holm_family": 0.0005423986974050043,
-      "holm_global": 0.006870383500463388
+      "holm_global": 0.007412782197868392
     },
     {
       "experiment": "E15",
@@ -3230,7 +3230,7 @@
       "t": 15.39752692260922,
       "p": 0.00010380849422068312,
       "holm_family": 0.0008304679537654649,
-      "holm_global": 0.011730359846937191
+      "holm_global": 0.012664636294923341
     },
     {
       "experiment": "E15",
@@ -3262,7 +3262,7 @@
       "t": 11.506122215381971,
       "p": 0.00032574405513052096,
       "holm_family": 0.0019544643307831257,
-      "holm_global": 0.036157590119487826
+      "holm_global": 0.039089286615662515
     },
     {
       "experiment": "E16",
@@ -3326,7 +3326,7 @@
       "t": 8.209506394219664,
       "p": 0.001199775195508152,
       "holm_family": 0.0035993255865244557,
-      "holm_global": 0.12957572111488042
+      "holm_global": 0.14037369787445378
     },
     {
       "experiment": "E16",
@@ -3518,7 +3518,7 @@
       "t": 5.149170707561093,
       "p": 0.006748324349366477,
       "holm_family": 0.04048994609619886,
-      "holm_global": 0.6343424888404489
+      "holm_global": 0.6950774079847472
     },
     {
       "experiment": "E18",
@@ -3647,7 +3647,295 @@
       "p": 0.21057110562896372,
       "holm_family": 0.8422844225158549,
       "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "best val AUROC \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_all",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "epoch = best val AUROC of 10",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 4.179069564547295,
+      "delta_per_seed": [
+        -0.5255,
+        6.4956,
+        2.8108,
+        5.5475,
+        6.5669
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        0.40548313143302694,
+        7.952655997661564
+      ],
+      "t": 3.0747824231477088,
+      "p": 0.037119630688453635,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "best val AUROC \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_all",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "epoch = best val AUROC of 10",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 3.2433809051815814,
+      "delta_per_seed": [
+        -0.8689,
+        4.7566,
+        2.1993,
+        4.8987,
+        5.2312
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        0.018519471382114627,
+        6.468242338981048
+      ],
+      "t": 2.7923894478386315,
+      "p": 0.049191918829220575,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "best val AUROC \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_all",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "epoch = best val AUROC of 10",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 12.962015130667108,
+      "delta_per_seed": [
+        4.1096,
+        14.3604,
+        9.8331,
+        17.5078,
+        18.9992
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        5.429125049170059,
+        20.494905212164156
+      ],
+      "t": 4.777492180781734,
+      "p": 0.008791665199360801,
+      "holm_family": 0.0791249867942472,
+      "holm_global": 0.8967498503348017
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 2 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es2",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 2",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 2.1673531786991505,
+      "delta_per_seed": [
+        -7.5229,
+        6.4956,
+        -0.2503,
+        5.5475,
+        6.5669
+      ],
+      "seeds_better": 3,
+      "ci95": [
+        -5.417515897017996,
+        9.752222254416296
+      ],
+      "t": 0.7933607111952923,
+      "p": 0.471972846117125,
+      "holm_family": 0.471972846117125,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 2 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es2",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 2",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 2.9579052410194038,
+      "delta_per_seed": [
+        0.166,
+        4.7566,
+        -0.2629,
+        4.8987,
+        5.2312
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -0.46164877976192153,
+        6.377459261800729
+      ],
+      "t": 2.4016177191991774,
+      "p": 0.07422599295349011,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 2 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es2",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 2",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 10.200489022167337,
+      "delta_per_seed": [
+        0.5524,
+        14.3604,
+        -0.4173,
+        17.5078,
+        18.9992
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        -1.4794500805388395,
+        21.880428124873514
+      ],
+      "t": 2.424764167619546,
+      "p": 0.07238925766767623,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 3 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es3",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 3",
+      "metric": "macro_f1",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 4.179069564547295,
+      "delta_per_seed": [
+        -0.5255,
+        6.4956,
+        2.8108,
+        5.5475,
+        6.5669
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        0.40548313143302694,
+        7.952655997661564
+      ],
+      "t": 3.0747824231477088,
+      "p": 0.037119630688453635,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 3 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es3",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 3",
+      "metric": "auroc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 3.2433809051815814,
+      "delta_per_seed": [
+        -0.8689,
+        4.7566,
+        2.1993,
+        4.8987,
+        5.2312
+      ],
+      "seeds_better": 4,
+      "ci95": [
+        0.018519471382114627,
+        6.468242338981048
+      ],
+      "t": 2.7923894478386315,
+      "p": 0.049191918829220575,
+      "holm_family": 0.25983741481917544,
+      "holm_global": 1.0
+    },
+    {
+      "experiment": "E19",
+      "comparison": "AUROC patience 3 \u2212 paper rule (YelpChi)",
+      "arm": "sel_yelpchi@auroc_es3",
+      "reference": "sel_yelpchi@loss_es2",
+      "what": "early stop on val AUROC, patience 3",
+      "metric": "auprc",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "delta_mean": 12.962015130667108,
+      "delta_per_seed": [
+        4.1096,
+        14.3604,
+        9.8331,
+        17.5078,
+        18.9992
+      ],
+      "seeds_better": 5,
+      "ci95": [
+        5.429125049170059,
+        20.494905212164156
+      ],
+      "t": 4.777492180781734,
+      "p": 0.008791665199360801,
+      "holm_family": 0.0791249867942472,
+      "holm_global": 0.8967498503348017
     }
   ],
-  "n_tests": 114
+  "n_tests": 123
 }

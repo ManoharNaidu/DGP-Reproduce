@@ -4,8 +4,8 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 (Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He, Cheng Chen — AAAI 2026;
 [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/38541) · [arXiv:2507.21653](https://arxiv.org/abs/2507.21653)).
 
-> **Status (2026-11-03): DGP reproduced on AmazonVideo, run on YelpChi (deviates); follow-up studies finished (§11–§22);
-> hyperparameter search running (§23).**
+> **Status (2026-11-04): DGP reproduced on AmazonVideo, run on YelpChi (deviates under the paper's stopping rule, close
+> with epoch selection by validation AUROC); follow-up studies finished (§11–§23).**
 > The official repository ([Xtra-Computing/DGP](https://github.com/Xtra-Computing/DGP)) contains only a README —
 > code release is pending industry-partner approval — so **every DGP component here is a `PAPER_RECONSTRUCTION`**,
 > built from both paper versions and traced to evidence in [`research/`](research/).
@@ -30,8 +30,9 @@ A reproduction of **"DGP: A Dual-Granularity Prompting Framework for Fraud Detec
 >   11-03, §22 Exp 4): about three quarters of that gain comes from Gemma as the classifier, whichever role is swapped
 >   first; Gemma's text adds 0.2–0.6 points (not significant) and the two roles add up (interaction ≈ 0).
 >
-> - **Hyperparameter search, running** (2026-11-03 →, §23): the epoch-selection rule (E19, both datasets, 5 seeds); the
->   YelpChi learning-rate sweep (E20) was dropped. The 178 existing training logs show that on YelpChi the epoch with the
+> - **Epoch selection** (2026-11-03 → 11-04, §23): choosing the epoch by validation AUROC instead of the paper's
+>   validation-loss rule lifts YelpChi to 67.30 / 82.00 / 44.58 (paper 69.07 / 84.28 / 48.87; +3.2 AUROC, +13.0 AUPRC,
+>   bootstrap CIs exclude 0, not significant after Holm with 5 seeds). AmazonVideo unchanged (1 seed). Stopped by the owner. The 178 existing training logs show that on YelpChi the epoch with the
 >   best validation AUROC was never the one kept (+4.0 val AUROC, +6.7 val AUPRC given up); on AmazonVideo it barely matters.
 > - **YelpChi** (2026-11-01 → 11-02, §11): the graph matches Table 1 exactly and the MLP lands within 0.34 AUROC of the
 >   paper, but DGP reaches 61.76 / 78.38 / 31.05 against the paper's 69.07 / 84.28 / 48.87 (−5.9 AUROC, −17.8 AUPRC).
@@ -68,7 +69,7 @@ What exists and works today:
 - Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
 
 What is outstanding: the paper's other three ablations, the budget / task-aware studies, the rest of the hyperparameter
-grid (the owner chose the epoch-selection rule only, running since 2026-11-03, §23), and the
+grid (the owner chose the epoch-selection rule only; stopped 2026-11-04 with YelpChi complete, §23), and the
 third-party GNN/LLM baselines beyond ConsisGAD and MLP.
 
 ## 2. What is DGP?
@@ -231,7 +232,7 @@ with Holm in `results/stats/all_comparisons.md` (E16: AUROC Holm p = 0.004, AUPR
   plausible. DGP is −5.90 AUROC and −17.82 AUPRC below the paper (AmazonVideo: −2.25 / −2.30).
 - **DGP ranks better than the MLP but is worse at the top of the ranking.** AUROC is higher on every seed, AUPRC lower on
   every seed. In the paper DGP beats the MLP by +16.63 AUPRC.
-- **Model selection is a candidate cause (being tested as E19, §23).** Early stopping on validation loss (patience 2, the paper's
+- **Model selection is the main cause (E19, §23).** Early stopping on validation loss (patience 2, the paper's
   rule) kept epoch 3 / 1 / 2 / 3 / 2. Validation loss rises after that while validation AUROC keeps rising: in every
   seed the best validation AUROC is at the last epoch run (81.6 / 77.6 / 81.6 / 81.9 / 86.6 vs the kept epochs).
   The YelpChi training set is only 1,348 reviews. Selecting on validation AUROC is a hyperparameter-search item.
@@ -647,7 +648,7 @@ The queue uses `HF_HOME=/workspace/hf_cache` (override with `HF_HOME_DGP`) becau
 cache was damaged; it holds Qwen3-8B `b968826` (the revision R0 used) and DeBERTa-v3-base. Write-up: experiment E14 in
 the DGP report; the fourth cell is E18.
 
-## 23. Hyperparameter search (E19 running since 2026-11-03; E20 dropped)
+## 23. Hyperparameter search (E19, 2026-11-03 → 11-04; E20 dropped)
 
 **Scope (owner decision, 2026-11-03).** The paper tunes B × K × M × LoRA rank × dropout × lr (1,728 points per dataset,
 arXiv v1 §5.1), selects by mean validation AUROC and reports none of the chosen values. The proposal
@@ -697,7 +698,31 @@ uses the test set. E19 (rule vs paper rule, per dataset) will enter
 `scripts/sel_queue2.sh` took over the two running YelpChi seeds and runs the rest of E19 (8 runs left). From then on the
 validation set goes through the model once per epoch instead of twice (loss and scores from the same forward pass,
 identical numbers, unit-tested), which shortens the queued runs. Measured: 0.46 h per YelpChi epoch with two lanes.
-Expected to finish about 2026-11-04T08:00Z (live ETA on the dashboard). Results go here
+On 2026-11-04 the owner stopped the search at 05:25Z, after all five YelpChi seeds and AmazonVideo seed 0 (AmazonVideo
+seed 1 was stopped during its last test pass, seed 4 in epoch 1, seeds 2 and 3 not run).
+
+**Results (2026-11-04, stopped by the owner after the YelpChi seeds; `python scripts/sel_analysis.py` →
+[`results/sel/e19.md`](results/sel/e19.md)).** Test set; same 10-epoch run per seed for every rule.
+
+| YelpChi, 5 seeds | Kept epochs | Macro-F1 | AUROC | AUPRC |
+|---|---|---|---|---|
+| Paper rule (lowest val loss, patience 2) | 3, 2, 2, 3, 2 | 63.12 ± 0.38 | 78.76 ± 0.35 | 31.62 ± 0.46 |
+| **Best val AUROC of 10 epochs** | 7, 4, 5, 4, 4 | **67.30 ± 2.97** | **82.00 ± 2.35** | **44.58 ± 5.49** |
+| Early stop on val AUROC, patience 2 | 4, 4, 1, 4, 4 | 65.29 ± 5.73 | 81.72 ± 2.48 | 41.82 ± 8.49 |
+| Early stop on val AUROC, patience 3 | 7, 4, 5, 4, 4 | 67.30 ± 2.97 | 82.00 ± 2.35 | 44.58 ± 5.49 |
+| Paper (Table 2) | — | 69.07 | 84.28 | 48.87 |
+
+- **The paper's stopping rule explains most of the YelpChi gap.** Best val AUROC vs the paper rule: Macro-F1 +4.18
+  (4/5 seeds), AUROC **+3.24** (4/5), AUPRC **+12.96** (5/5); paired bootstrap CIs [+2.52, +4.02] and [+11.40, +14.50].
+  The distance to the paper falls from −5.52 / −17.25 to −2.28 / −4.29 (AUROC / AUPRC); seeds 3 and 4 reach
+  84.11 / 49.66 and 84.12 / 50.85.
+- **Seed-level tests:** p 0.009–0.049 for the gains, none significant after Holm (best AUPRC 0.079; E19 family in
+  `results/stats/all_comparisons.md`, now 123 tests). The seed spread grows sharply (AUPRC std 0.46 → 5.49).
+- **Drift:** the paper rule here reproduces the original E16 runs within +0.38 AUROC / +0.57 AUPRC (seed 1 keeps
+  epoch 2 instead of 1).
+- **AmazonVideo:** only seed 0 finished; every rule keeps epoch 2 (75.04 / 32.54), in line with the log mining. Seed 1
+  was stopped in its last test pass, seed 4 in epoch 1; seeds 2 and 3 were not run.
+- The paper-rule numbers remain the reproduction result (decision D14); best-val-AUROC selection is a recorded deviation. Results go here
 and into the report as E19–E20.
 
 ## 24. Reproducibility
@@ -763,7 +788,9 @@ The paper also never states LoRA alpha, the maximum sequence length, the metapat
 prompts, or how the split was sampled. The two paper versions differ in method details:
 [`research/version_divergence.md`](research/version_divergence.md).
 
-**Still open:** the hyperparameter search is running (E19, §23; E20 and the rest of the grid were not run), the
+**Still open:** AmazonVideo seeds 1–4 of E19 (stopped, §23); E20 and the rest of the grid were not run; DGP on FLAG's
+datasets (Reddit, Instagram, Amazon Musical Instruments: converted by `scripts/convert_flag_datasets.py` and configured in
+`configs/experiments/flagdata/` on 2026-11-04, not run); the
 paper's other ablations (w/o PathSumm / TextSumm / NumSumm) and budget / task-aware studies on GPU, why DGP trails the paper on
 YelpChi by 18 AUPRC (§11; E19 tests the first candidate), ConsisGAD 5-seed run and the other
 baselines. From the follow-up studies:

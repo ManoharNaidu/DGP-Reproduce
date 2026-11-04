@@ -306,8 +306,9 @@ function renderSel(d) {
     t += `<tr><td class="small">Paper (Table 2)</td>${seeds.map(() => "<td></td>").join("")}` + MET.map(([m]) => `<td class="num small">${f2(X.paper[m])}</td>`).join("") + "<td></td><td></td></tr>";
     body += `<h2 style="margin-top:12px">${esc(names[exp] || exp)} <span class="small">${n} / 5 seeds finished</span></h2><div class="scroll"><table>${t}</table></div>`;
   }
-  el.innerHTML = `<summary><span class="grow">E19 results · epoch-selection rule (test set)</span>${badge(total === 10 ? "done" : "running", total === 10 ? "all seeds in" : `preliminary · ${total} / 10 runs`)}</summary>
-    <div class="inner">${body}<p class="note">Each rule picks an epoch on the validation set from the same 10-epoch run; the cells are that epoch's test metrics. Δ = rule − paper rule on the same seed (seeds better in brackets). Preliminary until all seeds finish: no significance tests yet, and the paper rule here can differ from the original E16 runs by GPU non-determinism.</p></div>`;
+  el.innerHTML = `<summary><span class="grow">E19 results · epoch-selection rule (test set)</span>${(() => { const q = d.queues.find((x) => x.key === "sel"), stopped = q && q.state === "done" && total < 10;
+      return badge(total === 10 || stopped ? "done" : "running", total === 10 ? "all seeds in" : stopped ? `stopped by owner · ${total} / 10 runs` : `preliminary · ${total} / 10 runs`); })()}</summary>
+    <div class="inner">${body}<p class="note">Each rule picks an epoch on the validation set from the same 10-epoch run; the cells are that epoch's test metrics. Δ = rule − paper rule on the same seed (seeds better in brackets). Significance tests and bootstrap CIs: results/sel/e19.md. The paper rule here can differ from the original E16 runs by GPU non-determinism (mean drift +0.38 AUROC on YelpChi).</p></div>`;
   el.open = isOpen("sel", true);
 }
 

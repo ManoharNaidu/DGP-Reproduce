@@ -1,0 +1,10 @@
+# DGP base framework on AmazonInstrument (2026-11-04): the AmazonVideo main configuration (configs/models/dgp.yaml: Qwen3-8B
+# summarizer and LoRA classifier, K=2, M=4, B=10, paper stopping rule), on FLAG-Reproduce's benchmark graph.
+# Changes: no numeric attributes exist, so the numeric summary is off; the classification question names the label.
+defaults:
+  - configs/models/dgp.yaml
+dataset_config: configs/datasets/amazon_musical.yaml
+mode: GPU_REPRODUCTION
+experiment: dgp_amazon_musical
+components:
+  numeric_summary: false

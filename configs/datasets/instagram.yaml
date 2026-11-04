@@ -1,0 +1,26 @@
+# Instagram from FLAG-Reproduce (2026-11-04): converted by scripts/convert_flag_datasets.py with FLAG's exact nodes, labels,
+# text and split, so DGP is comparable with FLAG's backbone results. Label 1 = Commercial Users. Not a DGP-paper dataset.
+name: instagram
+display_name: Instagram
+reproducibility: NOT_IN_PAPER
+processed_dir: datasets/processed/instagram
+
+graph:
+  relations: [UFU]
+
+relation_labels:
+  UFU: Follow
+
+expected:                      # FLAG benchmark as converted
+  nodes: 7946
+  edges: 76058
+  edge_types: 1
+  frauds: 722
+
+split:
+  sizes: {train: 794, val: 794, test: 6358}   # FLAG's split, read from split.json
+  seed: 0
+  stratify: true
+
+task:
+  question: Is this a commercial user?
