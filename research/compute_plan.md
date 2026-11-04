@@ -2,6 +2,11 @@
 
 Tags: **MEASURED** (from our real AmazonVideo runs) · **DERIVED** (arithmetic on verified numbers) · **ESTIMATE** (assumption; could be off by ~2×).
 
+> **Update (2026-11-04).** Since the 2026-09-17 note below: YelpReviews (main result and MLP), the target-only LLM
+> baseline and the w/o MDK ablation were run, and the owner approved a reduced hyperparameter search (§6 update;
+> E19 ran 2026-11-03 → 11-04 and was stopped after the YelpChi seeds). The budget sweep, the task-aware study and the
+> other three ablations have still not been run. Measured run times for all of them: README §11, §13, §14, §23.
+>
 > **Update (2026-09-17): the DGP main result (5 seeds, AmazonVideo) has been run for real** on 2× A100 80GB.
 > §4's ESTIMATE row for "DGP main, 5 seeds" is now replaced with MEASURED figures. Ablations, the budget sweep,
 > the task-aware study and the hyperparameter grid search have not been run — their rows below are still

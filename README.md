@@ -66,7 +66,8 @@ What exists and works today:
 - Every experiment of the paper wired to a script: main table, ablations, budget sweep, task-aware study,
   token accounting, complexity analysis, comparison with the paper.
 - 108 unit tests (all passing on 2026-11-03) and a 14-check CPU smoke test, including a check against the real Qwen3 tokenizer.
-- Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`).
+- Read-only progress dashboards (`tools/dgp-dashboard/`, v0.4.0; `tools/dr-dashboard/v2/`; `tools/x0-dashboard/` for the
+  2026-11 follow-up queues and E19).
 
 What is outstanding: the paper's other three ablations, the budget / task-aware studies, the rest of the hyperparameter
 grid (the owner chose the epoch-selection rule only; stopped 2026-11-04 with YelpChi complete, §23), and the
@@ -345,6 +346,14 @@ The paper's target-only **LLM** baseline is in §13 (`ctl_T0`).
 
 `results/tables/main_results.md` is written only from real runs; CPU debug runs are kept in
 `results/tables/debug_runs.md` and are never compared with the paper.
+
+**YelpReviews, 5 seeds (§11, 2026-11-02):** DGP 61.76 ± 1.86 / 78.38 ± 0.88 / 31.05 ± 1.31 (paper 69.07 / 84.28 / 48.87,
+DEVIATES); MLP 63.64 ± 0.43 / 74.66 ± 0.71 / 33.67 ± 1.01 (paper 62.09 / 75.00 / 32.24, MATCH on AUROC and AUPRC). With the
+epoch chosen by validation AUROC instead of the paper's validation-loss rule (E19, §23, a recorded deviation) DGP reaches
+67.30 / 82.00 / 44.58. Both tables were regenerated on 2026-11-04 (`scripts/evaluate.py`, `scripts/compare_with_paper.py`).
+They recompute every metric from `predictions.csv`, whose scores are rounded to 6 decimals; for the YelpChi MLP's seed 2
+many saturated scores tie after rounding, so the table shows 74.58 / 33.58 instead of the 74.66 / 33.67 computed at
+training time (seed 2: 73.01 vs 73.42 AUROC). The training-time values are the exact ones.
 
 **Tokens** (AmazonVideo, real data, real Qwen3-8B): mean review length **115.7 Qwen3 tokens**; average degree
 **133.1** (paper: 133); at K=2 a full-neighbour prompt averages **~1.5M raw tokens** per review versus a **measured
@@ -735,8 +744,8 @@ Test labels are read only by the split builder and evaluation.
 
 **One statistics standard (2026-11-01).** The studies were analysed with different tools as they ran (bootstrap CIs
 over test reviews, McNemar, Holm only from Exp 4 on). `python scripts/stats_standard.py` re-tests every paired
-comparison of E2–E18 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
-the 3 metrics × the comparisons of each experiment ("family") and over all 114 tests ("global") →
+comparison of E2–E19 the same way: seed as the unit (5 paired seeds), two-sided paired t-test, 95% t-interval, Holm over
+the 3 metrics × the comparisons of each experiment ("family") and over all 123 tests ("global") →
 [`results/stats/all_comparisons.md`](results/stats/all_comparisons.md).
 
 | Experiment | Comparisons | Tests | p < 0.05 | Holm family < 0.05 | Holm global < 0.05 |
@@ -753,6 +762,7 @@ the 3 metrics × the comparisons of each experiment ("family") and over all 114 
 | E16 DGP vs MLP on YelpChi | 1 | 3 | 2 | 2 (AUROC +3.72; AUPRC −2.62) | 0 |
 | E17 MDK vs random neighbours (w/o MDK) | 1 | 3 | 0 | 0 | 0 |
 | E18 fourth writer × classifier cell (QG0) | 2 | 6 | 2 | 1 (QG0 − R0 AUROC +1.21) | 0 |
+| E19 epoch-selection rule vs paper rule (YelpChi) | 3 | 9 | 6 | 0 (best: AUPRC +12.96, Holm 0.079) | 0 |
 
 Read with this standard, no prompt-side effect (E2, E8, E12) survives correction, the K sweep, the F0 re-run and the w/o MDK ablation (E17) are
 null, and Gemma's gain (E11) and the zero-shot penalty for Gemma (E13) survive in some arms but not all: they rest on

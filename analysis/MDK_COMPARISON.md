@@ -39,3 +39,11 @@ Dropping the identity term (`walk_only`) does change the ranking.
 
 The two implementations are the same operator. Differences in behaviour come from the **graph** (metapath
 product vs single relation), the **features**, and the **candidate set**, not from the diffusion formula.
+
+## Later result (2026-11-02): does MDK's choice matter at all?
+
+The w/o MDK ablation (E17, README §14) replaced MDK's M = 4 neighbours per metapath with 4 random neighbours at the
+same budget on AmazonVideo. DGP did not change measurably: R0 − noMDK is −0.53 Macro-F1, +0.36 AUROC and −0.14 AUPRC,
+none significant, although the two selections share only 0.3–21% of their neighbours on most metapaths. On the FLAG
+side FLAG-MD was likewise equal to cosine on Reddit, Instagram and YelpChi and better only on the Amazon user graphs.
+So the operator is the same, and in DGP its neighbour choice matters little.

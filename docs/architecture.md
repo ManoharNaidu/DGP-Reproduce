@@ -40,13 +40,13 @@ evaluation and record keeping. Scripts in `scripts/` are thin command-line wrapp
 | Module | Responsibility |
 |---|---|
 | `config.py` | YAML loading with `defaults:` inheritance and `--set key=value` overrides |
-| `data/` | graph container, dataset builders (AmazonVideo, YelpReviews, synthetic, proprietary stubs), splits |
+| `data/` | graph container, dataset builders (AmazonVideo, YelpReviews, synthetic, proprietary stubs), splits; FLAG's Reddit / Instagram / Amazon graphs are converted outside the package by `scripts/convert_flag_datasets.py` |
 | `mdk/` | metapath adjacency, diffusion operator, distance, Top-M trimming |
 | `embeddings/` | DeBERTaV3 mean-pooled embeddings; hashing embedder (DEBUG_ONLY) |
 | `summarization/` | summarizer protocol, Qwen3-8B summarizer, mock (DEBUG_ONLY), cached bi-level pipeline, numeric means |
 | `prompts/` | final prompt assembly; templates live in `prompts/dgp/` |
 | `models/` | label-token resolution, first-token loss and readout, Qwen3 + LoRA classifier, mock LLM (DEBUG_ONLY) |
-| `training/` | model-agnostic training loop with early stopping on validation loss |
+| `training/` | model-agnostic training loop with early stopping on validation loss; optional `training.selection_rules` trains every epoch and keeps the epoch each rule picks (E19, README §23); one validation pass per epoch gives both loss and scores |
 | `metrics/` | Macro-F1, AUROC, AUPRC; seed aggregation |
 | `evaluation/` | token accounting, complexity formulas, attention-dilution curves, tables/figures/comparison |
 | `baselines/` | MLP baseline; export of our graphs for the official GNN baselines |

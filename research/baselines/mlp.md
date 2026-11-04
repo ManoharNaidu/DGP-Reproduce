@@ -1,5 +1,9 @@
 # MLP
 
+> **Status 2026-11-02: implemented and run** (`scripts/run_mlp.py`, `src/dgp_repro/baselines/mlp.py`, CPU, 5 seeds).
+> AmazonVideo 59.83 / 68.33 / 25.11 (paper 61.74 / 70.47 / 26.55); YelpReviews 63.64 / 74.66 / 33.67 (paper 62.09 /
+> 75.00 / 32.24). README §11, §16. The notes below are the 2026-09 planning record.
+
 - **paper**: The perceptron: A probabilistic model for information storage and organization in the brain (cited by DGP as Rosenblatt 1958)
 - **authors**: Frank Rosenblatt
 - **venue**: Psychological Review, 1958

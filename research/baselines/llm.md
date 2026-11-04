@@ -1,5 +1,10 @@
 # LLM (Qwen3-8B finetuned on target nodes only)
 
+> **Status 2026-11-01: run on AmazonVideo** (`ctl_T0`, README §13): the same Qwen3-8B + LoRA classifier and recipe as
+> DGP with only `Target: <review>` and the question in the prompt, 5 seeds: 63.35 ± 2.84 / 73.29 ± 0.36 / 30.54 ± 0.60
+> (Macro-F1 / AUROC / AUPRC; paper 59.90 / 71.78 / 27.03). DGP − LLM is +1.69 AUROC / +1.83 AUPRC against +5.54 / +7.60
+> in the paper. Not run on YelpReviews. The notes below are the 2026-09 planning record.
+
 This is DGP's "graph-agnostic LLM" row: the base LLM is LoRA-finetuned on the **target node's own text only**, with no neighbourhood/graph context. It is the ablation that isolates how much of DGP's gain comes from the graph.
 
 - **paper**: Qwen3 Technical Report (cited by DGP as "Team 2025")

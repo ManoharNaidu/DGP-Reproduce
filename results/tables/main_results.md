@@ -3,3 +3,6 @@
 | dataset | method | mode | n_seeds | macro_f1_mean | macro_f1_std | auroc_mean | auroc_std | auprc_mean | auprc_std | macro_f1_at_0.5_mean | macro_f1_at_0.5_std |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | AmazonVideo | DGP | GPU_REPRODUCTION | 5 | 65.16 | 0.52 | 75.07 | 0.5 | 32.33 | 0.65 | 49.45 | 2.83 |
+| YelpReviews | DGP | GPU_REPRODUCTION | 5 | 61.76 | 1.86 | 78.38 | 0.88 | 31.05 | 1.31 | 49.03 | 2.54 |
+| AmazonVideo | MLP | CPU_REPRODUCTION | 5 | 59.83 | 0.5 | 68.33 | 0.51 | 25.11 | 1.09 | 49.65 | 1.63 |
+| YelpReviews | MLP | CPU_REPRODUCTION | 5 | 63.64 | 0.43 | 74.58 | 0.86 | 33.58 | 1.16 | 62.16 | 0.43 |

@@ -89,7 +89,7 @@
 | Edge count convention | `2 × Σ undirected pairs` = 9,883,406 exact; per-relation (no cross-relation dedup), no self-loops | computed | VERIFIED | CONFIRMED | — |
 | AmazonVideo `x_num` | Rating only. **`helpful` votes excluded — they define the label (leakage).** FraudCoT serializes only `Rating` | FraudCoT App. E; leakage analysis | VERIFIED | HIGH | `x_num = [overall]` (+ one-hot variant as option) |
 | YelpReviews source | Original Rayana & Akoglu YelpChi: 67,395 reviews, 13.23% filtered, plaintext included. 8,919/67,395 = 13.234% | shebuti.com | VERIFIED | CONFIRMED | — |
-| YelpReviews access | **Email-gated**: `srayana@cs.stonybrook.edu`. ODDS mirror TLS-fails. No public mirror with text found | shebuti.com | VERIFIED | CONFIRMED | **USER ACTION REQUIRED** |
+| YelpReviews access | **Email-gated**: `srayana@cs.stonybrook.edu`. ODDS mirror TLS-fails. No public mirror with text found | shebuti.com | VERIFIED | CONFIRMED | **USER ACTION REQUIRED** 2026-11-01: resolved for use via a mirror of the release; graph matches Table 1 exactly (README §11) |
 | Yelp ≠ `YelpChi.mat` | `.mat` = 45,954 nodes, 32 handcrafted feats, no text, 14.53% | group's `gnn_datasets` mirror | REPORTED | HIGH | Do not use `.mat` for DGP |
 | Yelp relations | R-U-R same user; R-S-R same product + same star; R-T-R same product + same month | arXiv v1; CARE-GNN §4.1.2 | VERIFIED (arXiv) | CONFIRMED | Test product-scope variants against 17,486,608 (Amazon precedent) |
 | Yelp edge count | 17,486,608 — untestable until data arrives | — | — | — | Validation target |

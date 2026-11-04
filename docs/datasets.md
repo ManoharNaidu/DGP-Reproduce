@@ -3,7 +3,8 @@
 | Paper name | Status | Source | Access |
 |---|---|---|---|
 | AmazonVideo | **Ready** — rebuilt graph matches paper Table 1 exactly | McAuley 2014, Amazon Instant Video 5-core | Automatic download, no registration |
-| YelpReviews | **Blocked on access** | Rayana & Akoglu 2015, original YelpChi release | Email request |
+| YelpReviews | **Ready (via mirror, 2026-11-01)** — graph matches paper Table 1 exactly | Rayana & Akoglu 2015, original YelpChi release, from the mirror downloaded for FLAG-Reproduce | `scripts/convert_yelpchi_mirror.py`; the official copy is still email-gated |
+| Reddit, Instagram, Amazon (Musical Instruments) | **Converted (2026-11-04), not in the DGP paper** | FLAG-Reproduce's benchmark graphs (GLBench; CARE-GNN Amazon + McAuley 2014 text) with FLAG's exact nodes and splits | `../FLAG-Reproduce/.venv-gpu/bin/python scripts/convert_flag_datasets.py` |
 | E-Commerce | Not reproducible | ByteDance internal | None |
 | LifeService | Not reproducible | ByteDance internal | None |
 
@@ -45,6 +46,13 @@ Two places where the data contradict the paper's prose, and why we follow the da
    fits them within 1.6 AUPRC points on average. (`graph.label.zero_vote_label`)
 
 ## YelpReviews — how to obtain it
+
+> **2026-11-01: obtained from a mirror.** FLAG-Reproduce had downloaded a copy of the original release
+> (`../FLAG-Reproduce/datasets/raw/yelpchi/`: metadata plus hotel and restaurant review text, 67,395 rows).
+> `scripts/convert_yelpchi_mirror.py` turns it into `datasets/raw/yelpchi/reviews.jsonl`; with RSR = same product +
+> star and RTR = same product + month the graph matches Table 1 exactly (67,395 nodes, 17,486,608 edges, 8,919 frauds).
+> The row-to-text join is supported statistically, not proven, so the email request below would still confirm it.
+> README §11 has the commands and results. The rest of this section is the original (2026-09-14) record.
 
 DGP uses the **original** YelpChi release (67,395 Chicago hotel and restaurant reviews **with raw text**,
 13.23% filtered by Yelp). This is **not** the `YelpChi.mat` used by CARE-GNN, PC-GNN, ConsisGAD and DGL
@@ -96,6 +104,21 @@ python scripts/prepare_data.py --dataset yelpchi           # refuses to save unl
 Sizes come from paper Table 1. The procedure is reconstructed: stratified by label, drawn from all
 labelled nodes (every node on both public datasets), fixed by `split.seed` (default 0); the five seeds
 vary only training. Stored in `datasets/processed/<dataset>/split.json`.
+
+## FLAG's datasets in DGP format (2026-11-04)
+
+`scripts/convert_flag_datasets.py` (run with FLAG-Reproduce's environment) writes `datasets/processed/{reddit,instagram,
+amazon_musical}/` from FLAG's own benchmark construction, so nodes, labels, text and splits are FLAG's exactly:
+
+| Dataset | Nodes | Relations (edges, directed) | Positives (label) | Split train / val / test |
+|---|---|---|---|---|
+| Reddit | 18,389 | URU reply (42,824) | 1,672 popular users | 1,839 / 1,839 / 14,711 |
+| Instagram | 7,946 | UFU follow (76,058) | 722 commercial users | 794 / 794 / 6,358 |
+| Amazon Musical Instruments | 11,944 (3,305 unlabelled, no text) | UPU 351,216 · USU 7,132,958 · UVU 2,073,474 | 821 fraudulent users | 2,591 / 864 / 5,184 |
+
+There are no numeric attributes, so `configs/experiments/flagdata/*.yaml` turn the numeric summary off. No DGP run on
+these datasets has been made (stopped by the owner before the first GPU step). The processed data is gitignored and must
+not be re-hosted (Instagram and Reddit come from GLBench).
 
 ## Proprietary datasets
 

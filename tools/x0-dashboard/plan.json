@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T05:50Z",
+  "updated": "2026-11-04T06:40Z",
   "note": "Order agreed on 2026-11-01; search scope 2026-11-03; everything stopped by the owner 2026-11-04T05:25Z. Edited by hand; the dashboard only reads it.",
   "items": [
     {
@@ -117,6 +117,12 @@
       "kind": "GPU",
       "state": "stopped",
       "detail": "2026-11-04: graphs converted with FLAG's exact nodes, labels, text and splits (scripts/convert_flag_datasets.py; Reddit 18,389 nodes 1839/1839/14711, Instagram 7,946 794/794/6358, Amazon 11,944 nodes 3 relations 2591/864/5184) and configs written (configs/experiments/flagdata/). Stopped by the owner before any GPU run."
+    },
+    {
+      "title": "Full documentation sync across both codebases and shared folders",
+      "kind": "docs",
+      "state": "done",
+      "detail": "2026-11-04: workspace README; DGP README (§16 YelpChi + rounding note, stats E19, dashboards), docs/datasets, docs/architecture, research/compute_plan, dataset_provenance, evidence_matrix, baselines/llm + mlp, analysis/MDK_COMPARISON, regenerated results/tables (main_results, comparison_with_paper), tools/x0-dashboard/README; dated notes in 8 Word files (Markov diffusion, 10-17 and 10-18 study reports, reports 01 and 02, FLAG final report, results paper, audit; originals in archive-2026-11-04/); FLAG README + reproduction_status; prompt_testing README + REPORT; reports/rebuild/README-conversion. Experiment logs (DGP E1-E20, FLAG E1-E14) and report 03 were already current."
     }
   ]
 }

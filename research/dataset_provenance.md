@@ -4,6 +4,13 @@
 Detection with Graph-Enhanced LLMs* (AAAI-2026), Yuan Li, Jun Hu, Bryan Hooi, Bingsheng He,
 Cheng Chen.
 
+> **Status update 2026-11-01 (this report is the 2026-09 provenance record; the YelpReviews items below changed since).**
+> A mirror of the original 67,395-review release (downloaded for FLAG-Reproduce) was converted
+> (`scripts/convert_yelpchi_mirror.py`). With RSR = same product + same star and RTR = same product + same month it gives
+> **exactly** Table 1's 67,395 nodes, **17,486,608 edges** (RUR 220,224 · RSR 16,333,680 · RTR 932,704) and 8,919 frauds,
+> which settles §1.7 and items 1–2 of §5 for use. The row-to-text join is supported statistically, not proven.
+> README §11.
+
 Every factual claim below is tied to a URL that was actually fetched, or to a computation run
 locally on a file that was actually downloaded. Claims that could not be verified are marked
 **UNVERIFIED**. Arithmetic observations are marked **INFERENCE**.
@@ -149,7 +156,7 @@ restates both correctly.
 Minor note: the CARE-GNN *paper body* writes the Amazon relation as `U-S-V` while its own Table 2
 and the DGL implementation both use `U-S-U`. The paper text is a typo.
 
-### 1.7 Edge count 17,486,608 (f) — **UNVERIFIED**
+### 1.7 Edge count 17,486,608 (f) — **UNVERIFIED** (2026-11-01: reproduced exactly from the mirror, see the note at the top)
 
 No published source reports this number other than DGP itself. It cannot be checked without the
 raw 67,395-review file, which is email-gated. It is not derivable from the `.mat` counts
@@ -490,7 +497,7 @@ identifiers.** Rejected for DGP; blocker #1 below is unchanged.
 
 ## 5. UNRESOLVED
 
-1. **YelpChi raw data not in hand.** Email-gated; no direct URL exists. This is the single
+1. **YelpChi raw data not in hand.** *(2026-11-01: in hand via a mirror; see the top.)* Email-gated; no direct URL exists. This is the single
    blocking dependency for reproducing YelpReviews. Everything downstream of it is unverified.
 2. **YelpChi file names and column headers — UNVERIFIED.** Neither shebuti.com nor ODDS publishes
    a file manifest. Whether the text column is literally named `reviewContent`, and whether the
