@@ -1,0 +1,231 @@
+{
+  "written": "2026-11-05T13:52:27",
+  "git_commit": "not_a_git_repository",
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.35",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.19.0",
+    "peft": "0.21.2",
+    "dgl": null,
+    "cuda": "13.0",
+    "gpus": [
+      "NVIDIA A100-SXM4-80GB"
+    ]
+  },
+  "config": {
+    "dgp": {
+      "K": 2,
+      "M": 4,
+      "B_node": 10,
+      "B_meta": 10,
+      "numeric_precision": 2,
+      "max_target_tokens": 1024
+    },
+    "mdk": {
+      "operator": "paper_eq6",
+      "adjacency": "weighted",
+      "features": "deberta_concat",
+      "scaling": "none",
+      "random_seed": 0
+    },
+    "components": {
+      "node_summary": true,
+      "text_summary": true,
+      "mdk": true,
+      "path_summary": true,
+      "numeric_summary": false
+    },
+    "task_aware": {
+      "enabled": false,
+      "apply_to_metapath": false
+    },
+    "embedder": {
+      "backend": "deberta",
+      "model_id": "microsoft/deberta-v3-base",
+      "max_length": 512,
+      "batch_size": 64
+    },
+    "summarizer": {
+      "backend": "qwen",
+      "model_id": "Qwen/Qwen3-8B",
+      "revision": null,
+      "batch_size": 16,
+      "enforce_budget": false,
+      "max_new_tokens_factor": 4,
+      "max_new_tokens_extra": 16,
+      "max_input_tokens": 8192
+    },
+    "classifier": {
+      "model_id": "Qwen/Qwen3-8B",
+      "revision": null,
+      "precision": "canonical",
+      "gradient_checkpointing": true,
+      "max_seq_len": 4096,
+      "lora": {
+        "enabled": true,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj"
+        ],
+        "rank": 8,
+        "alpha": 16,
+        "dropout": 0.05
+      }
+    },
+    "training": {
+      "optimizer": "adamw",
+      "learning_rate": 0.0001,
+      "batch_size": 4,
+      "max_epochs": 10,
+      "early_stopping_patience": 2,
+      "gradient_accumulation": 1,
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "eval_batch_size": 8
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "grid": {
+      "B": [
+        10,
+        20,
+        40,
+        80
+      ],
+      "K": [
+        1,
+        2,
+        3
+      ],
+      "M": [
+        2,
+        4,
+        8,
+        16
+      ],
+      "lora_rank": [
+        4,
+        8,
+        16,
+        32
+      ],
+      "lora_dropout": [
+        0.0,
+        0.05,
+        0.1
+      ],
+      "learning_rate": [
+        1e-05,
+        3e-05,
+        0.0001
+      ],
+      "selection_metric": "val_auroc"
+    },
+    "dataset_config": "configs/datasets/reddit.yaml",
+    "mode": "GPU_REPRODUCTION",
+    "experiment": "dgp_reddit",
+    "dataset": {
+      "name": "reddit",
+      "display_name": "Reddit",
+      "reproducibility": "NOT_IN_PAPER",
+      "processed_dir": "datasets/processed/reddit",
+      "graph": {
+        "relations": [
+          "URU"
+        ]
+      },
+      "relation_labels": {
+        "URU": "Reply"
+      },
+      "expected": {
+        "nodes": 18389,
+        "edges": 42824,
+        "edge_types": 1,
+        "frauds": 1672
+      },
+      "split": {
+        "sizes": {
+          "train": 1839,
+          "val": 1839,
+          "test": 14711
+        },
+        "seed": 0,
+        "stratify": true
+      },
+      "task": {
+        "question": "Is this a popular user?"
+      }
+    }
+  },
+  "run_id": "repro_reddit_seed2_e9acb52042",
+  "experiment": "repro_reddit",
+  "seed": 2,
+  "mode": "GPU_REPRODUCTION",
+  "device": "cuda:0",
+  "runtime_seconds": 2148.7,
+  "train_seconds": 1211.3,
+  "best_epoch": 1,
+  "label_tokens": {
+    "positive": "Yes",
+    "negative": "No",
+    "yes_id": 9454,
+    "no_id": 2753,
+    "boundary_checked": true,
+    "leading_space_variant' Yes'": [
+      7414
+    ],
+    "leading_space_variant' No'": [
+      2308
+    ]
+  },
+  "peak_memory": {
+    "gpu_peak_gb": 18.08,
+    "cpu_peak_rss_gb": 4.87
+  },
+  "prompt_metadata": {
+    "metapaths": [
+      "URU",
+      "URU-URU"
+    ],
+    "components": {
+      "node_summary": true,
+      "text_summary": true,
+      "mdk": true,
+      "path_summary": true,
+      "numeric_summary": false
+    },
+    "prompt_version": "v1-reconstruction",
+    "token_counter": "Qwen/Qwen3-8B-tokenizer",
+    "summarizer": "Qwen/Qwen3-8B",
+    "embedder": "microsoft/deberta-v3-base"
+  },
+  "dataset_summary": {
+    "name": "reddit",
+    "nodes": 18389,
+    "edges": 42824,
+    "edge_types": 1,
+    "edges_per_relation": {
+      "URU": 42824
+    },
+    "frauds": 1672,
+    "labeled": 18389,
+    "numeric_features": []
+  },
+  "split_sizes": {
+    "train": 1839,
+    "val": 1839,
+    "test": 14711
+  },
+  "split_seed": 0
+}

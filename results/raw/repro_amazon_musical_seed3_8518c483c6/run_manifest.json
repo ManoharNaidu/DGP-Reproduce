@@ -1,0 +1,248 @@
+{
+  "written": "2026-11-05T16:22:22",
+  "git_commit": "not_a_git_repository",
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.35",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.19.0",
+    "peft": "0.21.2",
+    "dgl": null,
+    "cuda": "13.0",
+    "gpus": [
+      "NVIDIA A100-SXM4-80GB"
+    ]
+  },
+  "config": {
+    "dgp": {
+      "K": 2,
+      "M": 4,
+      "B_node": 10,
+      "B_meta": 10,
+      "numeric_precision": 2,
+      "max_target_tokens": 1024
+    },
+    "mdk": {
+      "operator": "paper_eq6",
+      "adjacency": "weighted",
+      "features": "deberta_concat",
+      "scaling": "none",
+      "random_seed": 0
+    },
+    "components": {
+      "node_summary": true,
+      "text_summary": true,
+      "mdk": true,
+      "path_summary": true,
+      "numeric_summary": false
+    },
+    "task_aware": {
+      "enabled": false,
+      "apply_to_metapath": false
+    },
+    "embedder": {
+      "backend": "deberta",
+      "model_id": "microsoft/deberta-v3-base",
+      "max_length": 512,
+      "batch_size": 64
+    },
+    "summarizer": {
+      "backend": "qwen",
+      "model_id": "Qwen/Qwen3-8B",
+      "revision": null,
+      "batch_size": 16,
+      "enforce_budget": false,
+      "max_new_tokens_factor": 4,
+      "max_new_tokens_extra": 16,
+      "max_input_tokens": 4096,
+      "max_source_tokens": 3900
+    },
+    "classifier": {
+      "model_id": "Qwen/Qwen3-8B",
+      "revision": null,
+      "precision": "canonical",
+      "gradient_checkpointing": true,
+      "max_seq_len": 4096,
+      "lora": {
+        "enabled": true,
+        "target_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj"
+        ],
+        "rank": 8,
+        "alpha": 16,
+        "dropout": 0.05
+      }
+    },
+    "training": {
+      "optimizer": "adamw",
+      "learning_rate": 0.0001,
+      "batch_size": 4,
+      "max_epochs": 10,
+      "early_stopping_patience": 2,
+      "gradient_accumulation": 1,
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "eval_batch_size": 8
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "grid": {
+      "B": [
+        10,
+        20,
+        40,
+        80
+      ],
+      "K": [
+        1,
+        2,
+        3
+      ],
+      "M": [
+        2,
+        4,
+        8,
+        16
+      ],
+      "lora_rank": [
+        4,
+        8,
+        16,
+        32
+      ],
+      "lora_dropout": [
+        0.0,
+        0.05,
+        0.1
+      ],
+      "learning_rate": [
+        1e-05,
+        3e-05,
+        0.0001
+      ],
+      "selection_metric": "val_auroc"
+    },
+    "dataset_config": "configs/datasets/amazon_musical.yaml",
+    "mode": "GPU_REPRODUCTION",
+    "experiment": "dgp_amazon_musical",
+    "dataset": {
+      "name": "amazon_musical",
+      "display_name": "AmazonInstrument",
+      "reproducibility": "NOT_IN_PAPER",
+      "processed_dir": "datasets/processed/amazon_musical",
+      "graph": {
+        "relations": [
+          "UPU",
+          "USU",
+          "UVU"
+        ]
+      },
+      "relation_labels": {
+        "UPU": "Same Product",
+        "USU": "Same Star Rating",
+        "UVU": "Similar Text"
+      },
+      "expected": {
+        "nodes": 11944,
+        "edges": 9557648,
+        "edge_types": 3,
+        "frauds": 821
+      },
+      "split": {
+        "sizes": {
+          "train": 2591,
+          "val": 864,
+          "test": 5184
+        },
+        "seed": 0,
+        "stratify": true
+      },
+      "task": {
+        "question": "Is this fraud?"
+      }
+    }
+  },
+  "run_id": "repro_amazon_musical_seed3_8518c483c6",
+  "experiment": "repro_amazon_musical",
+  "seed": 3,
+  "mode": "GPU_REPRODUCTION",
+  "device": "cuda:0",
+  "runtime_seconds": 7180.3,
+  "train_seconds": 6216.1,
+  "best_epoch": 2,
+  "label_tokens": {
+    "positive": "Yes",
+    "negative": "No",
+    "yes_id": 9454,
+    "no_id": 2753,
+    "boundary_checked": true,
+    "leading_space_variant' Yes'": [
+      7414
+    ],
+    "leading_space_variant' No'": [
+      2308
+    ]
+  },
+  "peak_memory": {
+    "gpu_peak_gb": 19.56,
+    "cpu_peak_rss_gb": 5.08
+  },
+  "prompt_metadata": {
+    "metapaths": [
+      "UPU",
+      "USU",
+      "UVU",
+      "UPU-UPU",
+      "UPU-USU",
+      "UPU-UVU",
+      "USU-UPU",
+      "USU-USU",
+      "USU-UVU",
+      "UVU-UPU",
+      "UVU-USU",
+      "UVU-UVU"
+    ],
+    "components": {
+      "node_summary": true,
+      "text_summary": true,
+      "mdk": true,
+      "path_summary": true,
+      "numeric_summary": false
+    },
+    "prompt_version": "v1-reconstruction",
+    "token_counter": "Qwen/Qwen3-8B-tokenizer",
+    "summarizer": "Qwen/Qwen3-8B",
+    "embedder": "microsoft/deberta-v3-base"
+  },
+  "dataset_summary": {
+    "name": "amazon_musical",
+    "nodes": 11944,
+    "edges": 9557648,
+    "edge_types": 3,
+    "edges_per_relation": {
+      "UPU": 351216,
+      "USU": 7132958,
+      "UVU": 2073474
+    },
+    "frauds": 821,
+    "labeled": 8639,
+    "numeric_features": []
+  },
+  "split_sizes": {
+    "train": 2591,
+    "val": 864,
+    "test": 5184
+  },
+  "split_seed": 0
+}
