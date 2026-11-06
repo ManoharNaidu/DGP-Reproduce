@@ -1,0 +1,58 @@
+{
+  "experiment": "repro_instagram",
+  "dataset": "instagram",
+  "mode": "GPU_REPRODUCTION",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "test": {
+    "n_seeds": 5,
+    "macro_f1_mean": 52.75028658985342,
+    "macro_f1_std": 2.096919219378106,
+    "auroc_mean": 58.274338190395234,
+    "auroc_std": 2.6382696382017654,
+    "auprc_mean": 12.457932672098579,
+    "auprc_std": 1.0836236506803256,
+    "macro_f1_at_0.5_mean": 47.68675600269174,
+    "macro_f1_at_0.5_std": 0.13758482475655015
+  },
+  "val": {
+    "n_seeds": 5,
+    "macro_f1_mean": 53.16738696274557,
+    "macro_f1_std": 2.5145792150618864,
+    "auroc_mean": 60.193328716528164,
+    "auroc_std": 1.0635914985146722,
+    "auprc_mean": 13.691014720319846,
+    "auprc_std": 1.3385897129193363,
+    "macro_f1_at_0.5_mean": 47.62532981530343,
+    "macro_f1_at_0.5_std": 0.0
+  },
+  "token_usage": {
+    "mean_raw_target_tokens": 40.84004530581424,
+    "mean_raw_neighbor_tokens": 5809.356909136673,
+    "mean_trimmed_neighbor_raw_tokens": 244.2675560030204,
+    "mean_node_summary_tokens": 150.37805184998743,
+    "mean_metapath_summary_tokens": 66.67606342813994,
+    "mean_final_prompt_tokens": 135.0174930782784,
+    "mean_num_neighbors_full": 146.88144978605587,
+    "mean_num_neighbors_trimmed": 5.907123080795369,
+    "nodes": 7946,
+    "average_prompt_length": 135.0174930782784,
+    "p95_prompt_length": 191.0,
+    "max_prompt_length": 619.0,
+    "mean_full_neighbor_prompt_tokens": 5850.1969544424865,
+    "compression_ratio": 43.329177731442165,
+    "token_reduction": 0.9769208636684018,
+    "targets_truncated": 0,
+    "num_metapaths": 2,
+    "K": 2,
+    "M": 4,
+    "B_node": 10,
+    "B_meta": 10
+  },
+  "config_hash": "9dcd4dad8e"
+}
